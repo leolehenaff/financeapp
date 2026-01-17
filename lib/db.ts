@@ -101,4 +101,36 @@ export async function initDb() {
       ],
     });
   }
+
+  // Create allocation_objectives table
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS allocation_objectives (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      category TEXT NOT NULL,
+      key TEXT NOT NULL,
+      target_percent REAL NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+      UNIQUE(category, key)
+    )
+  `);
+
+  // Insert default allocation objectives for asset types (20% each)
+  for (const type of assetTypes) {
+    await db.execute({
+      sql: `INSERT OR IGNORE INTO allocation_objectives (category, key, target_percent)
+            VALUES ('type', ?, 20)`,
+      args: [type],
+    });
+  }
+
+  // Insert default allocation objectives for geographies (25% each)
+  const geoTypes = ["FR", "US", "EU", "OTHER"];
+  for (const geo of geoTypes) {
+    await db.execute({
+      sql: `INSERT OR IGNORE INTO allocation_objectives (category, key, target_percent)
+            VALUES ('geo', ?, 25)`,
+      args: [geo],
+    });
+  }
 }

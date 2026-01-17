@@ -139,3 +139,36 @@ export interface CreateAssetInput {
 }
 
 export type UpdateAssetInput = Partial<CreateAssetInput>;
+
+// Allocation Objectives
+export type AllocationCategory = "type" | "geo";
+
+export interface AllocationObjective {
+  id: number;
+  category: AllocationCategory;
+  key: string;
+  target_percent: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AllocationObjectiveRow {
+  id: number;
+  category: string;
+  key: string;
+  target_percent: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export function rowToAllocationObjective(row: AllocationObjectiveRow): AllocationObjective {
+  return {
+    ...row,
+    category: row.category as AllocationCategory,
+  };
+}
+
+export interface BulkAllocationObjectiveUpdate {
+  category: AllocationCategory;
+  objectives: { key: string; target_percent: number }[];
+}

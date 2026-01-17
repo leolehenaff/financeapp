@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Asset, DashboardStats, Snapshot } from "@/lib/types";
+import { Asset, DashboardStats, Snapshot, AllocationObjective } from "@/lib/types";
+import { ObjectivesModal } from "@/components/objectives/objectives-modal";
+import { PieWithTarget } from "@/components/charts/pie-with-target";
 import {
   formatCurrency,
   formatPercent,
@@ -19,6 +21,7 @@ import {
   PiggyBank,
   Bell,
   Sparkles,
+  Scale,
 } from "lucide-react";
 import {
   PieChart,
@@ -28,6 +31,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+// Note: PieChart, Pie, Cell only used for "By Person" chart
 import Link from "next/link";
 import { WHO_COLORS } from "@/lib/people";
 
@@ -63,23 +67,45 @@ function SkeletonChart() {
   );
 }
 
+type PerformanceTimespan = "7d" | "30d" | "1y" | "all";
+type PerformanceDisplay = "percentage" | "absolute";
+
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [typeObjectives, setTypeObjectives] = useState<AllocationObjective[]>([]);
+  const [geoObjectives, setGeoObjectives] = useState<AllocationObjective[]>([]);
+  const [performanceTimespan, setPerformanceTimespan] = useState<PerformanceTimespan>("all");
+  const [performanceDisplay, setPerformanceDisplay] = useState<PerformanceDisplay>("percentage");
+  const [allAssets, setAllAssets] = useState<Asset[]>([]);
+  const [allSnapshots, setAllSnapshots] = useState<Snapshot[]>([]);
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
+  useEffect(() => {
+    if (allAssets.length > 0) {
+      calculatePerformers();
+    }
+  }, [performanceTimespan, performanceDisplay, allAssets, allSnapshots]);
+
   const fetchDashboardData = async () => {
     try {
-      const [assetsRes, snapshotsRes] = await Promise.all([
+      const [assetsRes, snapshotsRes, objectivesRes] = await Promise.all([
         fetch("/api/assets"),
-        fetch("/api/snapshots?limit=30"),
+        fetch("/api/snapshots?limit=400"),
+        fetch("/api/objectives"),
       ]);
 
       const assets: Asset[] = await assetsRes.json();
       const snapshots: Snapshot[] = await snapshotsRes.json();
+      const objectives: AllocationObjective[] = await objectivesRes.json();
+
+      setAllAssets(assets);
+      setAllSnapshots(snapshots);
+      setTypeObjectives(objectives.filter((o) => o.category === "type"));
+      setGeoObjectives(objectives.filter((o) => o.category === "geo"));
 
       const totalValue = assets.reduce((sum, a) => sum + a.current_amount, 0);
       const totalBuyingAmount = assets.reduce(
@@ -118,17 +144,6 @@ export default function DashboardPage() {
         }
       }
 
-      const sortedByPerf = [...assets]
-        .filter((a) => a.buying_amount > 0)
-        .map((a) => ({
-          ...a,
-          perf: calculatePerformance(a.buying_amount, a.current_amount),
-        }))
-        .sort((a, b) => b.perf - a.perf);
-
-      const topPerformers = sortedByPerf.slice(0, 5);
-      const worstPerformers = sortedByPerf.slice(-5).reverse();
-
       const alerts = assets.filter(
         (a) =>
           (a.alert_high && a.current_value >= a.alert_high) ||
@@ -149,8 +164,8 @@ export default function DashboardPage() {
         byType,
         byWho,
         byGeo,
-        topPerformers,
-        worstPerformers,
+        topPerformers: [],
+        worstPerformers: [],
         alerts,
         totalDividendsAnnual,
       });
@@ -159,6 +174,90 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const calculatePerformers = () => {
+    if (!stats) return;
+
+    let sortedByPerf: Array<Asset & { perf: number; perfAbsolute: number }> = [];
+
+    if (performanceTimespan === "all") {
+      // All-time performance: compare to buying amount
+      sortedByPerf = [...allAssets]
+        .filter((a) => a.buying_amount > 0)
+        .map((a) => ({
+          ...a,
+          perf: calculatePerformance(a.buying_amount, a.current_amount),
+          perfAbsolute: a.current_amount - a.buying_amount,
+        }))
+        .sort((a, b) =>
+          performanceDisplay === "percentage"
+            ? b.perf - a.perf
+            : b.perfAbsolute - a.perfAbsolute
+        );
+    } else {
+      // Time-based performance: compare to historical snapshot
+      const daysAgo =
+        performanceTimespan === "7d" ? 7 : performanceTimespan === "30d" ? 30 : 365;
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() - daysAgo);
+
+      const historicalSnapshot = allSnapshots.find(
+        (s) => new Date(s.snapshot_date) <= targetDate
+      );
+
+      if (historicalSnapshot) {
+        const historicalData = JSON.parse(historicalSnapshot.data_json);
+        const historicalAssets = historicalData.assets || [];
+
+        sortedByPerf = [...allAssets]
+          .map((currentAsset) => {
+            const historicalAsset = historicalAssets.find(
+              (h: Asset) => h.id === currentAsset.id
+            );
+            if (!historicalAsset || historicalAsset.current_amount === 0) {
+              return null;
+            }
+
+            const perf = calculatePerformance(
+              historicalAsset.current_amount,
+              currentAsset.current_amount
+            );
+            const perfAbsolute = currentAsset.current_amount - historicalAsset.current_amount;
+            return {
+              ...currentAsset,
+              perf,
+              perfAbsolute,
+            };
+          })
+          .filter((a): a is Asset & { perf: number; perfAbsolute: number } => a !== null)
+          .sort((a, b) =>
+            performanceDisplay === "percentage"
+              ? b.perf - a.perf
+              : b.perfAbsolute - a.perfAbsolute
+          );
+      }
+    }
+
+    // For top performers: take top 5 (already sorted descending)
+    const topPerformers = sortedByPerf.slice(0, 5);
+
+    // For worst performers: take bottom 5, but keep them sorted by the same metric
+    // so the worst one is first
+    const worstPerformers = sortedByPerf
+      .slice()
+      .sort((a, b) =>
+        performanceDisplay === "percentage"
+          ? a.perf - b.perf  // Ascending: lowest percentage first
+          : a.perfAbsolute - b.perfAbsolute  // Ascending: biggest loss first
+      )
+      .slice(0, 5);
+
+    setStats({
+      ...stats,
+      topPerformers,
+      worstPerformers,
+    });
   };
 
   if (loading) {
@@ -227,7 +326,7 @@ export default function DashboardPage() {
         <div className="p-2 rounded-xl bg-gold/10">
           <Sparkles className="h-6 w-6 text-gold" />
         </div>
-        <div>
+        <div className="flex-1">
           <h1 className="font-display text-3xl font-semibold text-gradient-gold">
             Dashboard
           </h1>
@@ -235,6 +334,7 @@ export default function DashboardPage() {
             Vue d&apos;ensemble de votre patrimoine
           </p>
         </div>
+        <ObjectivesModal onSave={fetchDashboardData} />
       </div>
 
       {/* KPI Cards */}
@@ -349,38 +449,14 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={typeChartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={90}
-                  paddingAngle={3}
-                  dataKey="value"
-                  stroke="oklch(0.13 0.005 260)"
-                  strokeWidth={2}
-                >
-                  {typeChartData.map((_, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={CHART_COLORS[index % CHART_COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip content={<CustomTooltip />} />
-                <Legend
-                  verticalAlign="bottom"
-                  height={36}
-                  formatter={(value) => (
-                    <span className="text-xs text-muted-foreground">
-                      {value}
-                    </span>
-                  )}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            <PieWithTarget
+              data={typeChartData}
+              targets={typeObjectives.map((o) => ({
+                name: o.key,
+                target_percent: o.target_percent,
+              }))}
+              colors={CHART_COLORS}
+            />
           </CardContent>
         </Card>
 
@@ -393,38 +469,14 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={geoChartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={90}
-                  paddingAngle={3}
-                  dataKey="value"
-                  stroke="oklch(0.13 0.005 260)"
-                  strokeWidth={2}
-                >
-                  {geoChartData.map((_, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={CHART_COLORS[index % CHART_COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip content={<CustomTooltip />} />
-                <Legend
-                  verticalAlign="bottom"
-                  height={36}
-                  formatter={(value) => (
-                    <span className="text-xs text-muted-foreground">
-                      {value}
-                    </span>
-                  )}
-                />
-              </PieChart>
-            </ResponsiveContainer>
+            <PieWithTarget
+              data={geoChartData}
+              targets={geoObjectives.map((o) => ({
+                name: o.key,
+                target_percent: o.target_percent,
+              }))}
+              colors={CHART_COLORS}
+            />
           </CardContent>
         </Card>
 
@@ -473,7 +525,165 @@ export default function DashboardPage() {
         </Card>
       </div>
 
+      {/* Rebalancing Actions */}
+      {(() => {
+        const totalValue = stats.totalValue;
+        const rebalanceActions: Array<{
+          name: string;
+          category: "type" | "geo";
+          current: number;
+          target: number;
+          diff: number;
+          amount: number;
+        }> = [];
+
+        // Calculate type differences
+        const typeTotal = Object.values(stats.byType).reduce((a, b) => a + b, 0);
+        for (const obj of typeObjectives) {
+          const currentValue = stats.byType[obj.key] || 0;
+          const currentPercent = typeTotal > 0 ? (currentValue / typeTotal) * 100 : 0;
+          const diff = currentPercent - obj.target_percent;
+          const amountDiff = (diff / 100) * totalValue;
+          rebalanceActions.push({
+            name: obj.key,
+            category: "type",
+            current: currentPercent,
+            target: obj.target_percent,
+            diff,
+            amount: amountDiff,
+          });
+        }
+
+        // Calculate geo differences
+        const geoTotal = Object.values(stats.byGeo).reduce((a, b) => a + b, 0);
+        for (const obj of geoObjectives) {
+          const currentValue = stats.byGeo[obj.key] || 0;
+          const currentPercent = geoTotal > 0 ? (currentValue / geoTotal) * 100 : 0;
+          const diff = currentPercent - obj.target_percent;
+          const amountDiff = (diff / 100) * totalValue;
+          rebalanceActions.push({
+            name: obj.key,
+            category: "geo",
+            current: currentPercent,
+            target: obj.target_percent,
+            diff,
+            amount: amountDiff,
+          });
+        }
+
+        // Sort by absolute difference and take top 5
+        const topActions = rebalanceActions
+          .filter((a) => Math.abs(a.diff) >= 3) // Only show significant differences
+          .sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff))
+          .slice(0, 5);
+
+        if (topActions.length === 0) return null;
+
+        return (
+          <Card className="premium-card opacity-0 animate-fade-up stagger-5">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base font-medium flex items-center gap-2">
+                <div className="p-1.5 rounded-lg bg-gold/10">
+                  <Scale className="h-4 w-4 text-gold" />
+                </div>
+                Actions de rééquilibrage
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {topActions.map((action, index) => (
+                  <div
+                    key={`${action.category}-${action.name}`}
+                    className="flex items-center justify-between p-3 rounded-xl bg-card/50"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-muted-foreground w-4">
+                        {index + 1}.
+                      </span>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-sm">{action.name}</p>
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                            {action.category === "type" ? "Type" : "Geo"}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-muted-foreground font-mono">
+                          {formatPercent(action.current)} → {formatPercent(action.target)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge
+                        className={
+                          action.diff > 0
+                            ? "badge-rose font-mono"
+                            : "badge-emerald font-mono"
+                        }
+                      >
+                        {action.diff > 0 ? "Surpondéré" : "Sous-pondéré"}
+                      </Badge>
+                      <p
+                        className={`text-sm font-mono font-bold mt-1 ${
+                          action.diff > 0 ? "text-rose" : "text-emerald"
+                        }`}
+                      >
+                        {action.diff > 0 ? "+" : ""}
+                        {formatPercent(action.diff)}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
+
       {/* Performers and Alerts */}
+      <div className="flex items-center justify-between mb-4 opacity-0 animate-fade-up stagger-6">
+        <h2 className="text-lg font-semibold">Performance</h2>
+        <div className="flex gap-3">
+          {/* Display Toggle */}
+          <div className="flex gap-1 bg-muted rounded-lg p-1">
+            <button
+              onClick={() => setPerformanceDisplay("percentage")}
+              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                performanceDisplay === "percentage"
+                  ? "bg-card text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              %
+            </button>
+            <button
+              onClick={() => setPerformanceDisplay("absolute")}
+              className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                performanceDisplay === "absolute"
+                  ? "bg-card text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              €
+            </button>
+          </div>
+          {/* Timespan Toggle */}
+          <div className="flex gap-1 bg-muted rounded-lg p-1">
+            {(["7d", "30d", "1y", "all"] as const).map((span) => (
+              <button
+                key={span}
+                onClick={() => setPerformanceTimespan(span)}
+                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                  performanceTimespan === span
+                    ? "bg-gold text-background"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {span === "all" ? "Tout" : span}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Top Performers */}
         <Card className="premium-card opacity-0 animate-fade-up stagger-6">
@@ -507,12 +717,16 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <Badge className="badge-emerald font-mono">
-                    +
-                    {formatPercent(
-                      calculatePerformance(
-                        asset.buying_amount,
-                        asset.current_amount
-                      )
+                    {performanceDisplay === "percentage" ? (
+                      <>
+                        {(asset as Asset & { perf: number }).perf >= 0 ? "+" : ""}
+                        {formatPercent((asset as Asset & { perf: number }).perf)}
+                      </>
+                    ) : (
+                      <>
+                        {(asset as Asset & { perfAbsolute: number }).perfAbsolute >= 0 ? "+" : ""}
+                        {formatCurrency((asset as Asset & { perfAbsolute: number }).perfAbsolute)}
+                      </>
                     )}
                   </Badge>
                 </Link>
@@ -553,11 +767,13 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <Badge className="badge-rose font-mono">
-                    {formatPercent(
-                      calculatePerformance(
-                        asset.buying_amount,
-                        asset.current_amount
-                      )
+                    {performanceDisplay === "percentage" ? (
+                      formatPercent((asset as Asset & { perf: number }).perf)
+                    ) : (
+                      <>
+                        {(asset as Asset & { perfAbsolute: number }).perfAbsolute >= 0 ? "+" : ""}
+                        {formatCurrency((asset as Asset & { perfAbsolute: number }).perfAbsolute)}
+                      </>
                     )}
                   </Badge>
                 </Link>
