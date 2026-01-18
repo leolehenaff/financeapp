@@ -64,7 +64,7 @@ const TYPE_COLORS: Record<AssetType, string> = {
 function SkeletonRow() {
   return (
     <TableRow>
-      {[...Array(12)].map((_, i) => (
+      {[...Array(11)].map((_, i) => (
         <TableCell key={i}>
           <div className="h-4 bg-muted/50 rounded animate-shimmer" />
         </TableCell>
@@ -327,7 +327,6 @@ export default function AssetsPage() {
                     <ArrowUpDown className="h-3 w-3" />
                   </div>
                 </TableHead>
-                <TableHead>Ticker</TableHead>
                 <TableHead
                   className="cursor-pointer hover:text-gold transition-colors"
                   onClick={() => handleSort("who")}
@@ -378,7 +377,7 @@ export default function AssetsPage() {
               ) : filteredAssets.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={12}
+                    colSpan={11}
                     className="h-32 text-center text-muted-foreground"
                   >
                     Aucun actif trouvé
@@ -411,28 +410,18 @@ export default function AssetsPage() {
                       }`}
                     >
                       <TableCell className="font-medium">
-                        <Link
-                          href={`/assets/${asset.id}`}
-                          className="hover:text-gold transition-colors"
-                        >
-                          {asset.name}
-                        </Link>
-                        {(isAlertHigh || isAlertLow) && (
-                          <AlertCircle className="inline ml-1.5 h-3.5 w-3.5 text-gold" />
-                        )}
-                      </TableCell>
-                      <TableCell>
                         <div className="flex items-center gap-1.5">
-                          {asset.ticker && (
-                            <Badge
-                              variant="outline"
-                              className="font-mono text-xs border-border/50"
-                            >
-                              {asset.ticker}
-                            </Badge>
-                          )}
+                          <Link
+                            href={`/assets/${asset.id}`}
+                            className="hover:text-gold transition-colors"
+                          >
+                            {asset.name}
+                          </Link>
                           {asset.auto_refresh && (
-                            <Zap className="h-3 w-3 text-gold" />
+                            <Zap className="h-3.5 w-3.5 text-gold shrink-0" />
+                          )}
+                          {(isAlertHigh || isAlertLow) && (
+                            <AlertCircle className="h-3.5 w-3.5 text-gold shrink-0" />
                           )}
                         </div>
                       </TableCell>
