@@ -134,9 +134,9 @@ export default function ProtectedLayout({
         </div>
       )}
 
-      <div className="flex">
+      <div className="flex overflow-hidden">
         {/* Desktop sidebar */}
-        <aside className="hidden lg:flex flex-col w-72 border-r border-sidebar-border min-h-screen bg-sidebar/50 backdrop-blur-xl">
+        <aside className="hidden lg:flex flex-col w-72 border-r border-sidebar-border min-h-screen bg-sidebar/50 backdrop-blur-xl shrink-0">
           {/* Logo */}
           <div className="p-6 border-b border-sidebar-border/50">
             <div className="flex items-center gap-3">
@@ -214,8 +214,8 @@ export default function ProtectedLayout({
         </aside>
 
         {/* Main content */}
-        <main className="flex-1 min-h-screen">
-          <div className="p-4 lg:p-8 max-w-7xl mx-auto">{children}</div>
+        <main className="flex-1 min-h-screen overflow-x-hidden">
+          <div className="p-4 lg:p-8 max-w-7xl mx-auto w-full">{children}</div>
         </main>
       </div>
     </div>

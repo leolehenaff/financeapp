@@ -215,24 +215,26 @@ export default function AssetsPage() {
             </p>
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 shrink-0">
           <Button
             variant="outline"
             onClick={handleRefreshPrices}
             disabled={refreshing}
-            className="border-border/50 hover:border-gold/50 hover:bg-gold/5 transition-all"
+            className="border-border/50 hover:border-gold/50 hover:bg-gold/5 transition-all shrink-0"
           >
             {refreshing ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
               <RefreshCw className="mr-2 h-4 w-4" />
             )}
-            Actualiser
+            <span className="hidden sm:inline">Actualiser</span>
+            <span className="sm:hidden">Actu.</span>
           </Button>
-          <Button asChild className="btn-gold text-background">
+          <Button asChild className="btn-gold text-background shrink-0">
             <Link href="/assets/new">
               <Plus className="mr-2 h-4 w-4" />
-              Ajouter
+              <span className="hidden sm:inline">Ajouter</span>
+              <span className="sm:hidden">Ajout.</span>
             </Link>
           </Button>
         </div>
@@ -240,7 +242,7 @@ export default function AssetsPage() {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3 opacity-0 animate-fade-up stagger-1">
-        <div className="relative flex-1 min-w-[200px]">
+        <div className="relative flex-1 min-w-[160px]">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Rechercher un actif..."
@@ -253,7 +255,7 @@ export default function AssetsPage() {
           value={filterType}
           onValueChange={(v) => setFilterType(v as AssetType | "all")}
         >
-          <SelectTrigger className="w-[140px] bg-input border-border/50">
+          <SelectTrigger className="w-[120px] bg-input border-border/50">
             <SelectValue placeholder="Type" />
           </SelectTrigger>
           <SelectContent>
@@ -298,7 +300,7 @@ export default function AssetsPage() {
             <SelectItem value="OTHER">OTHER</SelectItem>
           </SelectContent>
         </Select>
-        <div className="flex items-center gap-2 px-3 py-2 rounded-md border border-border/50 bg-input">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-md border border-border/50 bg-input whitespace-nowrap">
           <Checkbox
             id="manual-only"
             checked={showManualOnly}
@@ -308,15 +310,16 @@ export default function AssetsPage() {
             htmlFor="manual-only"
             className="text-sm text-muted-foreground cursor-pointer select-none"
           >
-            À mettre à jour manuellement
+            <span className="hidden sm:inline">À mettre à jour manuellement</span>
+            <span className="sm:hidden">Manuel</span>
           </label>
         </div>
       </div>
 
       {/* Table */}
       <div className="rounded-xl border border-border/50 overflow-hidden bg-card/50 backdrop-blur-sm opacity-0 animate-fade-up stagger-2">
-        <div className="overflow-x-auto">
-          <Table>
+        <div className="overflow-x-auto -mx-px">
+          <Table className="w-full min-w-max">
             <TableHeader>
               <TableRow className="border-border/50 hover:bg-transparent">
                 <TableHead

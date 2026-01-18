@@ -540,6 +540,7 @@
 }
 
 .bg-radial-gold {
+  position: relative;
   background: radial-gradient(
     ellipse at top right,
     oklch(0.78 0.14 75 / 0.08) 0%,
