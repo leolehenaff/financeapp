@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -26,7 +25,6 @@ import {
   formatCurrency,
   formatPercent,
   calculatePerformance,
-  calculateDividendYield,
 } from "@/lib/calculations";
 import { PEOPLE, WHO_COLORS } from "@/lib/people";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -36,7 +34,6 @@ import {
   ArrowUpDown,
   Search,
   Loader2,
-  Pencil,
   Trash2,
   AlertCircle,
   Wallet,
@@ -67,7 +64,7 @@ const TYPE_COLORS: Record<AssetType, string> = {
 function SkeletonRow() {
   return (
     <TableRow>
-      {[...Array(13)].map((_, i) => (
+      {[...Array(12)].map((_, i) => (
         <TableCell key={i}>
           <div className="h-4 bg-muted/50 rounded animate-shimmer" />
         </TableCell>
@@ -77,7 +74,6 @@ function SkeletonRow() {
 }
 
 export default function AssetsPage() {
-  const router = useRouter();
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -373,7 +369,6 @@ export default function AssetsPage() {
                   </div>
                 </TableHead>
                 <TableHead className="text-right">%</TableHead>
-                <TableHead className="text-right">Div</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -383,7 +378,7 @@ export default function AssetsPage() {
               ) : filteredAssets.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={13}
+                    colSpan={12}
                     className="h-32 text-center text-muted-foreground"
                   >
                     Aucun actif trouvé
@@ -394,10 +389,6 @@ export default function AssetsPage() {
                   const perf = calculatePerformance(
                     asset.buying_amount,
                     asset.current_amount
-                  );
-                  const divYield = calculateDividendYield(
-                    asset.dividend_per_share || 0,
-                    asset.current_value
                   );
                   const distribution =
                     totalAmount > 0
@@ -493,34 +484,15 @@ export default function AssetsPage() {
                       <TableCell className="text-right font-mono text-sm text-muted-foreground">
                         {formatPercent(distribution)}
                       </TableCell>
-                      <TableCell className="text-right font-mono text-sm">
-                        {divYield > 0 ? (
-                          <span className="text-emerald">
-                            {formatPercent(divYield)}
-                          </span>
-                        ) : (
-                          <span className="text-muted-foreground">-</span>
-                        )}
-                      </TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 hover:bg-gold/10 hover:text-gold"
-                            onClick={() => router.push(`/assets/${asset.id}`)}
-                          >
-                            <Pencil className="h-3.5 w-3.5" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 hover:bg-rose/10 hover:text-rose"
-                            onClick={() => setDeleteId(asset.id)}
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        </div>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 hover:bg-rose/10 hover:text-rose"
+                          onClick={() => setDeleteId(asset.id)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
