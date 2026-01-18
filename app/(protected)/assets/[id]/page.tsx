@@ -240,7 +240,13 @@ export default function AssetDetailPage() {
       )}
 
       <div className="opacity-0 animate-fade-up stagger-2">
-        <AssetForm asset={asset} onSuccess={() => fetchAsset()} />
+        <AssetForm
+          asset={asset}
+          onSuccess={() => {
+            router.push("/assets");
+            router.refresh();
+          }}
+        />
       </div>
     </div>
   );
