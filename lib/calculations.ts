@@ -120,12 +120,12 @@ export function calculateAnnualDividend(
   return quantity * dividendPerShare;
 }
 
-export function formatCurrency(value: number): string {
+export function formatCurrency(value: number, decimals: number = 2): string {
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "EUR",
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    maximumFractionDigits: decimals,
   }).format(value);
 }
 

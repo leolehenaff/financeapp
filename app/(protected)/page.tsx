@@ -363,7 +363,7 @@ export default function DashboardPage() {
           </div>
           <p className="text-sm text-muted-foreground mb-1">Net Worth</p>
           <p className="text-3xl font-bold font-mono tracking-tight">
-            {formatCurrency(stats.totalValue)}
+            {formatCurrency(stats.totalValue, 0)}
           </p>
           <p className="text-xs text-muted-foreground mt-2">
             {stats.valueChange30d >= 0 ? "+" : ""}
@@ -405,10 +405,10 @@ export default function DashboardPage() {
           </div>
           <p className="text-sm text-muted-foreground mb-1">Dividendes annuels</p>
           <p className="text-3xl font-bold font-mono tracking-tight text-emerald">
-            {formatCurrency(stats.totalDividendsAnnual)}
+            {formatCurrency(stats.totalDividendsAnnual, 0)}
           </p>
           <p className="text-xs text-muted-foreground mt-2">
-            {formatCurrency(stats.totalDividendsAnnual / 12)}/mois
+            {formatCurrency(stats.totalDividendsAnnual / 12, 0)}/mois
           </p>
         </div>
 
