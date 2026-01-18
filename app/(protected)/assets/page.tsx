@@ -28,7 +28,7 @@ import {
   calculatePerformance,
   calculateDividendYield,
 } from "@/lib/calculations";
-import { PEOPLE } from "@/lib/people";
+import { PEOPLE, WHO_COLORS } from "@/lib/people";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Plus,
@@ -445,8 +445,16 @@ export default function AssetsPage() {
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {asset.who}
+                      <TableCell>
+                        <Badge
+                          className="text-xs border-0 font-medium"
+                          style={{
+                            backgroundColor: `color-mix(in oklch, ${WHO_COLORS[asset.who]}, transparent 85%)`,
+                            color: WHO_COLORS[asset.who],
+                          }}
+                        >
+                          {asset.who}
+                        </Badge>
                       </TableCell>
                       <TableCell>
                         <Badge
