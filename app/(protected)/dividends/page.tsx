@@ -57,7 +57,7 @@ export default function DividendsPage() {
   // Form state
   const [newAssetId, setNewAssetId] = useState<number | null>(null);
   const [newYear, setNewYear] = useState(new Date().getFullYear());
-  const [newAmount, setNewAmount] = useState(0);
+  const [newAmount, setNewAmount] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -82,6 +82,9 @@ export default function DividendsPage() {
 
   const handleSaveDividend = async () => {
     if (!newAssetId) return;
+    const amount = parseFloat(newAmount);
+    if (isNaN(amount) || amount <= 0) return;
+
     setSaving(true);
     try {
       await fetch("/api/dividends", {
@@ -90,13 +93,13 @@ export default function DividendsPage() {
         body: JSON.stringify({
           asset_id: newAssetId,
           year: newYear,
-          amount: newAmount,
+          amount: amount,
         }),
       });
       await fetchData();
       setDialogOpen(false);
       setNewAssetId(null);
-      setNewAmount(0);
+      setNewAmount("");
     } catch (error) {
       console.error("Error saving dividend:", error);
     } finally {
@@ -259,13 +262,13 @@ export default function DividendsPage() {
                   type="number"
                   step="0.01"
                   value={newAmount}
-                  onChange={(e) => setNewAmount(parseFloat(e.target.value) || 0)}
+                  onChange={(e) => setNewAmount(e.target.value)}
                   className="bg-input border-border/50 font-mono"
                 />
               </div>
               <Button
                 onClick={handleSaveDividend}
-                disabled={!newAssetId || saving}
+                disabled={!newAssetId || !newAmount || saving}
                 className="w-full btn-gold text-background"
               >
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
