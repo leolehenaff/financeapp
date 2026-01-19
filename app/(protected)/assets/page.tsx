@@ -65,7 +65,10 @@ function SkeletonRow() {
   return (
     <TableRow>
       {[...Array(11)].map((_, i) => (
-        <TableCell key={i}>
+        <TableCell
+          key={i}
+          className={i === 0 ? "sticky left-0 z-10 bg-card/95 backdrop-blur-sm" : ""}
+        >
           <div className="h-4 bg-muted/50 rounded animate-shimmer" />
         </TableCell>
       ))}
@@ -306,8 +309,8 @@ export default function AssetsPage() {
             htmlFor="manual-only"
             className="text-sm text-muted-foreground cursor-pointer select-none"
           >
-            <span className="hidden sm:inline">À mettre à jour manuellement</span>
-            <span className="sm:hidden">Manuel</span>
+            <span className="hidden sm:inline">Manual update</span>
+            <span className="sm:hidden">Manual</span>
           </label>
         </div>
       </div>
@@ -319,7 +322,7 @@ export default function AssetsPage() {
             <TableHeader>
               <TableRow className="border-border/50 hover:bg-transparent">
                 <TableHead
-                  className="cursor-pointer hover:text-gold transition-colors"
+                  className="cursor-pointer hover:text-gold transition-colors sticky left-0 z-10 bg-card/95 backdrop-blur-sm"
                   onClick={() => handleSort("name")}
                 >
                   <div className="flex items-center gap-1">
@@ -378,7 +381,7 @@ export default function AssetsPage() {
                 <TableRow>
                   <TableCell
                     colSpan={11}
-                    className="h-32 text-center text-muted-foreground"
+                    className="h-32 text-center text-muted-foreground sticky left-0"
                   >
                     Aucun actif trouvé
                   </TableCell>
@@ -409,7 +412,7 @@ export default function AssetsPage() {
                             : ""
                       }`}
                     >
-                      <TableCell className="font-medium">
+                      <TableCell className="font-medium sticky left-0 z-10 bg-card/95 backdrop-blur-sm">
                         <div className="flex items-center gap-1.5">
                           <Link
                             href={`/assets/${asset.id}`}
