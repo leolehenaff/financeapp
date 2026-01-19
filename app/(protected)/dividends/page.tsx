@@ -119,7 +119,8 @@ export default function DividendsPage() {
     .map((a) => ({
       asset: a,
       annual: calculateAnnualDividend(a.quantity, a.dividend_per_share || 0),
-    }));
+    }))
+    .sort((a, b) => b.annual - a.annual);
 
   const totalEstimatedAnnual = estimatedDividends.reduce(
     (sum, d) => sum + d.annual,
@@ -386,9 +387,9 @@ export default function DividendsPage() {
                 <TableRow className="border-border/50 hover:bg-transparent">
                   <TableHead>Asset</TableHead>
                   <TableHead>Ticker</TableHead>
+                  <TableHead className="text-right">Annuel estimé</TableHead>
                   <TableHead className="text-right">Quantité</TableHead>
                   <TableHead className="text-right">Div/action</TableHead>
-                  <TableHead className="text-right">Annuel estimé</TableHead>
                   <TableHead className="text-right">Mensuel estimé</TableHead>
                 </TableRow>
               </TableHeader>
@@ -399,14 +400,14 @@ export default function DividendsPage() {
                     <TableCell className="font-mono text-sm text-muted-foreground">
                       {asset.ticker}
                     </TableCell>
+                    <TableCell className="text-right font-mono text-sm font-medium text-emerald">
+                      {formatCurrency(annual)}
+                    </TableCell>
                     <TableCell className="text-right font-mono text-sm">
                       {asset.quantity.toLocaleString("fr-FR")}
                     </TableCell>
                     <TableCell className="text-right font-mono text-sm">
                       {formatCurrency(asset.dividend_per_share || 0)}
-                    </TableCell>
-                    <TableCell className="text-right font-mono text-sm font-medium text-emerald">
-                      {formatCurrency(annual)}
                     </TableCell>
                     <TableCell className="text-right font-mono text-sm text-muted-foreground">
                       {formatCurrency(annual / 12)}
