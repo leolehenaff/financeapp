@@ -6,13 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Table,
   TableBody,
   TableCell,
@@ -38,6 +31,8 @@ import {
   AlertCircle,
   Wallet,
   Zap,
+  ChevronDown,
+  X,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -49,6 +44,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 type SortKey = "name" | "current_amount" | "perf" | "asset_type" | "who";
 type SortOrder = "asc" | "desc";
@@ -81,9 +81,9 @@ export default function AssetsPage() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState<AssetType | "all">("all");
-  const [filterWho, setFilterWho] = useState<WhoType | "all">("all");
-  const [filterGeo, setFilterGeo] = useState<GeoType | "all">("all");
+  const [filterType, setFilterType] = useState<AssetType[]>([]);
+  const [filterWho, setFilterWho] = useState<WhoType[]>([]);
+  const [filterGeo, setFilterGeo] = useState<GeoType[]>([]);
   const [sortKey, setSortKey] = useState<SortKey>("current_amount");
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [deleteId, setDeleteId] = useState<number | null>(null);
@@ -141,18 +141,25 @@ export default function AssetsPage() {
     }
   };
 
+  const toggleFilter = <T,>(current: T[], value: T): T[] => {
+    if (current.includes(value)) {
+      return current.filter((v) => v !== value);
+    }
+    return [...current, value];
+  };
+
   const filteredAssets = assets
     .filter((a) => {
       if (search && !a.name.toLowerCase().includes(search.toLowerCase())) {
         return false;
       }
-      if (filterType !== "all" && a.asset_type !== filterType) {
+      if (filterType.length > 0 && !filterType.includes(a.asset_type)) {
         return false;
       }
-      if (filterWho !== "all" && a.who !== filterWho) {
+      if (filterWho.length > 0 && !filterWho.includes(a.who)) {
         return false;
       }
-      if (filterGeo !== "all" && a.geo !== filterGeo) {
+      if (filterGeo.length > 0 && a.geo && !filterGeo.includes(a.geo)) {
         return false;
       }
       if (showManualOnly && a.auto_refresh) {
@@ -250,55 +257,141 @@ export default function AssetsPage() {
             className="pl-9 bg-input border-border/50 focus:border-gold/50 input-glow"
           />
         </div>
-        <Select
-          value={filterType}
-          onValueChange={(v) => setFilterType(v as AssetType | "all")}
-        >
-          <SelectTrigger className="w-[120px] bg-input border-border/50">
-            <SelectValue placeholder="Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous types</SelectItem>
-            <SelectItem value="Stock">Stock</SelectItem>
-            <SelectItem value="Crypto">Crypto</SelectItem>
-            <SelectItem value="Start-up">Start-up</SelectItem>
-            <SelectItem value="Livret">Livret</SelectItem>
-            <SelectItem value="Active Cash">Active Cash</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select
-          value={filterWho}
-          onValueChange={(v) => setFilterWho(v as WhoType | "all")}
-        >
-          <SelectTrigger className="w-[120px] bg-input border-border/50">
-            <SelectValue placeholder="Qui" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous</SelectItem>
-            {PEOPLE.map((person) => (
-              <SelectItem key={person} value={person}>
-                {person}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select
-          value={filterGeo || "all"}
-          onValueChange={(v) =>
-            setFilterGeo(v === "all" ? "all" : (v as GeoType))
-          }
-        >
-          <SelectTrigger className="w-[120px] bg-input border-border/50">
-            <SelectValue placeholder="Geo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Toutes</SelectItem>
-            <SelectItem value="FR">FR</SelectItem>
-            <SelectItem value="US">US</SelectItem>
-            <SelectItem value="EU">EU</SelectItem>
-            <SelectItem value="OTHER">OTHER</SelectItem>
-          </SelectContent>
-        </Select>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-auto min-w-[120px] justify-between bg-input border-border/50 hover:bg-input/80"
+            >
+              <span className="truncate">
+                {filterType.length === 0
+                  ? "Type"
+                  : filterType.length === 1
+                    ? filterType[0]
+                    : `${filterType.length} types`}
+              </span>
+              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0" align="start">
+            <div className="p-2 space-y-1">
+              {(["Stock", "Crypto", "Start-up", "Livret", "Active Cash"] as AssetType[]).map((type) => (
+                <div
+                  key={type}
+                  className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
+                  onClick={() => setFilterType(toggleFilter(filterType, type))}
+                >
+                  <Checkbox checked={filterType.includes(type)} />
+                  <span className="text-sm">{type}</span>
+                </div>
+              ))}
+              {filterType.length > 0 && (
+                <>
+                  <div className="h-px bg-border my-1" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-xs"
+                    onClick={() => setFilterType([])}
+                  >
+                    <X className="mr-1 h-3 w-3" />
+                    Effacer
+                  </Button>
+                </>
+              )}
+            </div>
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-auto min-w-[120px] justify-between bg-input border-border/50 hover:bg-input/80"
+            >
+              <span className="truncate">
+                {filterWho.length === 0
+                  ? "Qui"
+                  : filterWho.length === 1
+                    ? filterWho[0]
+                    : `${filterWho.length} pers.`}
+              </span>
+              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0" align="start">
+            <div className="p-2 space-y-1">
+              {PEOPLE.map((person) => (
+                <div
+                  key={person}
+                  className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
+                  onClick={() => setFilterWho(toggleFilter(filterWho, person))}
+                >
+                  <Checkbox checked={filterWho.includes(person)} />
+                  <span className="text-sm">{person}</span>
+                </div>
+              ))}
+              {filterWho.length > 0 && (
+                <>
+                  <div className="h-px bg-border my-1" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-xs"
+                    onClick={() => setFilterWho([])}
+                  >
+                    <X className="mr-1 h-3 w-3" />
+                    Effacer
+                  </Button>
+                </>
+              )}
+            </div>
+          </PopoverContent>
+        </Popover>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-auto min-w-[120px] justify-between bg-input border-border/50 hover:bg-input/80"
+            >
+              <span className="truncate">
+                {filterGeo.length === 0
+                  ? "Geo"
+                  : filterGeo.length === 1
+                    ? filterGeo[0]
+                    : `${filterGeo.length} zones`}
+              </span>
+              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0" align="start">
+            <div className="p-2 space-y-1">
+              {(["FR", "US", "EU", "OTHER"] as GeoType[]).map((geo) => (
+                <div
+                  key={geo}
+                  className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
+                  onClick={() => setFilterGeo(toggleFilter(filterGeo, geo))}
+                >
+                  <Checkbox checked={filterGeo.includes(geo)} />
+                  <span className="text-sm">{geo}</span>
+                </div>
+              ))}
+              {filterGeo.length > 0 && (
+                <>
+                  <div className="h-px bg-border my-1" />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-xs"
+                    onClick={() => setFilterGeo([])}
+                  >
+                    <X className="mr-1 h-3 w-3" />
+                    Effacer
+                  </Button>
+                </>
+              )}
+            </div>
+          </PopoverContent>
+        </Popover>
         <div className="flex items-center gap-2 px-3 py-2 rounded-md border border-border/50 bg-input whitespace-nowrap">
           <Checkbox
             id="manual-only"
