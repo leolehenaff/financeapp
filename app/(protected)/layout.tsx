@@ -93,8 +93,8 @@ export default function ProtectedLayout({
             className="absolute inset-0 bg-background/80 backdrop-blur-sm"
             onClick={() => setMobileMenuOpen(false)}
           />
-          <div className="absolute top-0 left-0 w-72 h-full bg-sidebar border-r border-sidebar-border animate-slide-in-left">
-            <div className="p-6">
+          <div className="absolute top-0 left-0 w-72 h-full bg-sidebar border-r border-sidebar-border animate-slide-in-left flex flex-col">
+            <div className="p-6 flex-1 overflow-y-auto">
               <div className="flex items-center gap-3 mb-8">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center glow-gold">
                   <Sparkles className="h-5 w-5 text-background" />
@@ -138,26 +138,26 @@ export default function ProtectedLayout({
                   );
                 })}
               </nav>
+            </div>
 
-              <div className="absolute bottom-6 left-6 right-6">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-start gap-3 text-muted-foreground hover:text-rose hover:bg-rose/10"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="h-5 w-5" />
-                  Déconnexion
-                </Button>
-              </div>
+            <div className="p-6 border-t border-sidebar-border/50 shrink-0">
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-3 text-muted-foreground hover:text-rose hover:bg-rose/10"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-5 w-5" />
+                Déconnexion
+              </Button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="flex overflow-hidden">
+      <div className="flex">
         {/* Desktop sidebar */}
         <aside className={cn(
-          "hidden lg:flex flex-col border-r border-sidebar-border min-h-screen bg-sidebar/50 backdrop-blur-xl shrink-0 transition-all duration-300",
+          "hidden lg:flex flex-col border-r border-sidebar-border h-screen bg-sidebar/50 backdrop-blur-xl shrink-0 transition-all duration-300 sticky top-0",
           sidebarCollapsed ? "w-20" : "w-72"
         )}>
           {/* Logo */}
@@ -183,7 +183,7 @@ export default function ProtectedLayout({
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1">
+          <nav className="flex-1 overflow-y-auto p-4 space-y-1">
             {navigation.map((item, index) => {
               const isActive =
                 item.href === "/"
@@ -233,19 +233,8 @@ export default function ProtectedLayout({
             })}
           </nav>
 
-          {/* Footer */}
-          <div className="p-4 border-t border-sidebar-border/50 space-y-2">
-            <Button
-              variant="ghost"
-              className={cn(
-                "w-full gap-3 text-muted-foreground hover:text-rose hover:bg-rose/10 transition-colors",
-                sidebarCollapsed ? "justify-center px-2" : "justify-start"
-              )}
-              onClick={handleLogout}
-            >
-              <LogOut className="h-4 w-4" />
-              {!sidebarCollapsed && <span className="text-sm">Déconnexion</span>}
-            </Button>
+          {/* Always visible action buttons */}
+          <div className="p-4 border-t border-sidebar-border/50 space-y-2 shrink-0">
             <Button
               variant="ghost"
               size="sm"
@@ -263,6 +252,17 @@ export default function ProtectedLayout({
                   <span className="text-sm">Réduire</span>
                 </>
               )}
+            </Button>
+            <Button
+              variant="ghost"
+              className={cn(
+                "w-full gap-3 text-muted-foreground hover:text-rose hover:bg-rose/10 transition-colors",
+                sidebarCollapsed ? "justify-center px-2" : "justify-start"
+              )}
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4" />
+              {!sidebarCollapsed && <span className="text-sm">Déconnexion</span>}
             </Button>
           </div>
         </aside>
