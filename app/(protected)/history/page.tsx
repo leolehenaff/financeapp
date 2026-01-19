@@ -35,11 +35,17 @@ export default function HistoryPage() {
   const [timeRange, setTimeRange] = useState<TimeRange>("6m");
 
   useEffect(() => {
-    fetchSnapshots();
+    recomputeAndFetchSnapshots();
   }, []);
 
-  const fetchSnapshots = async () => {
+  const recomputeAndFetchSnapshots = async () => {
     try {
+      // First, recompute today's snapshot
+      await fetch("/api/snapshots", {
+        method: "POST",
+      });
+
+      // Then fetch all snapshots including the updated one
       const res = await fetch("/api/snapshots?limit=500");
       const data = await res.json();
       setSnapshots(data);
