@@ -29,6 +29,16 @@ interface PieWithTargetProps {
 
 const TARGET_RING_OPACITY = 0.35;
 
+const renderLabel = (entry: { percent: number; cx: number; cy: number; midAngle: number; innerRadius: number; outerRadius: number }) => {
+  const { percent } = entry;
+  const percentage = (percent * 100).toFixed(0);
+
+  // Only show label if percentage is above 5% to avoid clutter
+  if (percent < 0.05) return null;
+
+  return `${percentage}%`;
+};
+
 export function PieWithTarget({ data, targets, colors }: PieWithTargetProps) {
   const total = data.reduce((sum, d) => sum + d.value, 0);
 
@@ -158,6 +168,8 @@ export function PieWithTarget({ data, targets, colors }: PieWithTargetProps) {
           dataKey="value"
           stroke="oklch(0.13 0.005 260)"
           strokeWidth={2}
+          label={(entry) => renderLabel(entry as any)}
+          labelLine={false}
         >
           {sortedData.map((entry, index) => (
             <Cell

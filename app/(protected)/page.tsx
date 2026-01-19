@@ -305,6 +305,16 @@ export default function DashboardPage() {
     value,
   }));
 
+  const renderWhoLabel = (entry: { percent: number }) => {
+    const { percent } = entry;
+    const percentage = (percent * 100).toFixed(1);
+
+    // Only show label if percentage is above 5% to avoid clutter
+    if (percent < 0.05) return null;
+
+    return `${percentage}%`;
+  };
+
   const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number }> }) => {
     if (active && payload && payload.length) {
       return (
@@ -501,6 +511,8 @@ export default function DashboardPage() {
                   dataKey="value"
                   stroke="oklch(0.13 0.005 260)"
                   strokeWidth={2}
+                  label={(entry) => renderWhoLabel(entry as any)}
+                  labelLine={false}
                 >
                   {whoChartData.map((entry, index) => (
                     <Cell
