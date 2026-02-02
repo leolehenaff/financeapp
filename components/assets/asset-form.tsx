@@ -235,8 +235,8 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               id="quantity"
               type="number"
               step="any"
-              value={formData.quantity}
-              onChange={(e) => handleChange("quantity", parseFloat(e.target.value) || 0)}
+              value={formData.quantity === 0 ? "" : formData.quantity}
+              onChange={(e) => handleChange("quantity", e.target.value === "" ? 0 : parseFloat(e.target.value))}
               required
             />
           </div>
@@ -247,8 +247,8 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               id="buying_value"
               type="number"
               step="any"
-              value={formData.buying_value}
-              onChange={(e) => handleChange("buying_value", parseFloat(e.target.value) || 0)}
+              value={formData.buying_value === 0 ? "" : formData.buying_value}
+              onChange={(e) => handleChange("buying_value", e.target.value === "" ? 0 : parseFloat(e.target.value))}
               required
             />
           </div>
@@ -259,8 +259,8 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               id="buying_amount"
               type="number"
               step="any"
-              value={formData.buying_amount}
-              onChange={(e) => handleChange("buying_amount", parseFloat(e.target.value) || 0)}
+              value={formData.buying_amount === 0 ? "" : formData.buying_amount}
+              onChange={(e) => handleChange("buying_amount", e.target.value === "" ? 0 : parseFloat(e.target.value))}
               className="bg-muted"
             />
           </div>
@@ -271,8 +271,8 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               id="current_value"
               type="number"
               step="any"
-              value={formData.current_value}
-              onChange={(e) => handleChange("current_value", parseFloat(e.target.value) || 0)}
+              value={formData.current_value === 0 ? "" : formData.current_value}
+              onChange={(e) => handleChange("current_value", e.target.value === "" ? 0 : parseFloat(e.target.value))}
               required
             />
           </div>
@@ -283,8 +283,8 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               id="current_amount"
               type="number"
               step="any"
-              value={formData.current_amount}
-              onChange={(e) => handleChange("current_amount", parseFloat(e.target.value) || 0)}
+              value={formData.current_amount === 0 ? "" : formData.current_amount}
+              onChange={(e) => handleChange("current_amount", e.target.value === "" ? 0 : parseFloat(e.target.value))}
               className="bg-muted"
             />
           </div>
@@ -297,7 +297,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               step="any"
               value={formData.dividend_per_share || ""}
               onChange={(e) =>
-                handleChange("dividend_per_share", parseFloat(e.target.value) || 0)
+                handleChange("dividend_per_share", e.target.value === "" ? 0 : parseFloat(e.target.value))
               }
             />
           </div>
@@ -329,7 +329,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
                 step="any"
                 value={formData.alert_high || ""}
                 onChange={(e) =>
-                  handleChange("alert_high", e.target.value ? parseFloat(e.target.value) : null)
+                  handleChange("alert_high", e.target.value === "" ? null : parseFloat(e.target.value))
                 }
               />
             </div>
@@ -342,7 +342,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
                 step="any"
                 value={formData.alert_low || ""}
                 onChange={(e) =>
-                  handleChange("alert_low", e.target.value ? parseFloat(e.target.value) : null)
+                  handleChange("alert_low", e.target.value === "" ? null : parseFloat(e.target.value))
                 }
               />
             </div>
