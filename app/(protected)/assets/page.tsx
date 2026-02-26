@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -33,6 +34,7 @@ import {
   Zap,
   ChevronDown,
   X,
+  Ban,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -76,19 +78,73 @@ function SkeletonRow() {
   );
 }
 
+const ASSET_TYPES: AssetType[] = ["Stock", "Crypto", "Start-up", "Livret", "Active Cash"];
+const GEO_OPTIONS: GeoType[] = ["FR", "US", "EU", "OTHER"];
+const STORAGE_KEY = "assets-filters";
+
+interface FiltersState {
+  search: string;
+  filterType: AssetType[];
+  filterWho: WhoType[];
+  filterGeo: GeoType[];
+  showManualOnly: boolean;
+  sortKey: SortKey;
+  sortOrder: SortOrder;
+}
+
+const defaultFilters: FiltersState = {
+  search: "",
+  filterType: [],
+  filterWho: [],
+  filterGeo: [],
+  showManualOnly: false,
+  sortKey: "current_amount",
+  sortOrder: "desc",
+};
+
+function loadFilters(): FiltersState {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEY);
+    if (raw) return { ...defaultFilters, ...JSON.parse(raw) };
+  } catch {}
+  return defaultFilters;
+}
+
+function saveFilters(filters: FiltersState) {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(filters));
+  } catch {}
+}
+
 export default function AssetsPage() {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [search, setSearch] = useState("");
-  const [filterType, setFilterType] = useState<AssetType[]>([]);
-  const [filterWho, setFilterWho] = useState<WhoType[]>([]);
-  const [filterGeo, setFilterGeo] = useState<GeoType[]>([]);
-  const [sortKey, setSortKey] = useState<SortKey>("current_amount");
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [deleting, setDeleting] = useState(false);
-  const [showManualOnly, setShowManualOnly] = useState(false);
+
+  // Persisted filter state via sessionStorage
+  const [filters, setFiltersRaw] = useState<FiltersState>(defaultFilters);
+
+  useEffect(() => {
+    setFiltersRaw(loadFilters());
+  }, []);
+
+  const setFilters = useCallback((updater: Partial<FiltersState> | ((prev: FiltersState) => FiltersState)) => {
+    setFiltersRaw((prev) => {
+      const next = typeof updater === "function" ? updater(prev) : { ...prev, ...updater };
+      saveFilters(next);
+      return next;
+    });
+  }, []);
+
+  const { search, filterType, filterWho, filterGeo, showManualOnly, sortKey, sortOrder } = filters;
+
+  const setSearch = (v: string) => setFilters({ search: v });
+  const setFilterType = (v: AssetType[]) => setFilters({ filterType: v });
+  const setFilterWho = (v: WhoType[]) => setFilters({ filterWho: v });
+  const setFilterGeo = (v: GeoType[]) => setFilters({ filterGeo: v });
+  const setShowManualOnly = (v: boolean) => setFilters({ showManualOnly: v });
 
   useEffect(() => {
     fetchAssets();
@@ -109,10 +165,37 @@ export default function AssetsPage() {
   const handleRefreshPrices = async () => {
     setRefreshing(true);
     try {
-      await fetch("/api/prices/refresh", { method: "POST" });
+      const res = await fetch("/api/prices/refresh", { method: "POST" });
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error("Échec de l'actualisation des prix");
+        return;
+      }
+
       await fetchAssets();
+
+      const { updated, total, errors } = data as {
+        updated: number;
+        total: number;
+        errors: { ticker: string; name: string; reason: string }[];
+      };
+
+      if (errors.length === 0 && updated === total) {
+        toast.success(`${updated}/${total} prix actualisés`);
+      } else {
+        const failedTickers = errors.map((e) => e.ticker).join(", ");
+        const errorCount = total - updated;
+        toast.warning(`${updated}/${total} prix actualisés`, {
+          description: failedTickers
+            ? `${errorCount} erreur${errorCount > 1 ? "s" : ""}: ${failedTickers}`
+            : `${errorCount} actif${errorCount > 1 ? "s" : ""} non mis à jour`,
+          duration: 8000,
+        });
+      }
     } catch (error) {
       console.error("Error refreshing prices:", error);
+      toast.error("Erreur réseau lors de l'actualisation");
     } finally {
       setRefreshing(false);
     }
@@ -134,10 +217,9 @@ export default function AssetsPage() {
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+      setFilters({ sortOrder: sortOrder === "asc" ? "desc" : "asc" });
     } else {
-      setSortKey(key);
-      setSortOrder("desc");
+      setFilters({ sortKey: key, sortOrder: "desc" });
     }
   };
 
@@ -159,7 +241,7 @@ export default function AssetsPage() {
       if (filterWho.length > 0 && !filterWho.includes(a.who)) {
         return false;
       }
-      if (filterGeo.length > 0 && a.geo && !filterGeo.includes(a.geo)) {
+      if (filterGeo.length > 0 && (!a.geo || !filterGeo.includes(a.geo))) {
         return false;
       }
       if (showManualOnly && a.auto_refresh) {
@@ -273,17 +355,29 @@ export default function AssetsPage() {
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0" align="start">
+          <PopoverContent className="w-[220px] p-0" align="start">
             <div className="p-2 space-y-1">
-              {(["Stock", "Crypto", "Start-up", "Livret", "Active Cash"] as AssetType[]).map((type) => (
-                <div
-                  key={type}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
-                  onClick={() => setFilterType(toggleFilter(filterType, type))}
-                >
-                  <Checkbox checked={filterType.includes(type)} />
-                  <span className="text-sm">{type}</span>
-                </div>
+              {ASSET_TYPES.map((type) => (
+                  <div
+                    key={type}
+                    className="group flex items-center gap-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
+                    onClick={() => setFilterType(toggleFilter(filterType, type))}
+                  >
+                    <Checkbox checked={filterType.includes(type)} />
+                    <span className="text-sm flex-1">{type}</span>
+                    <button
+                      type="button"
+                      aria-label={`Tout sauf ${type}`}
+                      className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-rose/10 hover:text-rose transition-all"
+                      title={`Tout sauf ${type}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFilterType(ASSET_TYPES.filter((t) => t !== type));
+                      }}
+                    >
+                      <Ban className="h-3 w-3" />
+                    </button>
+                  </div>
               ))}
               {filterType.length > 0 && (
                 <>
@@ -318,16 +412,28 @@ export default function AssetsPage() {
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0" align="start">
+          <PopoverContent className="w-[220px] p-0" align="start">
             <div className="p-2 space-y-1">
               {PEOPLE.map((person) => (
                 <div
                   key={person}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
+                  className="group flex items-center gap-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
                   onClick={() => setFilterWho(toggleFilter(filterWho, person))}
                 >
                   <Checkbox checked={filterWho.includes(person)} />
-                  <span className="text-sm">{person}</span>
+                  <span className="text-sm flex-1">{person}</span>
+                  <button
+                    type="button"
+                    aria-label={`Tout sauf ${person}`}
+                    className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-rose/10 hover:text-rose transition-all"
+                    title={`Tout sauf ${person}`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setFilterWho(PEOPLE.filter((p) => p !== person));
+                    }}
+                  >
+                    <Ban className="h-3 w-3" />
+                  </button>
                 </div>
               ))}
               {filterWho.length > 0 && (
@@ -363,17 +469,29 @@ export default function AssetsPage() {
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0" align="start">
+          <PopoverContent className="w-[220px] p-0" align="start">
             <div className="p-2 space-y-1">
-              {(["FR", "US", "EU", "OTHER"] as GeoType[]).map((geo) => (
-                <div
-                  key={geo}
-                  className="flex items-center gap-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
-                  onClick={() => setFilterGeo(toggleFilter(filterGeo, geo))}
-                >
-                  <Checkbox checked={filterGeo.includes(geo)} />
-                  <span className="text-sm">{geo}</span>
-                </div>
+              {GEO_OPTIONS.map((geo) => (
+                  <div
+                    key={geo}
+                    className="group flex items-center gap-2 px-2 py-1.5 rounded hover:bg-accent cursor-pointer"
+                    onClick={() => setFilterGeo(toggleFilter(filterGeo, geo))}
+                  >
+                    <Checkbox checked={filterGeo.includes(geo)} />
+                    <span className="text-sm flex-1">{geo}</span>
+                    <button
+                      type="button"
+                      aria-label={`Tout sauf ${geo}`}
+                      className="opacity-0 group-hover:opacity-100 p-0.5 rounded hover:bg-rose/10 hover:text-rose transition-all"
+                      title={`Tout sauf ${geo}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFilterGeo(GEO_OPTIONS.filter((g) => g !== geo));
+                      }}
+                    >
+                      <Ban className="h-3 w-3" />
+                    </button>
+                  </div>
               ))}
               {filterGeo.length > 0 && (
                 <>
@@ -406,6 +524,17 @@ export default function AssetsPage() {
             <span className="sm:hidden">Manual</span>
           </label>
         </div>
+        {(search || filterType.length > 0 || filterWho.length > 0 || filterGeo.length > 0 || showManualOnly) && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-foreground"
+            onClick={() => setFilters(defaultFilters)}
+          >
+            <X className="mr-1 h-3.5 w-3.5" />
+            Réinitialiser
+          </Button>
+        )}
       </div>
 
       {/* Table */}

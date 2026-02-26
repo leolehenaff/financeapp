@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Playfair_Display, JetBrains_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -36,6 +37,7 @@ export default function RootLayout({
         className={`${outfit.variable} ${playfair.variable} ${jetbrains.variable} font-sans antialiased`}
       >
         {children}
+        <Toaster theme="dark" richColors position="bottom-right" />
       </body>
     </html>
   );

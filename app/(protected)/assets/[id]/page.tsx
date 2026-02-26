@@ -8,11 +8,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, RefreshCw, Loader2, TrendingUp } from "lucide-react";
+import { toast } from "sonner";
 import { formatCurrency } from "@/lib/calculations";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import {
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -75,10 +75,21 @@ export default function AssetDetailPage() {
     if (!asset?.ticker) return;
     setRefreshing(true);
     try {
-      await fetch(`/api/prices/refresh/${params.id}`, { method: "POST" });
+      const res = await fetch(`/api/prices/refresh/${params.id}`, { method: "POST" });
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(`Échec: ${data.error || "Erreur inconnue"}`);
+        return;
+      }
+
       await fetchAsset();
+      toast.success(`${asset.ticker} actualisé`, {
+        description: `${formatCurrency(data.oldValue)} → ${formatCurrency(data.newValue)}`,
+      });
     } catch (error) {
       console.error("Error refreshing price:", error);
+      toast.error("Erreur réseau lors de l'actualisation");
     } finally {
       setRefreshing(false);
     }
@@ -241,10 +252,7 @@ export default function AssetDetailPage() {
       <div className="opacity-0 animate-fade-up stagger-2">
         <AssetForm
           asset={asset}
-          onSuccess={() => {
-            router.push("/assets");
-            router.refresh();
-          }}
+          autoSave
         />
       </div>
     </div>

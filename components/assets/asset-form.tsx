@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Asset, AssetType, WhoType, GeoType, CreateAssetInput } from "@/lib/types";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check } from "lucide-react";
 import { PEOPLE, PERSON_1 } from "@/lib/people";
 
 // Add Textarea component inline since we didn't install it
@@ -34,12 +35,15 @@ function Textarea({
 interface AssetFormProps {
   asset?: Asset;
   onSuccess?: () => void;
+  autoSave?: boolean;
 }
 
-export function AssetForm({ asset, onSuccess }: AssetFormProps) {
+export function AssetForm({ asset, onSuccess, autoSave = false }: AssetFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
+  const lastSavedRef = useRef<string>("");
 
   const [formData, setFormData] = useState<CreateAssetInput>({
     name: asset?.name || "",
@@ -62,31 +66,77 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
     alert_low: asset?.alert_low || null,
   });
 
-  const handleChange = (field: keyof CreateAssetInput, value: unknown) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const handleChange = (field: keyof CreateAssetInput, value: unknown, immediate?: boolean) => {
+    if (autoSave) setSaveStatus("unsaved");
+    setFormData((prev) => {
+      const next = { ...prev, [field]: value };
 
-    // Auto-calculate amounts
-    if (field === "quantity" || field === "buying_value") {
-      const qty = field === "quantity" ? (value as number) : formData.quantity;
-      const buyVal = field === "buying_value" ? (value as number) : formData.buying_value;
-      setFormData((prev) => ({
-        ...prev,
-        buying_amount: qty * buyVal,
-      }));
-    }
+      // Auto-calculate amounts
+      if (field === "quantity" || field === "buying_value") {
+        const qty = field === "quantity" ? (value as number) : prev.quantity;
+        const buyVal = field === "buying_value" ? (value as number) : prev.buying_value;
+        next.buying_amount = qty * buyVal;
+      }
 
-    if (field === "quantity" || field === "current_value") {
-      const qty = field === "quantity" ? (value as number) : formData.quantity;
-      const curVal = field === "current_value" ? (value as number) : formData.current_value;
-      setFormData((prev) => ({
-        ...prev,
-        current_amount: qty * curVal,
-      }));
-    }
+      if (field === "quantity" || field === "current_value") {
+        const qty = field === "quantity" ? (value as number) : prev.quantity;
+        const curVal = field === "current_value" ? (value as number) : prev.current_value;
+        next.current_amount = qty * curVal;
+      }
+
+      // Auto-save immediately for selects/checkboxes
+      if (autoSave && asset && immediate) {
+        saveData(next);
+      }
+
+      return next;
+    });
   };
+
+  const saveData = useCallback(
+    async (data: CreateAssetInput) => {
+      if (!asset) return;
+      const serialized = JSON.stringify(data);
+      if (serialized === lastSavedRef.current) return;
+
+      setSaveStatus("saving");
+      try {
+        const res = await fetch(`/api/assets/${asset.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: serialized,
+        });
+        if (!res.ok) {
+          const d = await res.json();
+          throw new Error(d.error || "Failed to save");
+        }
+        lastSavedRef.current = serialized;
+        setSaveStatus("saved");
+      } catch (err) {
+        setSaveStatus("unsaved");
+        toast.error(err instanceof Error ? err.message : "Erreur lors de la sauvegarde");
+      }
+    },
+    [asset]
+  );
+
+  // Initialize lastSavedRef with the initial form data
+  useEffect(() => {
+    if (asset) {
+      lastSavedRef.current = JSON.stringify(formData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    if (autoSave && asset) {
+      // Use latest formData via setState callback trick
+      setFormData((current) => {
+        saveData(current);
+        return current;
+      });
+    }
+  }, [autoSave, asset, saveData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -106,6 +156,12 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error || "Failed to save asset");
+      }
+
+      if (autoSave) {
+        lastSavedRef.current = JSON.stringify(formData);
+        setSaveStatus("saved");
+        return;
       }
 
       if (onSuccess) {
@@ -142,6 +198,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               id="name"
               value={formData.name}
               onChange={(e) => handleChange("name", e.target.value)}
+              onBlur={handleBlur}
               required
             />
           </div>
@@ -152,6 +209,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               id="ticker"
               value={formData.ticker || ""}
               onChange={(e) => handleChange("ticker", e.target.value || null)}
+              onBlur={handleBlur}
               placeholder="ex: EPA:CAP, BTC-EUR"
             />
           </div>
@@ -162,6 +220,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               id="isin"
               value={formData.isin || ""}
               onChange={(e) => handleChange("isin", e.target.value || null)}
+              onBlur={handleBlur}
             />
           </div>
 
@@ -169,7 +228,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
             <Label htmlFor="who">Propriétaire *</Label>
             <Select
               value={formData.who}
-              onValueChange={(v) => handleChange("who", v as WhoType)}
+              onValueChange={(v) => handleChange("who", v as WhoType, true)}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -188,7 +247,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
             <Label htmlFor="asset_type">Type *</Label>
             <Select
               value={formData.asset_type}
-              onValueChange={(v) => handleChange("asset_type", v as AssetType)}
+              onValueChange={(v) => handleChange("asset_type", v as AssetType, true)}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -207,7 +266,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
             <Label htmlFor="geo">Géographie</Label>
             <Select
               value={formData.geo || "none"}
-              onValueChange={(v) => handleChange("geo", v === "none" ? null : (v as GeoType))}
+              onValueChange={(v) => handleChange("geo", v === "none" ? null : (v as GeoType), true)}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -237,6 +296,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               step="any"
               value={formData.quantity === 0 ? "" : formData.quantity}
               onChange={(e) => handleChange("quantity", e.target.value === "" ? 0 : parseFloat(e.target.value))}
+              onBlur={handleBlur}
               required
             />
           </div>
@@ -249,6 +309,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               step="any"
               value={formData.buying_value === 0 ? "" : formData.buying_value}
               onChange={(e) => handleChange("buying_value", e.target.value === "" ? 0 : parseFloat(e.target.value))}
+              onBlur={handleBlur}
               required
             />
           </div>
@@ -261,6 +322,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               step="any"
               value={formData.buying_amount === 0 ? "" : formData.buying_amount}
               onChange={(e) => handleChange("buying_amount", e.target.value === "" ? 0 : parseFloat(e.target.value))}
+              onBlur={handleBlur}
               className="bg-muted"
             />
           </div>
@@ -273,6 +335,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               step="any"
               value={formData.current_value === 0 ? "" : formData.current_value}
               onChange={(e) => handleChange("current_value", e.target.value === "" ? 0 : parseFloat(e.target.value))}
+              onBlur={handleBlur}
               required
             />
           </div>
@@ -285,6 +348,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               step="any"
               value={formData.current_amount === 0 ? "" : formData.current_amount}
               onChange={(e) => handleChange("current_amount", e.target.value === "" ? 0 : parseFloat(e.target.value))}
+              onBlur={handleBlur}
               className="bg-muted"
             />
           </div>
@@ -299,6 +363,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               onChange={(e) =>
                 handleChange("dividend_per_share", e.target.value === "" ? 0 : parseFloat(e.target.value))
               }
+              onBlur={handleBlur}
             />
           </div>
         </CardContent>
@@ -313,7 +378,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
             <Checkbox
               id="auto_refresh"
               checked={formData.auto_refresh}
-              onCheckedChange={(checked) => handleChange("auto_refresh", checked)}
+              onCheckedChange={(checked) => handleChange("auto_refresh", checked, true)}
             />
             <Label htmlFor="auto_refresh">
               Actualisation automatique des prix (nécessite un ticker)
@@ -331,6 +396,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
                 onChange={(e) =>
                   handleChange("alert_high", e.target.value === "" ? null : parseFloat(e.target.value))
                 }
+                onBlur={handleBlur}
               />
             </div>
 
@@ -344,6 +410,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
                 onChange={(e) =>
                   handleChange("alert_low", e.target.value === "" ? null : parseFloat(e.target.value))
                 }
+                onBlur={handleBlur}
               />
             </div>
           </div>
@@ -361,7 +428,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
               <Select
                 value={formData.startup_rating || "none"}
                 onValueChange={(v) =>
-                  handleChange("startup_rating", v === "none" ? null : v)
+                  handleChange("startup_rating", v === "none" ? null : v, true)
                 }
               >
                 <SelectTrigger>
@@ -386,6 +453,7 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
                 id="ir_reduction"
                 value={formData.ir_reduction || ""}
                 onChange={(e) => handleChange("ir_reduction", e.target.value || null)}
+                onBlur={handleBlur}
                 placeholder="ex: 18% IR, 50% IR"
               />
             </div>
@@ -401,21 +469,55 @@ export function AssetForm({ asset, onSuccess }: AssetFormProps) {
           <Textarea
             value={formData.notes || ""}
             onChange={(e) => handleChange("notes", e.target.value || null)}
+            onBlur={handleBlur}
             placeholder="Notes libres..."
             rows={4}
           />
         </CardContent>
       </Card>
 
-      <div className="flex gap-4">
-        <Button type="submit" disabled={loading}>
-          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {asset ? "Enregistrer" : "Créer"}
-        </Button>
-        <Button type="button" variant="outline" onClick={() => router.back()}>
-          Annuler
-        </Button>
-      </div>
+      {autoSave ? (
+        <div className="fixed bottom-4 left-4 z-50">
+          <span
+            className={`flex items-center gap-2 text-sm bg-card/90 backdrop-blur-sm border rounded-lg px-4 py-2 shadow-lg transition-colors ${
+              saveStatus === "saved"
+                ? "border-emerald/30 text-emerald"
+                : saveStatus === "saving"
+                  ? "border-border/50 text-muted-foreground"
+                  : "border-gold/30 text-gold"
+            }`}
+          >
+            {saveStatus === "saving" && (
+              <>
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                Sauvegarde...
+              </>
+            )}
+            {saveStatus === "saved" && (
+              <>
+                <Check className="h-3.5 w-3.5" />
+                Sauvegardé
+              </>
+            )}
+            {saveStatus === "unsaved" && (
+              <>
+                <div className="h-2 w-2 rounded-full bg-gold" />
+                Non enregistré
+              </>
+            )}
+          </span>
+        </div>
+      ) : (
+        <div className="flex gap-4">
+          <Button type="submit" disabled={loading}>
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {asset ? "Enregistrer" : "Créer"}
+          </Button>
+          <Button type="button" variant="outline" onClick={() => router.back()}>
+            Annuler
+          </Button>
+        </div>
+      )}
     </form>
   );
 }

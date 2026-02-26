@@ -9,13 +9,13 @@ export async function POST() {
 
     // Get all assets with tickers (manual refresh updates all)
     const result = await db.execute(
-      "SELECT * FROM assets WHERE ticker IS NOT NULL"
+      "SELECT * FROM assets WHERE ticker IS NOT NULL AND ticker != ''"
     );
 
     const assets = result.rows as unknown as AssetRow[];
 
     if (assets.length === 0) {
-      return NextResponse.json({ message: "No assets to refresh", updated: 0 });
+      return NextResponse.json({ message: "No assets to refresh", updated: 0, total: 0, errors: [] });
     }
 
     // Get unique tickers
@@ -26,32 +26,43 @@ export async function POST() {
 
     // Update each asset
     let updatedCount = 0;
+    const errors: { ticker: string; name: string; reason: string }[] = [];
+
     for (const asset of assets) {
       if (!asset.ticker) continue;
 
       const quote = quotes.get(asset.ticker);
       if (!quote) {
-        console.log(`No quote found for ${asset.ticker}`);
+        errors.push({ ticker: asset.ticker, name: asset.name, reason: "No quote returned" });
         continue;
       }
 
-      // Convert to EUR if needed
-      const priceInEur = await convertToEur(quote.price, quote.currency);
-      const dividendInEur = await convertToEur(quote.dividendPerShare, quote.currency);
-      const newAmount = asset.quantity * priceInEur;
+      try {
+        // Convert to EUR if needed
+        const priceInEur = await convertToEur(quote.price, quote.currency);
+        const dividendInEur = await convertToEur(quote.dividendPerShare, quote.currency);
+        const newAmount = asset.quantity * priceInEur;
 
-      await db.execute({
-        sql: `UPDATE assets SET current_value = ?, current_amount = ?, dividend_per_share = ?, updated_at = datetime('now') WHERE id = ?`,
-        args: [priceInEur, newAmount, dividendInEur, asset.id],
-      });
+        await db.execute({
+          sql: `UPDATE assets SET current_value = ?, current_amount = ?, dividend_per_share = ?, updated_at = datetime('now') WHERE id = ?`,
+          args: [priceInEur, newAmount, dividendInEur, asset.id],
+        });
 
-      updatedCount++;
+        updatedCount++;
+      } catch (err) {
+        errors.push({
+          ticker: asset.ticker,
+          name: asset.name,
+          reason: err instanceof Error ? err.message : "Unknown error",
+        });
+      }
     }
 
     return NextResponse.json({
       message: "Prices refreshed",
       updated: updatedCount,
       total: assets.length,
+      errors,
     });
   } catch (error) {
     console.error("Error refreshing prices:", error);
