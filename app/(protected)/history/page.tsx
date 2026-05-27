@@ -104,6 +104,67 @@ export default function HistoryPage() {
     };
   });
 
+  // Breakdown by type, grouped by month and averaged (smooths per-snapshot noise)
+  const breakdownData = (() => {
+    const buckets = new Map<
+      string,
+      {
+        date: string;
+        sortKey: number;
+        count: number;
+        Stock: number;
+        Crypto: number;
+        "Start-up": number;
+        Livret: number;
+        "Active Cash": number;
+      }
+    >();
+
+    for (const s of filteredSnapshots) {
+      let data: SnapshotData | null = null;
+      try {
+        data = JSON.parse(s.data_json);
+      } catch {
+        // ignore
+      }
+
+      const d = new Date(s.snapshot_date);
+      const sortKey = d.getFullYear() * 12 + d.getMonth();
+      const key = String(sortKey);
+
+      const bucket = buckets.get(key) ?? {
+        date: format(d, "MMM yy", { locale: fr }),
+        sortKey,
+        count: 0,
+        Stock: 0,
+        Crypto: 0,
+        "Start-up": 0,
+        Livret: 0,
+        "Active Cash": 0,
+      };
+
+      bucket.count += 1;
+      bucket.Stock += data?.by_type?.Stock || 0;
+      bucket.Crypto += data?.by_type?.Crypto || 0;
+      bucket["Start-up"] += data?.by_type?.["Start-up"] || 0;
+      bucket.Livret += data?.by_type?.Livret || 0;
+      bucket["Active Cash"] += data?.by_type?.["Active Cash"] || 0;
+
+      buckets.set(key, bucket);
+    }
+
+    return Array.from(buckets.values())
+      .sort((a, b) => a.sortKey - b.sortKey)
+      .map((b) => ({
+        date: b.date,
+        Stock: b.Stock / b.count,
+        Crypto: b.Crypto / b.count,
+        "Start-up": b["Start-up"] / b.count,
+        Livret: b.Livret / b.count,
+        "Active Cash": b["Active Cash"] / b.count,
+      }));
+  })();
+
   const latestValue = snapshots[0]?.total_value || 0;
   const oldestInRange = filteredSnapshots[0]?.total_value || latestValue;
   const changeValue = latestValue - oldestInRange;
@@ -303,6 +364,12 @@ export default function HistoryPage() {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
+                  domain={[
+                    (dataMin: number) =>
+                      Math.floor((dataMin * 0.98) / 1000) * 1000,
+                    (dataMax: number) =>
+                      Math.ceil((dataMax * 1.02) / 1000) * 1000,
+                  ]}
                   tickFormatter={(value) =>
                     value >= 1000000
                       ? `${(value / 1000000).toFixed(1)}M`
@@ -316,6 +383,7 @@ export default function HistoryPage() {
                   stroke="oklch(0.78 0.14 75)"
                   fill="url(#gradientTotal)"
                   strokeWidth={2}
+                  baseValue="dataMin"
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -328,17 +396,17 @@ export default function HistoryPage() {
         <CardHeader className="pb-2">
           <CardTitle className="text-base font-medium flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-emerald" />
-            Répartition par type d&apos;asset
+            Répartition par type d&apos;asset (moyenne mensuelle)
           </CardTitle>
         </CardHeader>
         <CardContent className="h-80">
-          {chartData.length === 0 ? (
+          {breakdownData.length === 0 ? (
             <div className="flex items-center justify-center h-full text-muted-foreground">
               Aucun snapshot disponible pour cette période
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
+              <AreaChart data={breakdownData}>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   stroke="oklch(0.28 0.015 260)"

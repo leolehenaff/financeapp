@@ -117,12 +117,21 @@ export default function DividendsPage() {
   };
 
   // Calculate estimated annual dividends from assets
+  const currentYear = new Date().getFullYear();
   const estimatedDividends = assets
     .filter((a) => a.dividend_per_share && a.dividend_per_share > 0)
-    .map((a) => ({
-      asset: a,
-      annual: calculateAnnualDividend(a.quantity, a.dividend_per_share || 0),
-    }))
+    .map((a) => {
+      const annual = calculateAnnualDividend(a.quantity, a.dividend_per_share || 0);
+      const received = dividends
+        .filter((d) => d.asset_id === a.id && d.year === currentYear)
+        .reduce((sum, d) => sum + d.amount, 0);
+      return {
+        asset: a,
+        annual,
+        received,
+        remaining: annual - received,
+      };
+    })
     .sort((a, b) => b.annual - a.annual);
 
   const totalEstimatedAnnual = estimatedDividends.reduce(
@@ -391,13 +400,16 @@ export default function DividendsPage() {
                   <TableHead>Asset</TableHead>
                   <TableHead>Ticker</TableHead>
                   <TableHead className="text-right">Annuel estimé</TableHead>
+                  <TableHead className="text-right">
+                    Reste à toucher ({currentYear})
+                  </TableHead>
                   <TableHead className="text-right">Quantité</TableHead>
                   <TableHead className="text-right">Div/action</TableHead>
                   <TableHead className="text-right">Mensuel estimé</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {estimatedDividends.map(({ asset, annual }) => (
+                {estimatedDividends.map(({ asset, annual, remaining }) => (
                   <TableRow key={asset.id} className="table-row-hover border-border/30">
                     <TableCell className="font-medium">{asset.name}</TableCell>
                     <TableCell className="font-mono text-sm text-muted-foreground">
@@ -405,6 +417,18 @@ export default function DividendsPage() {
                     </TableCell>
                     <TableCell className="text-right font-mono text-sm font-medium text-emerald">
                       {formatCurrency(annual)}
+                    </TableCell>
+                    <TableCell
+                      className={`text-right font-mono text-sm font-medium ${
+                        remaining <= 0 ? "text-muted-foreground" : "text-gold"
+                      }`}
+                    >
+                      {formatCurrency(Math.max(remaining, 0))}
+                      <span className="block text-xs text-muted-foreground">
+                        {annual > 0
+                          ? `${Math.max((remaining / annual) * 100, 0).toFixed(0)}%`
+                          : "—"}
+                      </span>
                     </TableCell>
                     <TableCell className="text-right font-mono text-sm">
                       {asset.quantity.toLocaleString("fr-FR")}
@@ -420,7 +444,7 @@ export default function DividendsPage() {
                 {estimatedDividends.length === 0 && (
                   <TableRow>
                     <TableCell
-                      colSpan={6}
+                      colSpan={7}
                       className="text-center text-muted-foreground py-8"
                     >
                       Aucun asset avec dividendes configurés
