@@ -2,6 +2,7 @@ import { dateFr, eur, pct, today } from "@/lib/format";
 import { FIRE, getFire, getHistory, getMonthProgress, getPositions, type Position } from "@/lib/queries";
 import { Delta, Dot, POCKET, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
+import { Positions } from "@/components/positions";
 
 export const dynamic = "force-dynamic";
 
@@ -18,10 +19,6 @@ function Composition({ positions, total }: { positions: Position[]; total: numbe
       </ul>
     </div>
   );
-}
-
-function group<T>(items: T[], by: (t: T) => string) {
-  return items.reduce<Map<string, T[]>>((m, t) => (m.set(by(t), [...(m.get(by(t)) ?? []), t]), m), new Map());
 }
 
 export default async function Patrimoine() {
@@ -69,33 +66,7 @@ export default async function Patrimoine() {
         </ol>
       </Section>
 
-      {[...group(positions, (p) => p.owner)].map(([owner, ps]) => (
-        <Section key={owner} title={<>{owner} <span className="text-ink-2 font-normal tnum">{eur(sum(ps, "value"))}</span></>} aside={<Delta value={perf(ps)} suffix=" %" />}>
-          <div className="space-y-4">
-            {[...group(ps, (p) => p.account)].map(([account, aps]) => (
-              <div key={account} className="panel overflow-x-auto">
-                <table className="tbl">
-                  <thead><tr><th>{account}</th><th className="num">Qté</th><th className="num">Prix</th><th className="num">Valeur</th><th className="num">Coût</th><th className="num">+/-</th><th className="num">Au</th></tr></thead>
-                  <tbody>
-                    {aps.map((p) => (
-                      <tr key={p.instrument_id}>
-                        <td><div className="flex items-center gap-2"><Dot kind={p.kind} /><span>{p.instrument}</span>{p.geo && <span className="text-ink-3 text-[12px]">{p.geo}</span>}</div></td>
-                        <td className="num text-ink-2">{p.quantity.toLocaleString("fr-FR", { maximumFractionDigits: 4 })}</td>
-                        <td className="num text-ink-2">{p.price?.toLocaleString("fr-FR", { maximumFractionDigits: 2 }) ?? "?"}</td>
-                        <td className="num font-medium">{eur(p.value)}</td>
-                        <td className="num text-ink-2">{eur(p.cost)}</td>
-                        <td className="num">{p.cost ? <Delta value={((p.value - p.cost) / p.cost) * 100} suffix=" %" /> : ""}</td>
-                        <td className="num text-ink-3 text-[12px]">{dateFr(p.price_date)}</td>
-                      </tr>
-                    ))}
-                    {aps.length > 1 && <tr className="total"><td>Total</td><td /><td /><td className="num">{eur(sum(aps, "value"))}</td><td className="num">{eur(sum(aps, "cost"))}</td><td className="num"><Delta value={perf(aps)} suffix=" %" /></td><td /></tr>}
-                  </tbody>
-                </table>
-              </div>
-            ))}
-          </div>
-        </Section>
-      ))}
+      <Positions positions={positions.map((p) => ({ ...p }))} />
     </>
   );
 }
