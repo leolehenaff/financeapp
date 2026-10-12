@@ -1,28 +1,9 @@
 import { dateFr, eur, pct, today } from "@/lib/format";
 import { getFire, getHistory, getMonthProgress, getPositions, type Position } from "@/lib/queries";
 import { Delta, Dot, POCKET, Section, pocket } from "@/components/ui";
+import { Chart } from "@/components/chart";
 
 export const dynamic = "force-dynamic";
-
-/** Deux courbes : valeur (encre) et versé net (pointillé). La zone entre les deux est la performance. */
-function Chart({ points }: { points: { date: string; value: number; cost: number | null }[] }) {
-  if (points.length < 2) return null;
-  const W = 600, H = 120;
-  const all = points.flatMap((p) => [p.value, p.cost ?? p.value]), min = Math.min(...all) * 0.97, max = Math.max(...all) * 1.02;
-  const xy = (i: number, v: number) => `${(i / (points.length - 1)) * W},${H - ((v - min) / (max - min)) * H}`;
-  const value = points.map((p, i) => xy(i, p.value));
-  const cost = points.flatMap((p, i) => (p.cost == null ? [] : [xy(i, p.cost)]));
-  const from = points.findIndex((p) => p.cost != null);
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-32 mt-4" preserveAspectRatio="none" role="img" aria-label="Valeur et montant versé sur un an">
-      {cost.length > 1
-        ? <polygon points={[...value.slice(from), ...[...cost].reverse()].join(" ")} fill="var(--c-stock)" opacity="0.2" />
-        : <polygon points={`0,${H} ${value.join(" ")} ${W},${H}`} fill="var(--c-stock)" opacity="0.15" />}
-      {cost.length > 1 && <polyline points={cost.join(" ")} fill="none" stroke="var(--ink-3)" strokeWidth="1" strokeDasharray="4 4" vectorEffect="non-scaling-stroke" />}
-      <polyline points={value.join(" ")} fill="none" stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-    </svg>
-  );
-}
 
 /** Bande de composition : la signature visuelle, une poche = un segment. */
 function Composition({ positions, total }: { positions: Position[]; total: number }) {
