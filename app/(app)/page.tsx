@@ -72,15 +72,19 @@ export default async function ThisMonth() {
       <h1 className="text-[30px] font-bold tracking-[-0.025em] leading-tight mt-0.5">
         {remaining.length === 0 ? "Tout est versé, beau mois." : `Il reste ${eur(planned - done)} à verser.`}
       </h1>
-      <p className="text-[15px] text-ink-2 mt-2 max-w-[65ch]">
+      <div className="mt-4 flex items-center gap-4">
+        <Bar value={done} max={planned} color="var(--accent)" className="h-5 flex-1" />
+        <span className="tnum text-[15px] font-semibold whitespace-nowrap">{planned ? Math.round((done / planned) * 100) : 0} %</span>
+      </div>
+      <p className="text-[13px] text-ink-2 mt-1.5 tnum">{eur(done)} versés sur {eur(planned)}</p>
+      <p className="text-[15px] text-ink-2 mt-4 max-w-[65ch]">
         Patrimoine {eur(total)}, soit <Delta value={cost ? ((total - cost) / cost) * 100 : 0} suffix=" %" /> sur un coût d&apos;achat de {eur(cost)}.
         {due.length > 0 && <> {due.length} action{due.length > 1 ? "s" : ""} à échéance dans les 30 jours{late ? `, dont ${late} en retard` : ""}.</>}
       </p>
 
-      <Section title="Versements du mois" aside={`${eur(done)} sur ${eur(planned)}`}>
+      <Section title="Versements du mois" aside={`${remaining.length} flux restant${remaining.length > 1 ? "s" : ""}`}>
         <div className="panel p-5">
-          <Bar value={done} max={planned} color="var(--accent)" className="h-3.5" />
-          <ul className="mt-5 divide-y divide-line">
+          <ul className="divide-y divide-line">
             {flows.map((f) => {
               const ok = f.done >= f.planned;
               return (
