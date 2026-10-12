@@ -1,44 +1,12 @@
 import type { Metadata } from "next";
-import { Outfit, Playfair_Display, JetBrains_Mono } from "next/font/google";
-import { Toaster } from "sonner";
 import "./globals.css";
 
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  display: "swap",
-});
+export const metadata: Metadata = { title: "Patrimoine", description: "Cockpit patrimonial Léo et Julie" };
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrains = JetBrains_Mono({
-  variable: "--font-jetbrains",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-export const metadata: Metadata = {
-  title: "Portfolio Tracker",
-  description: "Suivi de patrimoine financier personnel",
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
-      <body
-        className={`${outfit.variable} ${playfair.variable} ${jetbrains.variable} font-sans antialiased`}
-      >
-        {children}
-        <Toaster theme="dark" richColors position="bottom-right" />
-      </body>
+      <body className="mx-auto max-w-4xl px-4 pb-16">{children}</body>
     </html>
   );
 }

@@ -33,7 +33,7 @@ Décision du 12/10/2026 : 3 700 € investis par mois dès octobre, soit exactem
 | Léo | BTC | 250 | Bitstack |
 | Julie | Stock | 1 850 | MSCI World sur son PEA Trade Republic (ouvert 2025, horloge 5 ans lancée). Swissquote : à décider lors de l'état des lieux |
 
-Virements automatiques au 1er du mois, avant toute dépense.
+Virements automatiques au 1er du mois, avant toute dépense. Ces flux sont la table `plan_flows` (avec période de validité) : l'écran « Ce mois » compare le plan aux achats saisis.
 
 ## Mariage, juillet 2027
 

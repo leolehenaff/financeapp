@@ -1,136 +1,38 @@
-import { createClient, Client } from "@libsql/client";
+import { createClient } from "@libsql/client";
 
-let client: Client | null = null;
+export const db = createClient({
+  url: process.env.TURSO_DATABASE_URL!,
+  authToken: process.env.TURSO_AUTH_TOKEN,
+});
 
-export function getDb(): Client {
-  if (!client) {
-    client = createClient({
-      url: process.env.TURSO_DATABASE_URL!,
-      authToken: process.env.TURSO_AUTH_TOKEN,
-    });
-  }
-  return client;
-}
+export const KINDS = ["Stock", "Crypto", "Start-up", "Livret", "Active Cash"] as const;
+export const GEOS = ["US", "EU", "FR", "OTHER"] as const;
+export const ACCOUNT_KINDS = ["PEA", "CTO", "PEE", "AV", "Livret", "Crypto", "Startup", "Cash"] as const;
 
-export async function initDb() {
-  const db = getDb();
-
-  // Create assets table
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS assets (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      ticker TEXT,
-      isin TEXT,
-      who TEXT NOT NULL,
-      asset_type TEXT NOT NULL,
-      geo TEXT,
-      quantity REAL NOT NULL DEFAULT 0,
-      buying_value REAL NOT NULL DEFAULT 0,
-      buying_amount REAL NOT NULL DEFAULT 0,
-      current_value REAL NOT NULL DEFAULT 0,
-      current_amount REAL NOT NULL DEFAULT 0,
-      auto_refresh INTEGER NOT NULL DEFAULT 0,
-      dividend_per_share REAL DEFAULT 0,
-      notes TEXT,
-      startup_rating TEXT,
-      ir_reduction TEXT,
-      alert_high REAL,
-      alert_low REAL,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-    )
-  `);
-
-  // Create hypotheses table
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS hypotheses (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      asset_type TEXT NOT NULL UNIQUE,
-      pessimistic_rate REAL NOT NULL DEFAULT 0,
-      avg_rate REAL NOT NULL DEFAULT 0,
-      optimistic_rate REAL NOT NULL DEFAULT 0,
-      monthly_contribution_leo REAL NOT NULL DEFAULT 0,
-      monthly_contribution_julie REAL NOT NULL DEFAULT 0,
-      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-    )
-  `);
-
-  // Create snapshots table
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS snapshots (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      snapshot_date TEXT NOT NULL,
-      total_value REAL NOT NULL,
-      data_json TEXT NOT NULL,
-      created_at TEXT NOT NULL DEFAULT (datetime('now'))
-    )
-  `);
-
-  // Create index on snapshot_date
-  await db.execute(`
-    CREATE INDEX IF NOT EXISTS idx_snapshots_date ON snapshots(snapshot_date)
-  `);
-
-  // Create dividends table
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS dividends (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      asset_id INTEGER NOT NULL,
-      year INTEGER NOT NULL,
-      amount REAL NOT NULL DEFAULT 0,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      FOREIGN KEY (asset_id) REFERENCES assets(id) ON DELETE CASCADE,
-      UNIQUE(asset_id, year)
-    )
-  `);
-
-  // Insert default hypotheses if they don't exist
-  const assetTypes = ["Stock", "Crypto", "Start-up", "Livret", "Active Cash"];
-  for (const type of assetTypes) {
-    await db.execute({
-      sql: `INSERT OR IGNORE INTO hypotheses (asset_type, pessimistic_rate, avg_rate, optimistic_rate, monthly_contribution_leo, monthly_contribution_julie)
-            VALUES (?, ?, ?, ?, ?, ?)`,
-      args: [
-        type,
-        type === "Livret" ? 2 : type === "Stock" ? 3 : type === "Crypto" ? -10 : 0,
-        type === "Livret" ? 3 : type === "Stock" ? 7 : type === "Crypto" ? 10 : 5,
-        type === "Livret" ? 4 : type === "Stock" ? 12 : type === "Crypto" ? 30 : 20,
-        type === "Stock" ? 500 : type === "Crypto" ? 500 : 0,
-        type === "Stock" ? 200 : 0,
-      ],
-    });
-  }
-
-  // Create allocation_objectives table
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS allocation_objectives (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      category TEXT NOT NULL,
-      key TEXT NOT NULL,
-      target_percent REAL NOT NULL DEFAULT 0,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-      UNIQUE(category, key)
-    )
-  `);
-
-  // Insert default allocation objectives for asset types (20% each)
-  for (const type of assetTypes) {
-    await db.execute({
-      sql: `INSERT OR IGNORE INTO allocation_objectives (category, key, target_percent)
-            VALUES ('type', ?, 20)`,
-      args: [type],
-    });
-  }
-
-  // Insert default allocation objectives for geographies (25% each)
-  const geoTypes = ["FR", "US", "EU", "OTHER"];
-  for (const geo of geoTypes) {
-    await db.execute({
-      sql: `INSERT OR IGNORE INTO allocation_objectives (category, key, target_percent)
-            VALUES ('geo', ?, 25)`,
-      args: [geo],
-    });
-  }
-}
+export const SCHEMA = [
+  `CREATE TABLE IF NOT EXISTS accounts (
+    id INTEGER PRIMARY KEY, owner TEXT NOT NULL, name TEXT NOT NULL UNIQUE,
+    kind TEXT NOT NULL, opened_on TEXT, notes TEXT)`,
+  `CREATE TABLE IF NOT EXISTS instruments (
+    id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE, ticker TEXT UNIQUE, kind TEXT NOT NULL,
+    geo TEXT, price_source TEXT NOT NULL DEFAULT 'manual', notes TEXT)`,
+  `CREATE TABLE IF NOT EXISTS transactions (
+    id INTEGER PRIMARY KEY, date TEXT NOT NULL,
+    account_id INTEGER NOT NULL REFERENCES accounts(id),
+    instrument_id INTEGER NOT NULL REFERENCES instruments(id),
+    type TEXT NOT NULL CHECK (type IN ('buy','sell','dividend')),
+    quantity REAL NOT NULL DEFAULT 0, amount REAL NOT NULL, note TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now')))`,
+  `CREATE TABLE IF NOT EXISTS prices (
+    instrument_id INTEGER NOT NULL REFERENCES instruments(id), date TEXT NOT NULL,
+    price REAL NOT NULL, PRIMARY KEY (instrument_id, date))`,
+  `CREATE TABLE IF NOT EXISTS plan_flows (
+    id INTEGER PRIMARY KEY, owner TEXT NOT NULL,
+    account_id INTEGER NOT NULL REFERENCES accounts(id),
+    instrument_id INTEGER REFERENCES instruments(id),
+    monthly_amount REAL NOT NULL, from_month TEXT NOT NULL, to_month TEXT, label TEXT)`,
+  `CREATE TABLE IF NOT EXISTS actions (
+    id INTEGER PRIMARY KEY, section TEXT NOT NULL, title TEXT NOT NULL, due_date TEXT,
+    status TEXT NOT NULL DEFAULT 'todo' CHECK (status IN ('todo','done','dropped')),
+    done_on TEXT, created_at TEXT NOT NULL DEFAULT (datetime('now')))`,
+];
