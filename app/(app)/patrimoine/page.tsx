@@ -50,12 +50,19 @@ export default async function Patrimoine() {
       <div className="mt-6"><Composition positions={positions} total={total} /></div>
 
       <Section title="Trajectoire" aside={`${pct(fire.rate * 100)} attendus, ${eur(monthly)} par mois`}>
-        <ol className="grid grid-cols-3 text-[13px]">
-          {[["Aujourd'hui", eur(total), year], ["Seuil hors crédit", "680 k€", year + fire.partial], ["Seuil complet", "1,4 M€", year + fire.full]].map(([l, v, y], i) => (
-            <li key={l} className="relative pt-4">
-              <span className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: i === 0 ? "var(--ink)" : "var(--line-strong)" }} />
-              <span className="absolute top-[-3px] left-0 w-2 h-2 rounded-full bg-ink" />
-              <div className="text-ink-3">{l}</div>
+        {/* Une seule piste, remplie au prorata du chemin vers 1,4 M€ ; les seuils sont des repères, pas des étapes franchies. */}
+        <div className="relative h-3 rounded-full bg-surface-2">
+          <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${Math.min(100, (total / 1_400_000) * 100)}%`, background: "var(--accent)" }} />
+          {[680_000 / 1_400_000, 1].map((f) => <span key={f} className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-ink" style={{ left: `${f * 100}%` }} />)}
+        </div>
+        <ol className="grid grid-cols-3 text-[13px] mt-3">
+          {[
+            ["Aujourd'hui", eur(total), year, "text-left", ""],
+            ["Seuil hors crédit", "680 k€", year + fire.partial, "text-center", "Capital qui couvre toutes les dépenses sauf le crédit immobilier, à 3,5 % de retrait par an (28 fois les dépenses annuelles hors crédit)."],
+            ["Seuil complet", "1,4 M€", year + fire.full, "text-right", "Capital qui couvre la totalité du coût de vie actuel, crédit compris, à 3,5 % de retrait par an. L'année est estimée au rendement attendu et aux versements en cours."],
+          ].map(([l, v, y, a, tip]) => (
+            <li key={l} className={String(a)}>
+              <div className="text-ink-3">{tip ? <span className={`tip ${a === "text-right" ? "tip-right" : ""}`} tabIndex={0} data-tip={tip}>{l}</span> : l}</div>
               <div className="font-semibold text-[15px] tnum">{v}</div>
               <div className="text-ink-2 tnum">{y}</div>
             </li>

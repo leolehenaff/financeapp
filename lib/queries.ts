@@ -104,7 +104,8 @@ export async function getHistory(): Promise<{ date: string; value: number; cost:
   const r = await db.execute(`
     SELECT snapshot_date date, total_value value, json_extract(data_json, '$.cost') cost
     FROM snapshots WHERE snapshot_date >= date('now', '-365 days') ORDER BY 1`);
-  return r.rows as unknown as { date: string; value: number; cost: number | null }[];
+  // Objets plats : les Row libsql ne passent pas au composant client.
+  return r.rows.map((x) => ({ date: String(x.date), value: Number(x.value), cost: x.cost == null ? null : Number(x.cost) }));
 }
 
 /** Rendement moyen pondéré (hypothèses « avg ») et années jusqu'aux seuils FIRE. */
