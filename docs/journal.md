@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 12 octobre 2026 (nuit) : seuils FIRE révisés
+
+Léo trouvait 1,4 M€ trop faible pour vivre. Vérification : ce chiffre valait 28 fois le coût de vie actuel sans enfant, en nominal, sans fiscalité. Décision : recalculer sur le coût de vie avec enfant (5 436 €/mois dès avril 2027) et en euros constants, avec un rendement réel (nominal moins 2 %). Nouveaux seuils : 1,15 M€ hors crédit, 1,85 M€ complet, soit vers 2038 et 2044 au rythme actuel de 3 700 €/mois. Fiscalité des retraits toujours non déduite, à traiter à la prochaine revue annuelle. Constante `FIRE` dans `lib/queries.ts`.
+
 ## 12 octobre 2026 (soir) : app v2
 
 L'app v1 (tableau de bord de consultation, 8 258 lignes, jamais ouverte) est remplacée par un cockpit d'exécution en trois écrans : Ce mois (versements vs plan, actions à 30 jours, écart aux cibles, valorisations périmées), Patrimoine (positions par compte, historique, trajectoire FIRE), Journal (transactions, actions). Modèle : comptes, instruments, transactions, prix, flux planifiés, actions. Les 62 lignes v1 sont reprises comme transactions d'ouverture datées de leur création ; les anciennes tables restent en base, en lecture, jusqu'à l'état des lieux. Hypothèses de reprise à vérifier lors de l'état des lieux : toutes les actions de Léo sont sur son PEA, celles de Julie avec ticker sur son PEA Trade Republic, ASML compté dans le PEA.

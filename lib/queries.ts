@@ -108,17 +108,23 @@ export async function getHistory(): Promise<{ date: string; value: number; cost:
   return r.rows.map((x) => ({ date: String(x.date), value: Number(x.value), cost: x.cost == null ? null : Number(x.cost) }));
 }
 
-/** Rendement moyen pondéré (hypothèses « avg ») et années jusqu'aux seuils FIRE. */
+/** Seuils FIRE en euros constants de 2026 : 28 fois les dépenses annuelles (3,5 % de retrait brut),
+ *  sur un coût de vie avec enfant de 5 436 €/mois (3 956 + crèche 1 230 + courant 250). Voir docs/plan-financier.md. */
+export const FIRE = { partial: 1_150_000, full: 1_850_000, inflation: 0.02 };
+
+/** Rendement nominal pondéré (hypothèses « avg »), puis années jusqu'aux seuils en réel (rendement moins inflation,
+ *  versements supposés indexés). */
 export async function getFire(positions: Position[], monthly: number) {
   const hyp = (await db.execute("SELECT asset_type, avg_rate FROM hypotheses")).rows as unknown as { asset_type: string; avg_rate: number }[];
   const total = positions.reduce((s, p) => s + p.value, 0);
   const rate = hyp.reduce((s, h) => s + (positions.filter((p) => p.kind === h.asset_type).reduce((a, p) => a + p.value, 0) / total) * h.avg_rate, 0) / 100;
+  const real = rate - FIRE.inflation;
   const yearsTo = (target: number) => {
     let c = total, y = 0;
-    while (c < target && y < 60) { c = c * (1 + rate) + monthly * 12; y++; }
+    while (c < target && y < 60) { c = c * (1 + real) + monthly * 12; y++; }
     return y;
   };
-  return { rate, partial: yearsTo(680_000), full: yearsTo(1_400_000) };
+  return { rate, real, partial: yearsTo(FIRE.partial), full: yearsTo(FIRE.full) };
 }
 
 export const lists = async () => ({

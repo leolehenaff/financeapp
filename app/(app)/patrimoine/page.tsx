@@ -1,5 +1,5 @@
 import { dateFr, eur, pct, today } from "@/lib/format";
-import { getFire, getHistory, getMonthProgress, getPositions, type Position } from "@/lib/queries";
+import { FIRE, getFire, getHistory, getMonthProgress, getPositions, type Position } from "@/lib/queries";
 import { Delta, Dot, POCKET, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
 
@@ -49,17 +49,17 @@ export default async function Patrimoine() {
       <p className="flex gap-5 text-[12px] text-ink-3 mt-1.5"><span><span className="inline-block w-4 border-t-[1.5px] border-ink align-middle mr-1.5" />Valeur</span><span><span className="inline-block w-4 border-t border-dashed border-ink-3 align-middle mr-1.5" />Versé net{tracked && <> (suivi depuis le {dateFr(tracked.date)})</>}</span></p>
       <div className="mt-6"><Composition positions={positions} total={total} /></div>
 
-      <Section title="Trajectoire" aside={`${pct(fire.rate * 100)} attendus, ${eur(monthly)} par mois`}>
-        {/* Une seule piste, remplie au prorata du chemin vers 1,4 M€ ; les seuils sont des repères, pas des étapes franchies. */}
+      <Section title="Trajectoire" aside={`${pct(fire.real * 100)} réels attendus (${pct(fire.rate * 100)} moins 2 % d'inflation), ${eur(monthly)} par mois`}>
+        {/* Une seule piste, remplie au prorata du chemin vers le seuil complet ; les seuils sont des repères, pas des étapes franchies. */}
         <div className="relative h-3 rounded-full bg-surface-2">
-          <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${Math.min(100, (total / 1_400_000) * 100)}%`, background: "var(--accent)" }} />
-          {[680_000 / 1_400_000, 1].map((f) => <span key={f} className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-ink" style={{ left: `${f * 100}%` }} />)}
+          <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${Math.min(100, (total / FIRE.full) * 100)}%`, background: "var(--accent)" }} />
+          {[FIRE.partial / FIRE.full, 1].map((f) => <span key={f} className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-ink" style={{ left: `${f * 100}%` }} />)}
         </div>
         <ol className="grid grid-cols-3 text-[13px] mt-3">
           {[
             ["Aujourd'hui", eur(total), year, "text-left", ""],
-            ["Seuil hors crédit", "680 k€", year + fire.partial, "text-center", "Capital qui couvre toutes les dépenses sauf le crédit immobilier, à 3,5 % de retrait par an (28 fois les dépenses annuelles hors crédit)."],
-            ["Seuil complet", "1,4 M€", year + fire.full, "text-right", "Capital qui couvre la totalité du coût de vie actuel, crédit compris, à 3,5 % de retrait par an. L'année est estimée au rendement attendu et aux versements en cours."],
+            ["Seuil hors crédit", "1,15 M€", year + fire.partial, "text-center", "Capital, en euros d'aujourd'hui, qui couvre le coût de vie avec enfant (5 436 €/mois) sauf le crédit immobilier (1 974 €), à 3,5 % de retrait brut par an, soit 28 fois 41 500 €. Fiscalité des retraits non déduite."],
+            ["Seuil complet", "1,85 M€", year + fire.full, "text-right", "Capital, en euros d'aujourd'hui, qui couvre tout le coût de vie avec enfant (5 436 €/mois), crédit compris, à 3,5 % de retrait brut par an, soit 28 fois 65 200 €. Année estimée au rendement réel (nominal moins 2 % d'inflation) avec 3 700 € par mois indexés."],
           ].map(([l, v, y, a, tip]) => (
             <li key={l} className={String(a)}>
               <div className="text-ink-3">{tip ? <span className={`tip ${a === "text-right" ? "tip-right" : ""}`} tabIndex={0} data-tip={tip}>{l}</span> : l}</div>
