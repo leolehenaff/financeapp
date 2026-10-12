@@ -98,12 +98,12 @@ export const stale = (positions: Position[]) =>
   positions.filter((p) => p.price_source === "manual" && p.kind !== "Livret"
     && (!p.price_date || p.price_date < addDays(today(), p.kind === "Start-up" ? -365 : -90)));
 
-/** Un an d'historique : valeur, et versé net (coût d'achat) depuis les snapshots v2 seulement.
+/** Tout l'historique : valeur, et versé net (coût d'achat) depuis les snapshots v2 seulement.
  *  Les snapshots v1 ont un coût figé (valeur mise à jour à la main, pas d'achats saisis) : inutilisable. */
 export async function getHistory(): Promise<{ date: string; value: number; cost: number | null }[]> {
   const r = await db.execute(`
     SELECT snapshot_date date, total_value value, json_extract(data_json, '$.cost') cost
-    FROM snapshots WHERE snapshot_date >= date('now', '-365 days') ORDER BY 1`);
+    FROM snapshots ORDER BY 1`);
   // Objets plats : les Row libsql ne passent pas au composant client.
   return r.rows.map((x) => ({ date: String(x.date), value: Number(x.value), cost: x.cost == null ? null : Number(x.cost) }));
 }

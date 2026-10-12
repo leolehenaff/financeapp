@@ -32,7 +32,7 @@ export default async function Patrimoine() {
   const total = positions.reduce((s, p) => s + p.value, 0);
   const sum = (ps: Position[], k: "value" | "cost") => ps.reduce((s, p) => s + p[k], 0);
   const perf = (ps: Position[]) => { const c = sum(ps, "cost"), v = sum(ps, "value"); return c ? ((v - c) / c) * 100 : 0; };
-  const first = history[0], tracked = history.find((h) => h.cost != null);
+  const tracked = history.find((h) => h.cost != null);
   const cost = sum(positions, "cost");
   const year = Number(today().slice(0, 4));
 
@@ -42,8 +42,6 @@ export default async function Patrimoine() {
       <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum mt-0.5">{eur(total)}</h1>
       <p className="text-[15px] text-ink-2 mt-2">
         <Delta value={Math.round(total - cost)} suffix=" €" /> net des versements ({eur(cost)} versés), soit <Delta value={perf(positions)} suffix=" %" />.
-        {first && <> Depuis le {dateFr(first.date)} : <Delta value={Math.round(total - first.value)} suffix=" €" />
-          {tracked && tracked !== history.at(-1) && <>, dont {eur(Math.round(cost - tracked.cost!))} versés depuis le {dateFr(tracked.date)} et <Delta value={Math.round((total - cost) - (tracked.value - tracked.cost!))} suffix=" €" /> de performance</>}.</>}
       </p>
       <Chart points={history} />
       <p className="flex gap-5 text-[12px] text-ink-3 mt-1.5"><span><span className="inline-block w-4 border-t-[1.5px] border-ink align-middle mr-1.5" />Valeur</span><span><span className="inline-block w-4 border-t border-dashed border-ink-3 align-middle mr-1.5" />Versé net{tracked && <> (suivi depuis le {dateFr(tracked.date)})</>}</span></p>

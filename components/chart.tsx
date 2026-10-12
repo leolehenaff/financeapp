@@ -1,11 +1,38 @@
 "use client";
 import { useState } from "react";
-import { dateFr, eur } from "@/lib/format";
+import { addDays, dateFr, eur, today } from "@/lib/format";
+import { Delta } from "@/components/ui";
 
 type Point = { date: string; value: number; cost: number | null };
+const RANGES: [string, number][] = [["1 m", 30], ["3 m", 91], ["6 m", 182], ["1 an", 365], ["Max", 0]];
 
-/** Valeur (trait plein) et versé net (pointillé). Survol ou doigt posé : date et valeurs du jour. */
-export function Chart({ points }: { points: Point[] }) {
+/** Valeur (trait plein) et versé net (pointillé), sur une période au choix. Survol ou doigt posé : date et valeurs du jour. */
+export function Chart({ points: all }: { points: Point[] }) {
+  const [days, setDays] = useState(365);
+  const points = days ? all.filter((p) => p.date >= addDays(today(), -days)) : all;
+  const first = points[0], last = points.at(-1);
+  const tracked = points.find((p) => p.cost != null);
+  return (
+    <div>
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 mt-3">
+        <p className="text-[14px] text-ink-2 tnum">
+          {first && last && first !== last ? <>Depuis le {dateFr(first.date)} : <Delta value={Math.round(last.value - first.value)} suffix=" €" />
+            {tracked && tracked !== last && last.cost != null && <>, dont {eur(Math.round(last.cost - tracked.cost!))} versés et <Delta value={Math.round((last.value - last.cost) - (tracked.value - tracked.cost!))} suffix=" €" /> de performance</>}.</>
+            : "Pas assez d'historique sur cette période."}
+        </p>
+        <div className="flex gap-0.5 p-0.5 rounded-full bg-surface-2 text-[12px]" role="tablist" aria-label="Période">
+          {RANGES.map(([l, d]) => (
+            <button key={l} role="tab" aria-selected={d === days} onClick={() => setDays(d)}
+              className={`px-2.5 py-1 rounded-full tnum transition-colors ${d === days ? "bg-surface font-semibold shadow-[var(--shadow)]" : "text-ink-2 hover:text-ink"}`}>{l}</button>
+          ))}
+        </div>
+      </div>
+      <Curve points={points} />
+    </div>
+  );
+}
+
+function Curve({ points }: { points: Point[] }) {
   const [i, setI] = useState<number | null>(null);
   if (points.length < 2) return null;
   const W = 600, H = 120;
@@ -22,7 +49,7 @@ export function Chart({ points }: { points: Point[] }) {
   const p = i == null ? null : points[Math.max(0, Math.min(points.length - 1, i))];
   const left = i == null ? 0 : (i / (points.length - 1)) * 100;
   return (
-    <div className="relative mt-4 touch-pan-y select-none" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setI(null)}>
+    <div className="relative mt-3 touch-pan-y select-none" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setI(null)}>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-32 block" preserveAspectRatio="none" role="img" aria-label="Valeur et montant versé sur un an">
         {cost.length > 1
           ? <polygon points={[...value.slice(from), ...[...cost].reverse()].join(" ")} fill="var(--c-stock)" opacity="0.2" />
