@@ -40,18 +40,16 @@ export async function addTransaction(fd: FormData) {
   refresh();
 }
 
-/** Versement du mois en un clic : achat au dernier prix connu (ou 1 € l'unité sans prix). */
+/** Versement du mois : quantité et prix unitaire, saisis sous le flux. */
 export async function recordFlow(fd: FormData) {
-  const amount = num(fd, "amount");
-  if (amount <= 0) throw new Error("Montant invalide");
-  const f = (await db.execute({
-    sql: `SELECT f.account_id, f.instrument_id, (SELECT price FROM prices WHERE instrument_id = f.instrument_id ORDER BY date DESC LIMIT 1) price
-          FROM plan_flows f WHERE f.id = ?`, args: [num(fd, "flow_id")],
-  })).rows[0] as unknown as { account_id: number; instrument_id: number | null; price: number | null } | undefined;
+  const quantity = num(fd, "quantity"), price = num(fd, "price");
+  if (quantity <= 0 || price <= 0) throw new Error("Quantité et prix doivent être positifs");
+  const f = (await db.execute({ sql: "SELECT account_id, instrument_id FROM plan_flows WHERE id = ?", args: [num(fd, "flow_id")] }))
+    .rows[0] as unknown as { account_id: number; instrument_id: number | null } | undefined;
   if (!f?.instrument_id) throw new Error("Flux sans instrument : passer par le Journal");
   await db.execute({
     sql: "INSERT INTO transactions (date, account_id, instrument_id, type, quantity, amount, note) VALUES (?,?,?,'buy',?,?,'versement du mois')",
-    args: [today(), f.account_id, f.instrument_id, f.price ? amount / f.price : amount, amount],
+    args: [today(), f.account_id, f.instrument_id, quantity, Math.round(quantity * price * 100) / 100],
   });
   refresh();
 }

@@ -98,7 +98,10 @@ export default async function ThisMonth() {
                   {!ok && (f.instrument_id
                     ? <form action={recordFlow} className="col-start-2 col-span-2 mt-2 flex justify-end gap-2">
                         <input type="hidden" name="flow_id" value={f.id} />
-                        <input name="amount" type="number" step="0.01" min="0.01" defaultValue={f.planned - f.done} aria-label="Montant versé" className="field w-28 h-8 text-[13px]" required />
+                        <label className="flex items-center gap-1.5 text-[12px] text-ink-3">Qté
+                          <input name="quantity" type="number" step="any" min="0" placeholder={f.price ? ((f.planned - f.done) / f.price).toFixed(f.price > 1000 ? 5 : 2) : ""} className="field w-24 h-8 text-[13px]" required /></label>
+                        <label className="flex items-center gap-1.5 text-[12px] text-ink-3">Prix
+                          <input name="price" type="number" step="any" min="0" defaultValue={f.price ? Math.round(f.price * 100) / 100 : undefined} className="field w-24 h-8 text-[13px]" required /></label>
                         <button className="btn btn-sm btn-soft">Versé</button>
                       </form>
                     : <Link href="/journal" className="col-start-2 col-span-2 mt-2 text-[13px] underline underline-offset-2">Saisir dans le Journal</Link>)}
@@ -106,7 +109,7 @@ export default async function ThisMonth() {
               );
             })}
           </ul>
-          <p className="text-[12px] text-ink-3 mt-4">« Versé » enregistre un achat au dernier cours connu. Pour un autre prix ou une autre date, passe par le Journal.</p>
+          <p className="text-[12px] text-ink-3 mt-4">Quantité achetée et prix unitaire payé : le montant versé en découle. Le prix est pré-rempli au dernier cours connu, la quantité suggérée est le reste à verser divisé par ce prix. Pour une autre date, passe par le Journal.</p>
         </div>
       </Section>
 

@@ -56,23 +56,24 @@ export async function getAllocation(positions: Position[]) {
   };
 }
 
-export type FlowProgress = { id: number; owner: string; account: string; label: string; planned: number; done: number; instrument_id: number | null };
+export type FlowProgress = { id: number; owner: string; account: string; label: string; planned: number; done: number; instrument_id: number | null; price: number | null };
 
 export async function getMonthProgress(ym: string): Promise<FlowProgress[]> {
   const flows = (await db.execute({
     sql: `SELECT f.id, f.owner, f.account_id, f.instrument_id, f.monthly_amount, a.name account,
-            COALESCE(f.label, i.name) label
+            COALESCE(f.label, i.name) label,
+            (SELECT price FROM prices WHERE instrument_id = f.instrument_id ORDER BY date DESC LIMIT 1) price
           FROM plan_flows f JOIN accounts a ON a.id = f.account_id LEFT JOIN instruments i ON i.id = f.instrument_id
           WHERE f.from_month <= ? AND (f.to_month IS NULL OR f.to_month >= ?) ORDER BY f.owner, f.id`,
     args: [ym, ym],
-  })).rows as unknown as { id: number; owner: string; account_id: number; instrument_id: number | null; monthly_amount: number; account: string; label: string }[];
+  })).rows as unknown as { id: number; owner: string; account_id: number; instrument_id: number | null; monthly_amount: number; account: string; label: string; price: number | null }[];
   const done = (await db.execute({
     sql: `SELECT account_id, instrument_id, SUM(amount) amount FROM transactions
           WHERE type = 'buy' AND substr(date, 1, 7) = ? GROUP BY 1, 2`,
     args: [ym],
   })).rows as unknown as { account_id: number; instrument_id: number; amount: number }[];
   return flows.map((f) => ({
-    id: f.id, owner: f.owner, account: f.account, label: f.label, planned: f.monthly_amount, instrument_id: f.instrument_id,
+    id: f.id, owner: f.owner, account: f.account, label: f.label, planned: f.monthly_amount, instrument_id: f.instrument_id, price: f.price,
     done: done
       .filter((d) => d.account_id === f.account_id && (f.instrument_id === null || d.instrument_id === f.instrument_id))
       .reduce((s, d) => s + d.amount, 0),
