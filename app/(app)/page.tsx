@@ -113,6 +113,20 @@ export default async function ThisMonth() {
         </div>
       </Section>
 
+      <Section title="Valorisations à rafraîchir" aside={old.length ? `${old.length} ligne${old.length > 1 ? "s" : ""} de plus de 90 jours` : undefined}>
+        {old.length === 0 ? <Empty>Tout a été valorisé dans les 90 derniers jours.</Empty> : (
+          <>
+            <ul className="panel divide-y divide-line">{old.slice(0, 6).map((p) => <StaleRow key={p.instrument_id} p={p} />)}</ul>
+            {old.length > 6 && (
+              <details className="mt-3">
+                <summary className="cursor-pointer text-[13px] text-ink-2 hover:text-ink inline-block">Voir les {old.length - 6} autres</summary>
+                <ul className="panel divide-y divide-line mt-3">{old.slice(6).map((p) => <StaleRow key={p.instrument_id} p={p} />)}</ul>
+              </details>
+            )}
+          </>
+        )}
+      </Section>
+
       <Section title="À faire sous 30 jours" aside={due.length ? `${due.length} action${due.length > 1 ? "s" : ""}` : undefined}>
         {due.length === 0 ? <Empty>Rien à échéance. Les prochaines actions sont dans le Journal.</Empty> : (
           <ul className="divide-y divide-line">
@@ -135,19 +149,6 @@ export default async function ThisMonth() {
       </div>
       <p className="text-[12px] text-ink-3 mt-3">Le trait noir est la cible. Un écart positif veut dire « sous la cible » : c&apos;est là que vont les prochains versements.</p>
 
-      <Section title="Valorisations à rafraîchir" aside={old.length ? `${old.length} ligne${old.length > 1 ? "s" : ""} de plus de 90 jours` : undefined}>
-        {old.length === 0 ? <Empty>Tout a été valorisé dans les 90 derniers jours.</Empty> : (
-          <>
-            <ul className="panel divide-y divide-line">{old.slice(0, 6).map((p) => <StaleRow key={p.instrument_id} p={p} />)}</ul>
-            {old.length > 6 && (
-              <details className="mt-3">
-                <summary className="cursor-pointer text-[13px] text-ink-2 hover:text-ink inline-block">Voir les {old.length - 6} autres</summary>
-                <ul className="panel divide-y divide-line mt-3">{old.slice(6).map((p) => <StaleRow key={p.instrument_id} p={p} />)}</ul>
-              </details>
-            )}
-          </>
-        )}
-      </Section>
     </>
   );
 }
