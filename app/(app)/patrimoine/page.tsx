@@ -64,7 +64,7 @@ export default async function Patrimoine() {
             <li key={l} className={String(a)}>
               <div className="text-ink-3">{tip ? <span className={`tip ${a === "text-right" ? "tip-right" : ""}`} tabIndex={0} data-tip={tip}>{l}</span> : l}</div>
               <div className="font-semibold text-[15px] tnum">{v}</div>
-              <div className="text-ink-2 tnum">{y}</div>
+              <div className="text-ink-2 tnum">{y}, {Number(y) - 1997} ans</div>
             </li>
           ))}
         </ol>
