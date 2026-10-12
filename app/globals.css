@@ -1,11 +1,131 @@
 @import "tailwindcss";
 
-body { @apply bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100; }
-h1 { @apply text-2xl font-semibold; }
-h2 { @apply mt-8 mb-2 text-lg font-semibold; }
-table { @apply w-full text-sm; }
-th { @apply text-left font-medium text-neutral-500 py-1 pr-3; }
-td { @apply py-1 pr-3 border-t border-neutral-200 dark:border-neutral-800; }
-.num { @apply text-right tabular-nums; }
-input, select { @apply rounded border border-neutral-300 dark:border-neutral-700 bg-transparent px-2 py-1 text-sm; }
-button { @apply rounded bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900 px-3 py-1 text-sm; }
+/* Carnet de bord : tokens. Light par défaut, dark via le système. OKLCH partout. */
+:root {
+  color-scheme: light dark;
+  --bg: oklch(97.5% 0.008 80);
+  --surface: oklch(99.2% 0.005 85);
+  --surface-2: oklch(95% 0.012 80);
+  --ink: oklch(25% 0.02 60);
+  --ink-2: oklch(46% 0.02 60);
+  --ink-3: oklch(62% 0.015 65);
+  --line: oklch(89% 0.012 75);
+  --line-strong: oklch(80% 0.015 75);
+  --focus: oklch(70% 0.14 80);
+  --up: oklch(52% 0.11 150);
+  --down: oklch(54% 0.15 30);
+  --c-stock: oklch(70% 0.14 80);
+  --c-startup: oklch(62% 0.15 35);
+  --c-crypto: oklch(68% 0.17 55);
+  --c-livret: oklch(68% 0.10 150);
+  --c-cash: oklch(62% 0.08 240);
+  --r-sm: 6px; --r-md: 10px; --r-lg: 14px;
+  --ease: cubic-bezier(0.25, 1, 0.5, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: oklch(17% 0.012 60);
+    --surface: oklch(21% 0.012 60);
+    --surface-2: oklch(25% 0.012 60);
+    --ink: oklch(93% 0.01 80);
+    --ink-2: oklch(72% 0.015 70);
+    --ink-3: oklch(56% 0.015 65);
+    --line: oklch(30% 0.012 60);
+    --line-strong: oklch(38% 0.014 60);
+    --up: oklch(72% 0.11 150);
+    --down: oklch(72% 0.14 30);
+    --c-stock: oklch(76% 0.13 80);
+    --c-startup: oklch(70% 0.14 35);
+    --c-crypto: oklch(74% 0.15 55);
+    --c-livret: oklch(74% 0.10 150);
+    --c-cash: oklch(70% 0.08 240);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-focus: var(--focus);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+  --font-sans: var(--font-instrument), ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+.num { font-variant-numeric: tabular-nums lining-nums; text-align: right; white-space: nowrap; }
+.tnum { font-variant-numeric: tabular-nums lining-nums; }
+
+/* Formulaires : un seul vocabulaire. */
+.field {
+  height: 36px; width: 100%; padding: 0 10px; font-size: 14px;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line-strong); border-radius: var(--r-sm);
+  transition: border-color 180ms var(--ease), box-shadow 180ms var(--ease);
+}
+.field::placeholder { color: var(--ink-3); }
+.field:hover { border-color: var(--ink-3); }
+.field:focus-visible { outline: none; border-color: var(--focus); box-shadow: 0 0 0 3px oklch(from var(--focus) l c h / 0.3); }
+select.field { appearance: none; padding-right: 28px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' fill='none' stroke='%23887766' stroke-width='1.5'/></svg>");
+  background-repeat: no-repeat; background-position: right 10px center; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 36px; padding: 0 14px; font-size: 14px; font-weight: 500; white-space: nowrap;
+  border-radius: var(--r-sm); border: 1px solid transparent; cursor: pointer;
+  transition: background-color 180ms var(--ease), border-color 180ms var(--ease), transform 120ms var(--ease);
+}
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(from var(--focus) l c h / 0.4); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn-primary { background: var(--ink); color: var(--bg); }
+.btn-primary:hover { background: oklch(from var(--ink) calc(l + 0.08) c h); }
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--line-strong); }
+.btn-ghost:hover { background: var(--surface-2); }
+.btn-sm { height: 30px; padding: 0 10px; font-size: 13px; }
+
+/* Case à cocher d'action : ronde, se remplit d'encre. */
+.check {
+  width: 24px; height: 24px; flex: none; border-radius: 999px; cursor: pointer;
+  border: 1.5px solid var(--line-strong); background: var(--surface); color: var(--bg);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background-color 180ms var(--ease), border-color 180ms var(--ease), transform 120ms var(--ease);
+}
+.check:hover { border-color: var(--ink); transform: scale(1.06); }
+.check:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(from var(--focus) l c h / 0.4); }
+.check-done { background: var(--ink); border-color: var(--ink); cursor: default; }
+
+/* Tableaux : en-têtes discrets, lignes séparées par un filet, survol tonal. */
+.tbl { width: 100%; font-size: 14px; border-collapse: collapse; }
+.tbl th { font-size: 12px; font-weight: 500; color: var(--ink-3); text-align: left; padding: 6px 10px; letter-spacing: 0.01em; border-bottom: 1px solid var(--line); }
+.tbl td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.tbl tbody tr:last-child td { border-bottom: 0; }
+.tbl tbody tr:hover td { background: var(--surface-2); }
+.tbl .total td { font-weight: 600; background: var(--surface-2); }
+.tbl .total:hover td { background: var(--surface-2); }
+.tbl th.num, .tbl td.num { text-align: right; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 999px; flex: none; }
+.bar { height: 10px; border-radius: 999px; background: var(--surface-2); overflow: hidden; }
+.bar > i { display: block; height: 100%; border-radius: 999px; transition: width 400ms var(--ease); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

@@ -13,6 +13,9 @@ docs/
   julie-suisse.md    salaire CHF, impôt à la source, LPP, obligations déclaratives
   revues.md          checklists revue trimestrielle et annuelle
   journal.md         historique daté des décisions et de leur contexte
+PRODUCT.md         contexte produit pour le design (registre, usages, personnalité, anti-références)
+DESIGN.md          design system « Carnet de bord » : tokens, typographie, composants, règles. À lire avant tout écran
+components/ui.tsx  primitives (Section, Bar, Delta, Dot, Check, Empty) et couleurs par poche (POCKET)
 app/(app)/page.tsx            écran « Ce mois » : versements vs plan, actions à 30 j, écart aux cibles, valorisations périmées
 app/(app)/patrimoine/page.tsx positions par personne et compte, historique, trajectoire FIRE
 app/(app)/journal/page.tsx    saisie et liste des transactions, instruments, actions
@@ -63,4 +66,4 @@ Commence toute session par `docs/README.md`, puis la table `actions` (ou `docs/a
 
 ## App
 
-Next.js 16, App Router, Server Components et server actions uniquement, Tailwind sans bibliothèque de composants. `npm run dev`, `npm run lint`, `npm run build`. Déployé sur Vercel, crons dans `vercel.json`.
+Next.js 16, App Router, Server Components et server actions uniquement, Tailwind 4 avec les tokens de `app/globals.css` (voir DESIGN.md), aucune bibliothèque de composants. Tout nouvel écran respecte DESIGN.md : pastille de poche devant chaque instrument, signe devant chaque variation, encre pour les actions, zéro ombre. `npm run dev`, `npm run lint`, `npm run build`. Déployé sur Vercel, crons dans `vercel.json`.
