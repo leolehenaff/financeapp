@@ -56,7 +56,7 @@ export async function getAllocation(positions: Position[]) {
   };
 }
 
-export type FlowProgress = { id: number; owner: string; account: string; label: string; planned: number; done: number };
+export type FlowProgress = { id: number; owner: string; account: string; label: string; planned: number; done: number; instrument_id: number | null };
 
 export async function getMonthProgress(ym: string): Promise<FlowProgress[]> {
   const flows = (await db.execute({
@@ -72,7 +72,7 @@ export async function getMonthProgress(ym: string): Promise<FlowProgress[]> {
     args: [ym],
   })).rows as unknown as { account_id: number; instrument_id: number; amount: number }[];
   return flows.map((f) => ({
-    id: f.id, owner: f.owner, account: f.account, label: f.label, planned: f.monthly_amount,
+    id: f.id, owner: f.owner, account: f.account, label: f.label, planned: f.monthly_amount, instrument_id: f.instrument_id,
     done: done
       .filter((d) => d.account_id === f.account_id && (f.instrument_id === null || d.instrument_id === f.instrument_id))
       .reduce((s, d) => s + d.amount, 0),
@@ -92,10 +92,10 @@ export const dueSoon = (actions: Action[], days = 30) => {
   return actions.filter((a) => a.status === "todo" && a.due_date && a.due_date <= limit);
 };
 
-export const stale = (positions: Position[], days = 90) => {
-  const limit = addDays(today(), -days);
-  return positions.filter((p) => p.price_source === "manual" && p.kind !== "Livret" && (!p.price_date || p.price_date < limit));
-};
+/** Valorisation périmée : manuelle et plus vieille que 90 jours (un an pour les start-up, jamais pour les livrets). */
+export const stale = (positions: Position[]) =>
+  positions.filter((p) => p.price_source === "manual" && p.kind !== "Livret"
+    && (!p.price_date || p.price_date < addDays(today(), p.kind === "Start-up" ? -365 : -90)));
 
 /** Un an d'historique : valeur, et versé net (coût d'achat) depuis les snapshots v2 seulement.
  *  Les snapshots v1 ont un coût figé (valeur mise à jour à la main, pas d'achats saisis) : inutilisable. */

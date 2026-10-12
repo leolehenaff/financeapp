@@ -1,4 +1,5 @@
-import { completeAction, setPrice } from "@/lib/actions";
+import Link from "next/link";
+import { completeAction, recordFlow, setPrice } from "@/lib/actions";
 import { dateFr, eur, monthLabel, pct, today } from "@/lib/format";
 import { dueSoon, getActions, getAllocation, getMonthProgress, getPositions, stale, type AllocRow, type Position } from "@/lib/queries";
 import { Bar, Check, Delta, Dot, Empty, Section, pocket } from "@/components/ui";
@@ -94,11 +95,18 @@ export default async function ThisMonth() {
                     <span className="text-ink-3"> / {eur(f.planned)}</span>
                   </div>
                   <div className="col-start-2 col-span-2 mt-1.5"><Bar value={f.done} max={f.planned} color={pocket(kindOf(f)).color} className="h-1.5" /></div>
+                  {!ok && (f.instrument_id
+                    ? <form action={recordFlow} className="col-start-2 col-span-2 mt-2 flex gap-2">
+                        <input type="hidden" name="flow_id" value={f.id} />
+                        <input name="amount" type="number" step="0.01" min="0.01" defaultValue={f.planned - f.done} aria-label="Montant versé" className="field w-28 text-[14px]" required />
+                        <button className="btn btn-sm">Versé</button>
+                      </form>
+                    : <Link href="/journal" className="col-start-2 col-span-2 mt-2 text-[13px] underline underline-offset-2">Saisir dans le Journal</Link>)}
                 </li>
               );
             })}
           </ul>
-          <p className="text-[12px] text-ink-3 mt-4">Un versement se saisit comme un achat dans le Journal, il apparaît ici le jour même.</p>
+          <p className="text-[12px] text-ink-3 mt-4">« Versé » enregistre un achat au dernier cours connu. Pour un autre prix ou une autre date, passe par le Journal.</p>
         </div>
       </Section>
 
