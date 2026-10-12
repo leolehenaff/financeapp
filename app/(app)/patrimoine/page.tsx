@@ -58,8 +58,8 @@ export default async function Patrimoine() {
         <ol className="grid grid-cols-3 text-[13px] mt-3">
           {[
             ["Aujourd'hui", eur(total), year, "text-left", ""],
-            ["Seuil hors crédit", "1,15 M€", year + fire.partial, "text-center", "Capital, en euros d'aujourd'hui, qui couvre le coût de vie avec enfant (5 436 €/mois) sauf le crédit immobilier (1 974 €), à 3,5 % de retrait brut par an, soit 28 fois 41 500 €. Fiscalité des retraits non déduite."],
-            ["Seuil complet", "1,85 M€", year + fire.full, "text-right", "Capital, en euros d'aujourd'hui, qui couvre tout le coût de vie avec enfant (5 436 €/mois), crédit compris, à 3,5 % de retrait brut par an, soit 28 fois 65 200 €. Année estimée au rendement réel (nominal moins 2 % d'inflation) avec 3 700 € par mois indexés."],
+            ["Seuil hors crédit", "870 k€", year + fire.partial, "text-center", "Capital, en euros d'aujourd'hui, qui couvre le coût de vie avec un enfant d'âge scolaire (4 550 €/mois) sauf le crédit immobilier (1 974 €), à 3,5 % de retrait brut par an, soit 28 fois 31 000 €. Fiscalité des retraits non déduite."],
+            ["Seuil complet", "1,53 M€", year + fire.full, "text-right", "Capital, en euros d'aujourd'hui, qui couvre tout le coût de vie avec un enfant d'âge scolaire (4 550 €/mois), crédit compris, à 3,5 % de retrait brut par an, soit 28 fois 54 600 €. Année estimée au rendement réel (nominal moins 2 % d'inflation) avec 3 700 € par mois indexés."],
           ].map(([l, v, y, a, tip]) => (
             <li key={l} className={String(a)}>
               <div className="text-ink-3">{tip ? <span className={`tip ${a === "text-right" ? "tip-right" : ""}`} tabIndex={0} data-tip={tip}>{l}</span> : l}</div>

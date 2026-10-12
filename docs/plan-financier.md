@@ -54,8 +54,8 @@ Virements automatiques au 1er du mois, avant toute dépense. Ces flux sont la ta
 ## Trajectoire FIRE
 
 - Règle : 3,5 % de retrait brut, soit 28 fois les dépenses annuelles, en euros constants de 2026. La fiscalité des retraits (17,2 % PEA, 30 % CTO et crypto) n'est pas déduite : c'est la marge d'optimisme du modèle.
-- Base de dépenses (révision du 12/10/2026) : coût de vie avec enfant 5 436 €/mois (3 956 + crèche 1 230 + courant bébé 250), soit 65 200 €/an. Hors crédit (1 974 €/mois) : 41 500 €/an.
-- Seuil hors crédit ≈ 1,15 M€. Seuil complet ≈ 1,85 M€. Les années affichées dans l'app sont calculées au rendement réel (hypothèses nominales moins 2 % d'inflation), avec 3 700 €/mois supposés indexés. Au 12/10/2026 : seuil hors crédit vers 2038, seuil complet vers 2044.
+- Base de dépenses (révision du 12/10/2026) : coût de vie à l'horizon des seuils, enfant d'âge scolaire, 4 550 €/mois (3 956 + 600 : cantine, périscolaire, activités ; la crèche est finie dès 2030), soit 54 600 €/an. Hors crédit (1 974 €/mois) : 31 000 €/an. Le surcoût crèche 2027 à 2030 est une dépense de phase, pas une dépense de rente.
+- Seuil hors crédit ≈ 870 k€. Seuil complet ≈ 1,53 M€. Les années affichées dans l'app sont calculées au rendement réel (hypothèses nominales moins 2 % d'inflation), avec 3 700 €/mois supposés indexés. Au 12/10/2026 : seuil hors crédit vers 2035, seuil complet vers 2042.
 - Anciens repères (juillet 2026) : 680 k€ et 1,4 M€, calculés sans enfant et en nominal. Abandonnés le 12/10/2026 car trop optimistes.
 - La maison est exclue du calcul : sa valeur sert d'apport pour la maison définitive.
 - Capital au 12/10/2026 : 272 482 €, coût d'achat 240 826 €.

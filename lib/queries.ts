@@ -109,8 +109,9 @@ export async function getHistory(): Promise<{ date: string; value: number; cost:
 }
 
 /** Seuils FIRE en euros constants de 2026 : 28 fois les dépenses annuelles (3,5 % de retrait brut),
- *  sur un coût de vie avec enfant de 5 436 €/mois (3 956 + crèche 1 230 + courant 250). Voir docs/plan-financier.md. */
-export const FIRE = { partial: 1_150_000, full: 1_850_000, inflation: 0.02 };
+ *  sur un coût de vie de 4 550 €/mois (3 956 + 600 pour un enfant d'âge scolaire, la crèche étant finie bien avant).
+ *  Voir docs/plan-financier.md. */
+export const FIRE = { partial: 870_000, full: 1_530_000, inflation: 0.02 };
 
 /** Rendement nominal pondéré (hypothèses « avg »), puis années jusqu'aux seuils en réel (rendement moins inflation,
  *  versements supposés indexés). */

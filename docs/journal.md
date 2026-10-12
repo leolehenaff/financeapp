@@ -2,7 +2,7 @@
 
 ## 12 octobre 2026 (nuit) : seuils FIRE révisés
 
-Léo trouvait 1,4 M€ trop faible pour vivre. Vérification : ce chiffre valait 28 fois le coût de vie actuel sans enfant, en nominal, sans fiscalité. Décision : recalculer sur le coût de vie avec enfant (5 436 €/mois dès avril 2027) et en euros constants, avec un rendement réel (nominal moins 2 %). Nouveaux seuils : 1,15 M€ hors crédit, 1,85 M€ complet, soit vers 2038 et 2044 au rythme actuel de 3 700 €/mois. Fiscalité des retraits toujours non déduite, à traiter à la prochaine revue annuelle. Constante `FIRE` dans `lib/queries.ts`.
+Léo trouvait 1,4 M€ trop faible pour vivre. Vérification : ce chiffre valait 28 fois le coût de vie actuel sans enfant, en nominal, sans fiscalité. Décision : recalculer sur le coût de vie à l'horizon des seuils (enfant d'âge scolaire, 3 956 + 600 = 4 550 €/mois ; la crèche s'arrête vers 2030, première version à 5 436 € corrigée par Léo) et en euros constants, avec un rendement réel (nominal moins 2 %). Nouveaux seuils : 870 k€ hors crédit, 1,53 M€ complet, soit vers 2035 et 2042 au rythme actuel de 3 700 €/mois. Fiscalité des retraits toujours non déduite, à traiter à la prochaine revue annuelle. Constante `FIRE` dans `lib/queries.ts`.
 
 ## 12 octobre 2026 (soir) : app v2
 
