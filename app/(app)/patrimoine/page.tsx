@@ -4,16 +4,22 @@ import { Delta, Dot, POCKET, Section, pocket } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
-function Chart({ points }: { points: { date: string; value: number }[] }) {
+/** Deux courbes : valeur (encre) et versé net (pointillé). La zone entre les deux est la performance. */
+function Chart({ points }: { points: { date: string; value: number; cost: number | null }[] }) {
   if (points.length < 2) return null;
   const W = 600, H = 120;
-  const vs = points.map((p) => p.value), min = Math.min(...vs) * 0.97, max = Math.max(...vs) * 1.02;
-  const xy = points.map((p, i) => [(i / (points.length - 1)) * W, H - ((p.value - min) / (max - min)) * H]);
-  const line = xy.map(([x, y]) => `${x},${y}`).join(" ");
+  const all = points.flatMap((p) => [p.value, p.cost ?? p.value]), min = Math.min(...all) * 0.97, max = Math.max(...all) * 1.02;
+  const xy = (i: number, v: number) => `${(i / (points.length - 1)) * W},${H - ((v - min) / (max - min)) * H}`;
+  const value = points.map((p, i) => xy(i, p.value));
+  const cost = points.flatMap((p, i) => (p.cost == null ? [] : [xy(i, p.cost)]));
+  const from = points.findIndex((p) => p.cost != null);
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-32 mt-4" preserveAspectRatio="none" role="img" aria-label="Évolution du patrimoine sur un an">
-      <polygon points={`0,${H} ${line} ${W},${H}`} fill="var(--c-stock)" opacity="0.15" />
-      <polyline points={line} fill="none" stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+    <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-32 mt-4" preserveAspectRatio="none" role="img" aria-label="Valeur et montant versé sur un an">
+      {cost.length > 1
+        ? <polygon points={[...value.slice(from), ...[...cost].reverse()].join(" ")} fill="var(--c-stock)" opacity="0.2" />
+        : <polygon points={`0,${H} ${value.join(" ")} ${W},${H}`} fill="var(--c-stock)" opacity="0.15" />}
+      {cost.length > 1 && <polyline points={cost.join(" ")} fill="none" stroke="var(--ink-3)" strokeWidth="1" strokeDasharray="4 4" vectorEffect="non-scaling-stroke" />}
+      <polyline points={value.join(" ")} fill="none" stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }
@@ -45,7 +51,8 @@ export default async function Patrimoine() {
   const total = positions.reduce((s, p) => s + p.value, 0);
   const sum = (ps: Position[], k: "value" | "cost") => ps.reduce((s, p) => s + p[k], 0);
   const perf = (ps: Position[]) => { const c = sum(ps, "cost"), v = sum(ps, "value"); return c ? ((v - c) / c) * 100 : 0; };
-  const first = history[0]?.value;
+  const first = history[0], tracked = history.find((h) => h.cost != null);
+  const cost = sum(positions, "cost");
   const year = Number(today().slice(0, 4));
 
   return (
@@ -53,10 +60,12 @@ export default async function Patrimoine() {
       <p className="text-[13px] text-ink-2">Patrimoine au {dateFr(today())}</p>
       <h1 className="text-[34px] font-semibold tracking-[-0.02em] leading-tight tnum mt-0.5">{eur(total)}</h1>
       <p className="text-[15px] text-ink-2 mt-2">
-        {first && <><Delta value={Math.round(total - first)} suffix=" €" /> depuis le {dateFr(history[0].date)}, </>}
-        <Delta value={perf(positions)} suffix=" %" /> sur le coût d&apos;achat.
+        <Delta value={Math.round(total - cost)} suffix=" €" /> net des versements ({eur(cost)} versés), soit <Delta value={perf(positions)} suffix=" %" />.
+        {first && <> Depuis le {dateFr(first.date)} : <Delta value={Math.round(total - first.value)} suffix=" €" />
+          {tracked && tracked !== history.at(-1) && <>, dont {eur(Math.round(cost - tracked.cost!))} versés depuis le {dateFr(tracked.date)} et <Delta value={Math.round((total - cost) - (tracked.value - tracked.cost!))} suffix=" €" /> de performance</>}.</>}
       </p>
       <Chart points={history} />
+      <p className="flex gap-5 text-[12px] text-ink-3 mt-1.5"><span><span className="inline-block w-4 border-t-[1.5px] border-ink align-middle mr-1.5" />Valeur</span><span><span className="inline-block w-4 border-t border-dashed border-ink-3 align-middle mr-1.5" />Versé net{tracked && <> (suivi depuis le {dateFr(tracked.date)})</>}</span></p>
       <div className="mt-6"><Composition positions={positions} total={total} /></div>
 
       <Section title="Trajectoire" aside={`${pct(fire.rate * 100)} attendus, ${eur(monthly)} par mois`}>

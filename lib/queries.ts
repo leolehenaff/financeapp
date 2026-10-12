@@ -97,10 +97,13 @@ export const stale = (positions: Position[], days = 90) => {
   return positions.filter((p) => p.price_source === "manual" && p.kind !== "Livret" && (!p.price_date || p.price_date < limit));
 };
 
-export async function getHistory(): Promise<{ date: string; value: number }[]> {
-  const r = await db.execute(
-    "SELECT snapshot_date date, total_value value FROM snapshots WHERE snapshot_date >= date('now', '-365 days') ORDER BY 1");
-  return r.rows as unknown as { date: string; value: number }[];
+/** Un an d'historique : valeur, et versé net (coût d'achat) depuis les snapshots v2 seulement.
+ *  Les snapshots v1 ont un coût figé (valeur mise à jour à la main, pas d'achats saisis) : inutilisable. */
+export async function getHistory(): Promise<{ date: string; value: number; cost: number | null }[]> {
+  const r = await db.execute(`
+    SELECT snapshot_date date, total_value value, json_extract(data_json, '$.cost') cost
+    FROM snapshots WHERE snapshot_date >= date('now', '-365 days') ORDER BY 1`);
+  return r.rows as unknown as { date: string; value: number; cost: number | null }[];
 }
 
 /** Rendement moyen pondéré (hypothèses « avg ») et années jusqu'aux seuils FIRE. */
