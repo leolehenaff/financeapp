@@ -69,7 +69,7 @@ export default async function ThisMonth() {
   return (
     <>
       <p className="text-[13px] text-ink-2 capitalize">{monthLabel(ym)}</p>
-      <h1 className="text-[28px] font-semibold tracking-[-0.02em] leading-tight mt-0.5">
+      <h1 className="text-[30px] font-bold tracking-[-0.025em] leading-tight mt-0.5">
         {remaining.length === 0 ? "Tout est versé, beau mois." : `Il reste ${eur(planned - done)} à verser.`}
       </h1>
       <p className="text-[15px] text-ink-2 mt-2 max-w-[65ch]">
@@ -79,7 +79,7 @@ export default async function ThisMonth() {
 
       <Section title="Versements du mois" aside={`${eur(done)} sur ${eur(planned)}`}>
         <div className="panel p-5">
-          <Bar value={done} max={planned} color="var(--ink)" className="h-3" />
+          <Bar value={done} max={planned} color="var(--accent)" className="h-3.5" />
           <ul className="mt-5 divide-y divide-line">
             {flows.map((f) => {
               const ok = f.done >= f.planned;
@@ -96,10 +96,10 @@ export default async function ThisMonth() {
                   </div>
                   <div className="col-start-2 col-span-2 mt-1.5"><Bar value={f.done} max={f.planned} color={pocket(kindOf(f)).color} className="h-1.5" /></div>
                   {!ok && (f.instrument_id
-                    ? <form action={recordFlow} className="col-start-2 col-span-2 mt-2 flex gap-2">
+                    ? <form action={recordFlow} className="col-start-2 col-span-2 mt-2 flex justify-end gap-2">
                         <input type="hidden" name="flow_id" value={f.id} />
-                        <input name="amount" type="number" step="0.01" min="0.01" defaultValue={f.planned - f.done} aria-label="Montant versé" className="field w-28 text-[14px]" required />
-                        <button className="btn btn-sm">Versé</button>
+                        <input name="amount" type="number" step="0.01" min="0.01" defaultValue={f.planned - f.done} aria-label="Montant versé" className="field w-28 h-8 text-[13px]" required />
+                        <button className="btn btn-sm btn-soft">Versé</button>
                       </form>
                     : <Link href="/journal" className="col-start-2 col-span-2 mt-2 text-[13px] underline underline-offset-2">Saisir dans le Journal</Link>)}
                 </li>
@@ -117,7 +117,7 @@ export default async function ThisMonth() {
               <li key={a.id} className="flex gap-3 items-start py-3">
                 <form action={completeAction.bind(null, a.id)} className="pt-0.5"><Check /></form>
                 <div className="text-[14px] leading-snug">
-                  <span className={`tnum text-[12px] font-medium px-1.5 py-0.5 rounded-sm mr-2 ${a.due_date! < day ? "bg-down text-bg" : "bg-surface-2 text-ink-2"}`}>{dateFr(a.due_date)}</span>
+                  <span className={`chip tnum mr-2 ${a.due_date! < day ? "bg-down-soft text-down" : "bg-surface-2 text-ink-2"}`}>{dateFr(a.due_date)}</span>
                   {a.title}
                 </div>
               </li>

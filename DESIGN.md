@@ -1,42 +1,45 @@
 ---
 name: Carnet de bord
-description: Cockpit patrimonial chaleureux et lisible, papier chaud, encre brune, une couleur par poche.
+description: Cockpit patrimonial clair et coloré, blanc sur gris très pâle, une couleur vive par poche, formes rondes.
 colors:
-  paper: "oklch(97.5% 0.008 80)"
-  paper-surface: "oklch(99.2% 0.005 85)"
-  paper-sunken: "oklch(95% 0.012 80)"
-  ink: "oklch(25% 0.02 60)"
-  ink-soft: "oklch(46% 0.02 60)"
-  ink-faint: "oklch(62% 0.015 65)"
-  rule: "oklch(89% 0.012 75)"
-  rule-strong: "oklch(80% 0.015 75)"
-  focus-ochre: "oklch(70% 0.14 80)"
-  gain-sage: "oklch(52% 0.11 150)"
-  loss-terracotta: "oklch(54% 0.15 30)"
-  pocket-stock-ochre: "oklch(70% 0.14 80)"
-  pocket-startup-terracotta: "oklch(62% 0.15 35)"
-  pocket-crypto-burnt-orange: "oklch(68% 0.17 55)"
-  pocket-livret-sage: "oklch(68% 0.10 150)"
-  pocket-cash-slate: "oklch(62% 0.08 240)"
+  page: "oklch(97.5% 0.006 250)"
+  surface: "oklch(100% 0 0)"
+  surface-sunken: "oklch(95.5% 0.008 250)"
+  ink: "oklch(22% 0.03 265)"
+  ink-soft: "oklch(48% 0.025 262)"
+  ink-faint: "oklch(64% 0.02 260)"
+  rule: "oklch(92% 0.008 250)"
+  rule-strong: "oklch(84% 0.012 250)"
+  accent-indigo: "oklch(55% 0.21 275)"
+  accent-indigo-soft: "oklch(94% 0.04 275)"
+  gain-green: "oklch(58% 0.17 150)"
+  gain-green-soft: "oklch(94% 0.06 150)"
+  loss-red: "oklch(58% 0.19 25)"
+  loss-red-soft: "oklch(94% 0.05 25)"
+  pocket-stock-indigo: "oklch(58% 0.2 270)"
+  pocket-startup-pink: "oklch(64% 0.22 345)"
+  pocket-crypto-orange: "oklch(72% 0.18 55)"
+  pocket-livret-green: "oklch(66% 0.17 155)"
+  pocket-cash-teal: "oklch(66% 0.13 215)"
 typography:
   display:
     fontFamily: "Instrument Sans, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "34px"
-    fontWeight: 600
-    lineHeight: 1.15
-    letterSpacing: "-0.02em"
+    fontSize: "38px"
+    fontWeight: 700
+    lineHeight: 1.1
+    letterSpacing: "-0.03em"
   headline:
     fontFamily: "Instrument Sans, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "28px"
-    fontWeight: 600
-    lineHeight: 1.2
-    letterSpacing: "-0.02em"
+    fontSize: "30px"
+    fontWeight: 700
+    lineHeight: 1.15
+    letterSpacing: "-0.025em"
   title:
     fontFamily: "Instrument Sans, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "17px"
-    fontWeight: 600
+    fontSize: "18px"
+    fontWeight: 700
     lineHeight: 1.3
-    letterSpacing: "-0.01em"
+    letterSpacing: "-0.015em"
   body:
     fontFamily: "Instrument Sans, ui-sans-serif, system-ui, sans-serif"
     fontSize: "15px"
@@ -50,13 +53,13 @@ typography:
   label:
     fontFamily: "Instrument Sans, ui-sans-serif, system-ui, sans-serif"
     fontSize: "12px"
-    fontWeight: 500
+    fontWeight: 600
     lineHeight: 1.3
-    letterSpacing: "0.01em"
+    letterSpacing: "0.02em"
 rounded:
-  sm: "6px"
-  md: "10px"
-  lg: "14px"
+  sm: "10px"
+  md: "14px"
+  lg: "18px"
   pill: "999px"
 spacing:
   xs: "4px"
@@ -66,208 +69,161 @@ spacing:
   xl: "40px"
 components:
   button-primary:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
+    backgroundColor: "{colors.accent-indigo}"
+    textColor: "#ffffff"
     typography: "{typography.table}"
-    rounded: "{rounded.sm}"
-    padding: "0 14px"
-    height: "36px"
+    rounded: "{rounded.pill}"
+    padding: "0 16px"
+    height: "40px"
+  button-soft:
+    backgroundColor: "{colors.accent-indigo-soft}"
+    textColor: "{colors.accent-indigo}"
+    typography: "{typography.table}"
+    rounded: "{rounded.pill}"
+    padding: "0 16px"
+    height: "40px"
   button-ghost:
-    backgroundColor: "transparent"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
     typography: "{typography.table}"
-    rounded: "{rounded.sm}"
-    padding: "0 14px"
-    height: "36px"
-  button-ghost-hover:
-    backgroundColor: "{colors.paper-sunken}"
+    rounded: "{rounded.pill}"
+    padding: "0 16px"
+    height: "40px"
   field:
-    backgroundColor: "{colors.paper-surface}"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
     typography: "{typography.table}"
     rounded: "{rounded.sm}"
-    padding: "0 10px"
-    height: "36px"
+    padding: "0 12px"
+    height: "40px"
   panel:
-    backgroundColor: "{colors.paper-surface}"
+    backgroundColor: "{colors.surface}"
     rounded: "{rounded.lg}"
     padding: "20px"
+  nav-tabs:
+    backgroundColor: "{colors.surface-sunken}"
+    rounded: "{rounded.pill}"
+    padding: "4px"
   date-chip:
-    backgroundColor: "{colors.paper-sunken}"
+    backgroundColor: "{colors.surface-sunken}"
     textColor: "{colors.ink-soft}"
     typography: "{typography.label}"
-    rounded: "{rounded.sm}"
-    padding: "2px 6px"
-  date-chip-late:
-    backgroundColor: "{colors.loss-terracotta}"
-    textColor: "{colors.paper}"
-  check:
-    backgroundColor: "{colors.paper-surface}"
     rounded: "{rounded.pill}"
-    size: "24px"
+    padding: "0 10px"
+    height: "24px"
+  date-chip-late:
+    backgroundColor: "{colors.loss-red-soft}"
+    textColor: "{colors.loss-red}"
+  check:
+    backgroundColor: "{colors.surface}"
+    rounded: "{rounded.pill}"
+    size: "26px"
   check-done:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
+    backgroundColor: "{colors.gain-green}"
+    textColor: "#ffffff"
 ---
 
 # Design System: Carnet de bord
 
 ## 1. Overview
 
-**Creative North Star: "Le carnet de bord"**
+**Creative North Star: « Clair, joli, un peu fun »**
 
-Un carnet qu'on ouvre le 1er du mois à la table de la cuisine : du papier chaud, une encre brune plutôt que noire, des chiffres qu'on lit à bout de bras, et cinq couleurs de crayon, une par poche, qui ne changent jamais de page en page. Le carnet raconte le chemin parcouru et pointe le prochain pas. Il ne vend rien, il ne crie pas, il ne décore pas.
+Un cockpit qu'on ouvre le 1er du mois sur iPhone, dans la cuisine, puis le soir sur Mac : du blanc posé sur un gris très pâle, des cartes rondes qui flottent à peine, et cinq couleurs franches, une par poche, qui ne changent jamais d'écran en écran. La couleur fait le fun, la typographie fait la hiérarchie, les barres épaisses font voir le progrès. Référence assumée : Copilot Money pour la couleur par catégorie et les barres, Mercury pour le calme des chiffres.
 
-Le système sert un cockpit d'exécution (registre produit) : la hiérarchie est faite par la taille et le poids de la typographie, jamais par l'ornement. Les surfaces sont plates, séparées par des filets fins et des tons de papier légèrement différents. La couleur est réservée aux données : poches, gains et pertes, cible atteinte ou non. Le thème clair est le défaut (cuisine, lumière du jour, iPhone) ; le thème sombre suit le système pour les revues du soir sur Mac et garde la même teinte chaude dans ses neutres.
-
-Le système rejette explicitement : l'ancienne v1 « Midnight Luxe » (noir, or, lueurs, animations d'entrée), l'app de banque (chrome marketing, cartes partout, chiffres noyés), le tableur ou Grafana (grille brute sans hiérarchie), l'app crypto (néon sur noir, casino) et le gabarit SaaS « gros chiffre, petit label, dégradé ».
+Thème clair uniquement : pas de mode sombre. La v2 « papier et encre brune » du 12/10/2026 et la v1 « Midnight Luxe » sont toutes deux rejetées : trop ternes, trop sombres. Le système reste un registre produit : aucune décoration, la couleur est toujours une donnée (poche, gain, perte, action primaire).
 
 **Key Characteristics:**
-- Papier chaud (oklch 97.5 % 0.008 80) et encre brune (oklch 25 % 0.02 60) : jamais de blanc pur ni de noir pur.
-- Cinq couleurs de poche, stables partout : ocre, terracotta, orange brûlé, sauge, ardoise.
-- Une seule famille typographique, Instrument Sans, chiffres tabulaires sur toute valeur numérique.
-- Élévation plate : filets 1 px et tons de papier, zéro ombre portée.
-- Le progrès est une forme : barre épaisse arrondie, case ronde qui se remplit d'encre, repère noir de cible.
-- Dense sur Mac, une colonne sur iPhone, sans changement de vocabulaire.
+- Page gris bleuté très pâle, cartes blanches avec une ombre douce, jamais de filet autour d'une carte.
+- Cinq couleurs de poche saturées : indigo, rose, orange, vert, bleu canard.
+- Un accent indigo pour l'action primaire, les boutons doux et la barre du total.
+- Instrument Sans, titres en 700 serrés, chiffres tabulaires partout.
+- Tout ce qui se clique est une pilule : boutons, onglets, puces, cases rondes.
+- Saisie inline sur l'écran même : « Versé » sous chaque flux, prix sous chaque valorisation, case à cocher devant chaque action.
 
-## 2. Colors: La palette du carnet
+## 2. Colors
 
-Des neutres tous teintés vers le jaune-brun (teinte 60 à 85), une encre brune, cinq crayons de couleur, et deux couleurs sémantiques sourdes pour gain et perte.
+Stratégie **palette complète** : neutres teintés vers le bleu (teinte 250 à 265), un accent indigo, deux couleurs sémantiques (gain, perte) chacune avec une version douce pour les fonds, et cinq couleurs de poche. Tout en OKLCH.
 
-### Primary
-- **Encre brune** (`{colors.ink}`): texte principal, titres, bouton primaire, repère de cible, case cochée. C'est l'accent du système : il n'y en a pas d'autre. Les actions principales sont en encre pleine, pas en couleur.
-- **Ocre de focus** (`{colors.focus-ochre}`): anneau de focus des champs et boutons (3 px à 30 % d'opacité), identique à l'ocre de la poche Actions. Jamais utilisé en remplissage de bouton.
-
-### Secondary: les cinq poches
-- **Ocre, Actions** (`{colors.pocket-stock-ochre}`): la poche principale, aussi la couleur de remplissage du graphique de patrimoine (15 % d'opacité).
-- **Terracotta, Start-up** (`{colors.pocket-startup-terracotta}`).
-- **Orange brûlé, Crypto** (`{colors.pocket-crypto-burnt-orange}`).
-- **Sauge, Livrets** (`{colors.pocket-livret-sage}`).
-- **Ardoise, Cash** (`{colors.pocket-cash-slate}`): sert aussi aux barres géographiques, qui n'ont pas de poche propre.
-
-Chaque poche garde sa couleur sur la pastille de 10 px devant son nom, sa barre de progression, son segment de la bande de composition et sa ligne dans les tableaux. Une ligne de tableau sans pastille n'existe pas.
-
-### Tertiary: sémantique
-- **Sauge profonde, gain** (`{colors.gain-sage}`) et **terracotta profonde, perte** (`{colors.loss-terracotta}`): uniquement sur du texte signé (+13,9 %, −4 614 €) et sur la puce de date en retard. Jamais sur une surface entière, jamais sans le signe.
-
-### Neutral
-- **Papier** (`{colors.paper}`): fond de page.
-- **Surface** (`{colors.paper-surface}`): panneaux, champs, en-tête.
-- **Papier enfoncé** (`{colors.paper-sunken}`): fond de barre vide, survol de ligne, ligne de total, puce de date.
-- **Encre douce** (`{colors.ink-soft}`) : texte secondaire, sous-titres de section, libellés de formulaire.
-- **Encre pâle** (`{colors.ink-faint}`) : en-têtes de tableau, dates de valorisation, métadonnées, versement déjà fait.
-- **Filet** (`{colors.rule}`) et **filet fort** (`{colors.rule-strong}`) : séparateurs de lignes, bordure des panneaux, bordure des champs au repos.
-
-Thème sombre : mêmes teintes, lightness inversée (papier 17 %, encre 93 %), poches éclaircies de 6 à 8 points pour garder le contraste AA sur fond sombre.
-
-### Named Rules
-**La règle du crayon unique.** Une poche, une couleur, partout. Interdit d'utiliser une couleur de poche pour autre chose que sa poche, et interdit de donner deux couleurs à une même poche sur deux écrans.
-
-**La règle du signe.** Aucune information portée par la couleur seule. Gain et perte portent toujours + ou − ; l'écart à la cible porte toujours son montant ; la cible est un trait, pas une teinte.
-
-**La règle de l'encre.** L'accent du système est l'encre. Les boutons primaires, la cible, la case cochée, la ligne du graphique sont en encre. Si un élément interactif est coloré, c'est une erreur.
+- **Page** `oklch(97.5% 0.006 250)`, **Surface** blanc pur autorisé ici (seule exception), **Surface enfoncée** `oklch(95.5% 0.008 250)` pour les pistes de barres, les onglets et les puces.
+- **Encre** `oklch(22% 0.03 265)`, **douce** 48 %, **pâle** 64 %. Contraste AA respecté : encre pâle réservée aux textes de 12 à 13 px non essentiels.
+- **Accent indigo** `oklch(55% 0.21 275)` : bouton primaire, focus, barre du total du mois. Version douce `oklch(94% 0.04 275)` pour le bouton doux.
+- **Gain** `oklch(58% 0.17 150)`, **perte** `oklch(58% 0.19 25)` : texte des variations, toujours avec le signe. Versions douces pour les fonds de puce (retard = fond rouge doux, texte rouge).
+- **Poches** : Actions indigo `oklch(58% 0.2 270)`, Start-up rose `oklch(64% 0.22 345)`, Crypto orange `oklch(72% 0.18 55)`, Livrets vert `oklch(66% 0.17 155)`, Cash bleu canard `oklch(66% 0.13 215)`. Une poche garde sa couleur sur la pastille, la barre, la bande de composition et le graphique.
+- Règle **crayon unique** : une couleur de poche ne colore jamais un bouton ni une autre donnée.
 
 ## 3. Typography
 
-**Display Font:** Instrument Sans (avec ui-sans-serif, system-ui)
-**Body Font:** Instrument Sans
-**Label/Mono Font:** aucune. Les chiffres utilisent `font-variant-numeric: tabular-nums lining-nums` partout, ce qui donne l'alignement d'une mono sans sa froideur.
+Instrument Sans seule. Chiffres tabulaires (`tnum`, `num`) sur toute valeur numérique, sans exception.
 
-**Character:** une humaniste légèrement condensée, chaleureuse sans être ronde, qui tient la densité d'un tableau et la taille d'un total. Une seule famille, quatre graisses (400, 500, 600, 700), ratio d'échelle 1,2.
+- **Display 38/700/-0.03em** : le total du patrimoine, une fois par écran.
+- **Headline 30/700/-0.025em** : la phrase d'ouverture, avec un verbe (« Il reste 3 700 € à verser. »).
+- **Title 18/700/-0.015em** : titres de section, aparté en 13 px encre douce à droite.
+- **Body 15/400** : prose, 65ch maximum.
+- **Table 14/400** : tableaux, listes, champs, boutons (600 pour les boutons).
+- **Label 12/600/0.02em** : en-têtes de tableau en capitales, libellés de champ, puces.
 
-### Hierarchy
-- **Display** (600, 34 px, 1.15, −0.02em): le total du patrimoine, une fois par écran au plus.
-- **Headline** (600, 28 px, 1.2, −0.02em): la phrase d'ouverture de l'écran, toujours une phrase avec un verbe (« Il reste 3 700 € à verser. »), jamais un label.
-- **Title** (600, 17 px, 1.3, −0.01em): titres de section, avec un aparté à droite en 13 px encre douce.
-- **Body** (400, 15 px, 1.45): prose, limitée à 65ch.
-- **Table** (400, 14 px, 1.4): tableaux, listes, formulaires. Valeur principale en 500, secondaires en encre douce.
-- **Label** (500, 12 px, 1.3, +0.01em): en-têtes de tableau, libellés de champ, puce de date, métadonnées. Jamais en capitales.
+## 4. Elevation & Depth
 
-### Named Rules
-**La règle de la phrase.** Un écran s'ouvre sur une phrase qui dit quoi faire, en Headline, précédée d'un surtitre 13 px (le mois, la date). Pas de « gros chiffre, petit label ».
-
-**La règle tabulaire.** Tout nombre, même dans une phrase, porte la classe `tnum`. Tout nombre dans une colonne porte `num` (aligné à droite, sans retour à la ligne).
-
-## 4. Elevation
-
-Système plat. Aucune ombre portée, nulle part. La profondeur est tonale : papier (page) sous surface (panneau) sous papier enfoncé (barre vide, survol, total). Les panneaux ont un filet de 1 px en `rule` et un rayon de 14 px. Les lignes de tableau sont séparées par un filet, le survol teinte la ligne en papier enfoncé en 180 ms. L'en-tête collant est la seule surface translucide (surface à 80 % plus flou de 4 px) et c'est purement structurel.
-
-### Named Rules
-**La règle du papier.** Si un élément a besoin d'une ombre pour se détacher, c'est qu'il n'a pas le bon ton de papier. Changer le ton, pas ajouter l'ombre.
-
-**La règle du panneau unique.** Un panneau n'en contient jamais un autre. Les listes dans un panneau sont séparées par des filets, pas par des sous-cartes.
+Deux niveaux seulement.
+- **Page** : fond gris pâle, sections séparées par 40 px d'espace et un titre, jamais par un filet.
+- **Carte** (`.panel`) : blanc, coins 18 px, ombre douce `0 1px 2px 5 %` + `0 6px 20px 6 %` en encre. Pas de bordure. Une carte ne contient jamais une autre carte.
+- Les lignes à l'intérieur d'une carte sont séparées par un filet 1 px `rule`, survol en surface enfoncée.
+- L'onglet actif de la navigation porte la même ombre douce : il « sort » du rail gris.
 
 ## 5. Components
 
-Vocabulaire court, identique sur les trois écrans. Tout élément interactif a ses états repos, survol, focus, actif, désactivé.
-
 ### Buttons
-- **Shape:** coins légèrement arrondis (6 px), hauteur 36 px (30 px en `btn-sm`), padding 0 14 px, texte 14 px en 500.
-- **Primary:** encre pleine, texte papier. Survol : encre éclaircie de 8 points. Un seul par formulaire.
-- **Ghost:** transparent, filet fort, texte encre. Survol : papier enfoncé. Pour OK, Créer, Ajouter.
-- **Hover / Focus:** transitions 180 ms sur fond et bordure, enfoncement de 1 px au clic (120 ms), anneau de focus ocre 3 px à 40 %.
-- **Disabled:** opacité 0,5, curseur par défaut.
+- **Primaire** : pilule 40 px, indigo plein, texte blanc 600. Survol indigo un peu plus foncé, pression `scale(0.97)`, focus anneau indigo 4 px à 25 %. Un seul par formulaire.
+- **Doux** : pilule indigo doux sur texte indigo. Pour les actions secondaires fréquentes (« Versé », « OK »).
+- **Ghost** : pilule blanche, filet fort 1,5 px. Pour annuler ou déplier.
+- **Petit** : 32 px, 13 px, padding 12 px.
 
-### Check (case d'action)
-- **Style:** cercle de 24 px, filet fort 1,5 px, surface. Survol : bordure encre et agrandissement de 6 %. Cochée : encre pleine, coche papier, désactivée.
-- Une action se coche d'un geste, sans confirmation, sans modal.
+### Check (action)
+Case ronde 26 px, filet fort 2 px. Survol : bordure verte, `scale(1.08)`. Cochée : fond vert, coche blanche, désactivée. Un geste, sans confirmation.
 
 ### Chips
-- **Puce de date:** 12 px en 500, chiffres tabulaires, papier enfoncé sur encre douce, coins 6 px, padding 2 px 6 px. Devant chaque action datée.
-- **Puce en retard:** même forme, fond terracotta profonde, texte papier. La seule surface colorée du système.
+Pilule 24 px, 12 px 600, chiffres tabulaires. Date à venir : surface enfoncée sur encre douce. En retard : fond rouge doux, texte rouge.
 
-### Panels (containers)
-- **Corner Style:** 14 px.
-- **Background:** surface.
-- **Shadow Strategy:** aucune (voir Elevation).
-- **Border:** 1 px filet.
-- **Internal Padding:** 20 px pour un formulaire ou un bloc de progression, 0 pour un panneau qui contient un tableau ou une liste (les lignes portent leur propre padding 9 à 12 px).
-- Un panneau sert à grouper un formulaire, une progression ou un tableau. Les sections de page ne sont pas des panneaux : un titre, un aparté, un filet.
+### Panels
+Blanc, 18 px, ombre douce. Padding 20 px pour un formulaire ou une progression, 0 quand la carte contient un tableau ou une liste.
 
 ### Fields
-- **Style:** hauteur 36 px, surface, filet fort 1 px, coins 6 px, texte 14 px, placeholder encre pâle. Libellé au-dessus en 12 px encre douce, jamais de placeholder en guise de libellé.
-- **Hover:** bordure encre pâle. **Focus:** bordure ocre et anneau ocre 3 px à 30 %.
-- **Select:** même enveloppe, chevron inline de 12 px en encre douce, groupes d'options par poche.
-- **Error:** texte 13 px terracotta profonde sous le champ, `role="alert"`.
+40 px, blanc, filet fort 1,5 px, coins 10 px, texte 14 px. Libellé au-dessus en 12 px. Focus : bordure indigo et anneau 4 px à 18 %. Erreur : 13 px rouge sous le champ, `role="alert"`. Les classes `.field`, `.btn`, `.panel` vivent dans `@layer components` pour que les utilitaires Tailwind (largeur, hauteur) les surchargent.
 
 ### Navigation
-- **Style:** barre collante en surface translucide, filet dessous. Marque « Carnet de bord » en 15 px 600 (masquée sous 640 px), trois onglets texte 14 px, « Sortir » en encre pâle à droite.
-- **States:** repos encre douce, survol encre, actif encre en 500 avec un filet de 2 px en encre sous l'onglet (`aria-current="page"`).
-- **Mobile:** mêmes onglets, la marque disparaît, les onglets gardent 44 px de hauteur tactile.
+Rail en pilule gris pâle avec trois onglets ; l'actif est blanc, 600, avec l'ombre douce. Marque « Carnet de bord » en 17 px 700 à gauche (masquée sous 640 px), « Sortir » en encre pâle à droite. Barre collante sur fond page translucide.
 
 ### Progress bar (signature)
-Barre arrondie de 10 px de haut (12 px pour le total du mois, 6 px pour une ligne), fond papier enfoncé, remplissage dans la couleur de la poche, animation de largeur 400 ms en ease-out. Sur les cibles d'allocation, un trait vertical en encre de 2 px marque la cible ; le réel se lit par rapport au trait, l'écart signé en € se lit à droite.
+Pilule de 12 px (14 px pour le total du mois, 6 px pour une ligne), piste en surface enfoncée, remplissage couleur de la poche (indigo accent pour le total), largeur animée 400 ms. Sur les cibles d'allocation, un trait vertical en encre de 2 px marque la cible, l'écart signé en € à droite.
 
-### Composition strip (signature)
-Bande de 12 px, segments contigus séparés de 1 px, un par poche, largeur proportionnelle, légende en dessous avec pastille, nom et pourcentage. C'est le portrait du patrimoine en un regard.
+### Inline entry (signature)
+Sous un flux non versé : champ 32 px pré-rempli du reste à verser et bouton doux « Versé », alignés à droite. Un flux sans instrument renvoie vers le Journal. Sous une valorisation périmée : champ prix et bouton doux « OK ». Jamais de modal.
+
+### Composition strip
+Bande de 12 px, segments contigus séparés de 1 px, un par poche, légende en dessous avec pastille, nom, pourcentage.
 
 ### Tables
-En-têtes 12 px encre pâle avec filet dessous, cellules 14 px, padding 9 px 10 px, pastille de poche devant chaque instrument, colonnes numériques à droite en tabulaire, ligne de total en 600 sur papier enfoncé. Débordement horizontal autorisé sur mobile dans le panneau ; les listes éditables (valorisations) sont des lignes flexibles qui replient le formulaire sous le nom.
+En-têtes 12 px 600 capitales encre pâle, cellules 14 px padding 10 px 12 px, pastille devant chaque instrument, colonnes numériques à droite, total en 600 sur surface enfoncée.
 
 ### Empty state
-Texte 14 px encre douce, centré, dans un cadre en pointillés de 10 px. Dit ce qui se passera quand il y aura quelque chose (« Rien à échéance. Les prochaines actions sont dans le Journal. »).
+14 px encre douce, centré, cadre en pointillés 14 px, dit ce qui apparaîtra ici.
 
 ## 6. Do's and Don'ts
 
 ### Do:
-- **Do** ouvrir chaque écran sur une phrase d'action en 28 px 600 (« Il reste 3 700 € à verser. »), précédée du mois ou de la date en 13 px.
-- **Do** mettre une pastille de poche de 10 px devant tout instrument, partout, dans la couleur exacte de sa poche.
-- **Do** écrire le signe devant toute variation (+13,9 %, −4 614 €) et le montant à côté de tout écart.
-- **Do** utiliser l'encre pour tout élément interactif principal : bouton primaire, case cochée, trait de cible, ligne de graphique.
-- **Do** séparer les lignes par un filet de 1 px en `rule` et teinter le survol en papier enfoncé.
-- **Do** garder les chiffres tabulaires (`tnum` ou `num`) sans exception.
-- **Do** respecter `prefers-reduced-motion` : toutes les transitions tombent à zéro.
-- **Do** montrer un état vide qui dit ce qui apparaîtra ici.
+- **Do** ouvrir chaque écran sur une phrase d'action en 30 px 700, précédée du mois ou de la date en 13 px.
+- **Do** mettre une pastille de 10 px devant tout instrument, dans la couleur exacte de sa poche.
+- **Do** écrire le signe devant toute variation et le montant à côté de tout écart.
+- **Do** permettre la saisie là où le chiffre s'affiche : champ et bouton doux sous la ligne, jamais une autre page.
+- **Do** réserver l'indigo plein à une action par écran et aux totaux.
+- **Do** garder les chiffres tabulaires et respecter `prefers-reduced-motion`.
 
 ### Don't:
-- **Don't** reproduire l'ancienne v1 « Midnight Luxe » : fond noir, or, lueurs, dégradés, animations d'entrée, mot « wealth ».
-- **Don't** faire une app de banque : promos, cartes en grille, icônes décoratives, chiffres noyés dans le chrome.
-- **Don't** faire un tableur ou Grafana : un tableau nu sans titre de section, sans pastille, sans hiérarchie.
-- **Don't** faire une app crypto : néon, graphiques en chandeliers, rouge et vert saturés.
-- **Don't** utiliser le gabarit « gros chiffre, petit label, stats de soutien » ni une grille de cartes identiques.
-- **Don't** utiliser `#000`, `#fff`, ni un gris sans teinte. Tout neutre est teinté entre 60 et 85.
-- **Don't** mettre une ombre portée, un flou décoratif, un dégradé, un `border-left` coloré de plus de 1 px, un texte en dégradé.
-- **Don't** imbriquer un panneau dans un panneau.
-- **Don't** colorer un bouton avec une couleur de poche ni réutiliser une couleur de poche pour une autre donnée.
-- **Don't** ouvrir un modal : la saisie est inline, le cochage est direct, la création d'instrument est un `details` replié.
-- **Don't** écrire de libellé en capitales, ni de tiret cadratin dans l'interface.
+- **Don't** revenir au sombre, au brun ou à l'or : ni « Midnight Luxe », ni « papier et encre brune ».
+- **Don't** faire une app de banque, un tableur, Grafana ou une app crypto (néon, chandeliers).
+- **Don't** entourer une carte d'un filet, ni imbriquer deux cartes, ni poser une ombre sur autre chose qu'une carte ou l'onglet actif.
+- **Don't** mettre un dégradé, un texte en dégradé, un `border-left` coloré, un flou décoratif.
+- **Don't** colorer un bouton avec une couleur de poche.
+- **Don't** ouvrir un modal ni renvoyer vers une autre page pour une saisie d'une ligne.
+- **Don't** écrire de tiret cadratin dans l'interface.

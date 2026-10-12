@@ -28,6 +28,7 @@ Références : Mercury et Stripe Dashboard pour la clarté et la confiance calme
 ## Anti-references
 
 - **L'ancienne v1 « Midnight Luxe »** : fond noir, or, lueurs, animations d'entrée, vocabulaire « wealth management ». Interdit.
+- **La v2 « papier et encre brune » du 12/10/2026** : beige, brun, sombre le soir. Rejetée par Léo : « je veux un truc clair, joli et un peu fun ».
 - **Une app de banque** (Boursorama, Revolut) : marketing, promos, cartes partout, chiffres noyés dans le chrome.
 - **Un tableur ou Grafana** : grille brute, zéro hiérarchie, tout au même niveau (la v2 brute du 12/10/2026).
 - **Une app crypto** : néon sur noir, graphiques criards, sensation de casino.
@@ -43,4 +44,4 @@ Références : Mercury et Stripe Dashboard pour la clarté et la confiance calme
 
 ## Accessibility & Inclusion
 
-Contraste AA sur tout texte et sur les chiffres colorés. Jamais la couleur seule : hausses, baisses et écarts portent toujours un signe ou un libellé. Rouge et vert restent utilisables mais chaque usage est doublé par le signe. Motion réduite respectée (prefers-reduced-motion), aucune animation nécessaire à la compréhension. Thème clair par défaut, thème sombre suivant le système pour les sessions du soir.
+Contraste AA sur tout texte et sur les chiffres colorés. Jamais la couleur seule : hausses, baisses et écarts portent toujours un signe ou un libellé. Rouge et vert restent utilisables mais chaque usage est doublé par le signe. Motion réduite respectée (prefers-reduced-motion), aucune animation nécessaire à la compréhension. Thème clair uniquement, pas de mode sombre (décision du 12/10/2026).

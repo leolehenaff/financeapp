@@ -66,4 +66,4 @@ Commence toute session par `docs/README.md`, puis la table `actions` (ou `docs/a
 
 ## App
 
-Next.js 16, App Router, Server Components et server actions uniquement, Tailwind 4 avec les tokens de `app/globals.css` (voir DESIGN.md), aucune bibliothèque de composants. Tout nouvel écran respecte DESIGN.md : pastille de poche devant chaque instrument, signe devant chaque variation, encre pour les actions, zéro ombre. `npm run dev`, `npm run lint`, `npm run build`. Déployé sur Vercel, crons dans `vercel.json`.
+Next.js 16, App Router, Server Components et server actions uniquement, Tailwind 4 avec les tokens de `app/globals.css` (voir DESIGN.md), aucune bibliothèque de composants. Tout nouvel écran respecte DESIGN.md : pastille de poche devant chaque instrument, signe devant chaque variation, indigo pour l'action primaire, saisie inline sous la ligne concernée, ombre douce sur les cartes seulement, thème clair uniquement. `npm run dev`, `npm run lint`, `npm run build`. Déployé sur Vercel, crons dans `vercel.json`.

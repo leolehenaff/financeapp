@@ -25,7 +25,7 @@ export default async function Journal() {
   return (
     <>
       <p className="text-[13px] text-ink-2">Journal</p>
-      <h1 className="text-[28px] font-semibold tracking-[-0.02em] leading-tight mt-0.5">Ce qui a été fait, ce qui reste à faire.</h1>
+      <h1 className="text-[30px] font-bold tracking-[-0.025em] leading-tight mt-0.5">Ce qui a été fait, ce qui reste à faire.</h1>
 
       <Section title="Saisir une transaction">
         <form action={addTransaction} className="panel p-5 grid grid-cols-2 md:grid-cols-4 gap-3">

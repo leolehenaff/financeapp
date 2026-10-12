@@ -1,155 +1,431 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-12T21:30:00+02:00",
+  "generatedAt": "2026-10-12T23:30:00+02:00",
   "title": "Design System: Carnet de bord",
   "extensions": {
     "colorMeta": {
-      "paper": { "role": "neutral", "displayName": "Papier", "canonical": "oklch(97.5% 0.008 80)", "tonalRamp": ["oklch(17% 0.012 60)", "oklch(28% 0.012 65)", "oklch(40% 0.012 70)", "oklch(55% 0.01 75)", "oklch(70% 0.01 78)", "oklch(85% 0.01 80)", "oklch(93% 0.009 80)", "oklch(97.5% 0.008 80)"] },
-      "paper-surface": { "role": "neutral", "displayName": "Surface", "canonical": "oklch(99.2% 0.005 85)", "tonalRamp": ["oklch(21% 0.012 60)", "oklch(32% 0.01 70)", "oklch(45% 0.008 75)", "oklch(60% 0.007 80)", "oklch(75% 0.006 82)", "oklch(88% 0.006 84)", "oklch(95% 0.005 85)", "oklch(99.2% 0.005 85)"] },
-      "paper-sunken": { "role": "neutral", "displayName": "Papier enfoncé", "canonical": "oklch(95% 0.012 80)", "tonalRamp": ["oklch(25% 0.012 60)", "oklch(35% 0.012 65)", "oklch(48% 0.012 70)", "oklch(62% 0.012 75)", "oklch(75% 0.012 78)", "oklch(86% 0.012 80)", "oklch(91% 0.012 80)", "oklch(95% 0.012 80)"] },
-      "ink": { "role": "primary", "displayName": "Encre brune", "canonical": "oklch(25% 0.02 60)", "tonalRamp": ["oklch(15% 0.02 60)", "oklch(25% 0.02 60)", "oklch(36% 0.02 60)", "oklch(46% 0.02 60)", "oklch(62% 0.015 65)", "oklch(75% 0.012 70)", "oklch(86% 0.01 75)", "oklch(93% 0.01 80)"] },
-      "ink-soft": { "role": "neutral", "displayName": "Encre douce", "canonical": "oklch(46% 0.02 60)", "tonalRamp": ["oklch(15% 0.02 60)", "oklch(25% 0.02 60)", "oklch(36% 0.02 60)", "oklch(46% 0.02 60)", "oklch(62% 0.015 65)", "oklch(75% 0.012 70)", "oklch(86% 0.01 75)", "oklch(93% 0.01 80)"] },
-      "ink-faint": { "role": "neutral", "displayName": "Encre pâle", "canonical": "oklch(62% 0.015 65)", "tonalRamp": ["oklch(15% 0.02 60)", "oklch(25% 0.02 60)", "oklch(36% 0.02 60)", "oklch(46% 0.02 60)", "oklch(62% 0.015 65)", "oklch(75% 0.012 70)", "oklch(86% 0.01 75)", "oklch(93% 0.01 80)"] },
-      "rule": { "role": "neutral", "displayName": "Filet", "canonical": "oklch(89% 0.012 75)", "tonalRamp": ["oklch(30% 0.012 60)", "oklch(38% 0.014 60)", "oklch(50% 0.013 70)", "oklch(62% 0.013 72)", "oklch(72% 0.013 74)", "oklch(80% 0.015 75)", "oklch(89% 0.012 75)", "oklch(95% 0.01 78)"] },
-      "rule-strong": { "role": "neutral", "displayName": "Filet fort", "canonical": "oklch(80% 0.015 75)", "tonalRamp": ["oklch(30% 0.012 60)", "oklch(38% 0.014 60)", "oklch(50% 0.013 70)", "oklch(62% 0.013 72)", "oklch(72% 0.013 74)", "oklch(80% 0.015 75)", "oklch(89% 0.012 75)", "oklch(95% 0.01 78)"] },
-      "focus-ochre": { "role": "primary", "displayName": "Ocre de focus", "canonical": "oklch(70% 0.14 80)", "tonalRamp": ["oklch(20% 0.06 80)", "oklch(32% 0.09 80)", "oklch(45% 0.12 80)", "oklch(58% 0.14 80)", "oklch(70% 0.14 80)", "oklch(80% 0.11 80)", "oklch(89% 0.07 80)", "oklch(95% 0.03 80)"] },
-      "gain-sage": { "role": "tertiary", "displayName": "Sauge profonde, gain", "canonical": "oklch(52% 0.11 150)", "tonalRamp": ["oklch(18% 0.05 150)", "oklch(30% 0.08 150)", "oklch(42% 0.1 150)", "oklch(52% 0.11 150)", "oklch(64% 0.11 150)", "oklch(76% 0.09 150)", "oklch(87% 0.06 150)", "oklch(95% 0.03 150)"] },
-      "loss-terracotta": { "role": "tertiary", "displayName": "Terracotta profonde, perte", "canonical": "oklch(54% 0.15 30)", "tonalRamp": ["oklch(18% 0.06 30)", "oklch(30% 0.1 30)", "oklch(42% 0.13 30)", "oklch(54% 0.15 30)", "oklch(66% 0.14 30)", "oklch(77% 0.1 30)", "oklch(87% 0.06 30)", "oklch(95% 0.03 30)"] },
-      "pocket-stock-ochre": { "role": "secondary", "displayName": "Ocre, Actions", "canonical": "oklch(70% 0.14 80)", "tonalRamp": ["oklch(20% 0.06 80)", "oklch(32% 0.09 80)", "oklch(45% 0.12 80)", "oklch(58% 0.14 80)", "oklch(70% 0.14 80)", "oklch(80% 0.11 80)", "oklch(89% 0.07 80)", "oklch(95% 0.03 80)"] },
-      "pocket-startup-terracotta": { "role": "secondary", "displayName": "Terracotta, Start-up", "canonical": "oklch(62% 0.15 35)", "tonalRamp": ["oklch(18% 0.06 35)", "oklch(30% 0.1 35)", "oklch(42% 0.13 35)", "oklch(52% 0.15 35)", "oklch(62% 0.15 35)", "oklch(74% 0.12 35)", "oklch(86% 0.07 35)", "oklch(95% 0.03 35)"] },
-      "pocket-crypto-burnt-orange": { "role": "secondary", "displayName": "Orange brûlé, Crypto", "canonical": "oklch(68% 0.17 55)", "tonalRamp": ["oklch(20% 0.06 55)", "oklch(32% 0.1 55)", "oklch(45% 0.14 55)", "oklch(57% 0.16 55)", "oklch(68% 0.17 55)", "oklch(78% 0.13 55)", "oklch(88% 0.08 55)", "oklch(95% 0.03 55)"] },
-      "pocket-livret-sage": { "role": "secondary", "displayName": "Sauge, Livrets", "canonical": "oklch(68% 0.10 150)", "tonalRamp": ["oklch(18% 0.05 150)", "oklch(30% 0.08 150)", "oklch(42% 0.1 150)", "oklch(55% 0.11 150)", "oklch(68% 0.1 150)", "oklch(78% 0.08 150)", "oklch(88% 0.05 150)", "oklch(95% 0.03 150)"] },
-      "pocket-cash-slate": { "role": "secondary", "displayName": "Ardoise, Cash", "canonical": "oklch(62% 0.08 240)", "tonalRamp": ["oklch(18% 0.04 240)", "oklch(30% 0.06 240)", "oklch(42% 0.08 240)", "oklch(52% 0.08 240)", "oklch(62% 0.08 240)", "oklch(74% 0.07 240)", "oklch(86% 0.04 240)", "oklch(95% 0.02 240)"] }
+      "page": {
+        "role": "neutral",
+        "displayName": "Page",
+        "canonical": "oklch(97.5% 0.006 250)",
+        "tonalRamp": [
+          "oklch(18% 0.003 250)",
+          "oklch(30% 0.005 250)",
+          "oklch(42% 0.006 250)",
+          "oklch(54% 0.006 250)",
+          "oklch(66% 0.006 250)",
+          "oklch(78% 0.005 250)",
+          "oklch(88% 0.005 250)",
+          "oklch(95% 0.003 250)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": [
+          "oklch(18% 0.0 0)",
+          "oklch(30% 0.0 0)",
+          "oklch(42% 0.0 0)",
+          "oklch(54% 0.0 0)",
+          "oklch(66% 0.0 0)",
+          "oklch(78% 0.0 0)",
+          "oklch(88% 0.0 0)",
+          "oklch(95% 0.0 0)"
+        ]
+      },
+      "surface-sunken": {
+        "role": "neutral",
+        "displayName": "Surface enfoncée",
+        "canonical": "oklch(95.5% 0.008 250)",
+        "tonalRamp": [
+          "oklch(18% 0.004 250)",
+          "oklch(30% 0.006 250)",
+          "oklch(42% 0.008 250)",
+          "oklch(54% 0.008 250)",
+          "oklch(66% 0.008 250)",
+          "oklch(78% 0.006 250)",
+          "oklch(88% 0.006 250)",
+          "oklch(95% 0.004 250)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Encre",
+        "canonical": "oklch(22% 0.03 265)",
+        "tonalRamp": [
+          "oklch(18% 0.015 265)",
+          "oklch(30% 0.024 265)",
+          "oklch(42% 0.03 265)",
+          "oklch(54% 0.03 265)",
+          "oklch(66% 0.03 265)",
+          "oklch(78% 0.024 265)",
+          "oklch(88% 0.024 265)",
+          "oklch(95% 0.015 265)"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Encre douce",
+        "canonical": "oklch(48% 0.025 262)",
+        "tonalRamp": [
+          "oklch(18% 0.013 262)",
+          "oklch(30% 0.02 262)",
+          "oklch(42% 0.025 262)",
+          "oklch(54% 0.025 262)",
+          "oklch(66% 0.025 262)",
+          "oklch(78% 0.02 262)",
+          "oklch(88% 0.02 262)",
+          "oklch(95% 0.013 262)"
+        ]
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Encre pâle",
+        "canonical": "oklch(64% 0.02 260)",
+        "tonalRamp": [
+          "oklch(18% 0.01 260)",
+          "oklch(30% 0.016 260)",
+          "oklch(42% 0.02 260)",
+          "oklch(54% 0.02 260)",
+          "oklch(66% 0.02 260)",
+          "oklch(78% 0.016 260)",
+          "oklch(88% 0.016 260)",
+          "oklch(95% 0.01 260)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Filet",
+        "canonical": "oklch(92% 0.008 250)",
+        "tonalRamp": [
+          "oklch(18% 0.004 250)",
+          "oklch(30% 0.006 250)",
+          "oklch(42% 0.008 250)",
+          "oklch(54% 0.008 250)",
+          "oklch(66% 0.008 250)",
+          "oklch(78% 0.006 250)",
+          "oklch(88% 0.006 250)",
+          "oklch(95% 0.004 250)"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Filet fort",
+        "canonical": "oklch(84% 0.012 250)",
+        "tonalRamp": [
+          "oklch(18% 0.006 250)",
+          "oklch(30% 0.01 250)",
+          "oklch(42% 0.012 250)",
+          "oklch(54% 0.012 250)",
+          "oklch(66% 0.012 250)",
+          "oklch(78% 0.01 250)",
+          "oklch(88% 0.01 250)",
+          "oklch(95% 0.006 250)"
+        ]
+      },
+      "accent-indigo": {
+        "role": "primary",
+        "displayName": "Indigo, accent",
+        "canonical": "oklch(55% 0.21 275)",
+        "tonalRamp": [
+          "oklch(18% 0.105 275)",
+          "oklch(30% 0.168 275)",
+          "oklch(42% 0.21 275)",
+          "oklch(54% 0.21 275)",
+          "oklch(66% 0.21 275)",
+          "oklch(78% 0.168 275)",
+          "oklch(88% 0.168 275)",
+          "oklch(95% 0.105 275)"
+        ]
+      },
+      "accent-indigo-soft": {
+        "role": "neutral",
+        "displayName": "Indigo doux",
+        "canonical": "oklch(94% 0.04 275)",
+        "tonalRamp": [
+          "oklch(18% 0.02 275)",
+          "oklch(30% 0.032 275)",
+          "oklch(42% 0.04 275)",
+          "oklch(54% 0.04 275)",
+          "oklch(66% 0.04 275)",
+          "oklch(78% 0.032 275)",
+          "oklch(88% 0.032 275)",
+          "oklch(95% 0.02 275)"
+        ]
+      },
+      "gain-green": {
+        "role": "tertiary",
+        "displayName": "Vert, gain",
+        "canonical": "oklch(58% 0.17 150)",
+        "tonalRamp": [
+          "oklch(18% 0.085 150)",
+          "oklch(30% 0.136 150)",
+          "oklch(42% 0.17 150)",
+          "oklch(54% 0.17 150)",
+          "oklch(66% 0.17 150)",
+          "oklch(78% 0.136 150)",
+          "oklch(88% 0.136 150)",
+          "oklch(95% 0.085 150)"
+        ]
+      },
+      "gain-green-soft": {
+        "role": "neutral",
+        "displayName": "Vert doux",
+        "canonical": "oklch(94% 0.06 150)",
+        "tonalRamp": [
+          "oklch(18% 0.03 150)",
+          "oklch(30% 0.048 150)",
+          "oklch(42% 0.06 150)",
+          "oklch(54% 0.06 150)",
+          "oklch(66% 0.06 150)",
+          "oklch(78% 0.048 150)",
+          "oklch(88% 0.048 150)",
+          "oklch(95% 0.03 150)"
+        ]
+      },
+      "loss-red": {
+        "role": "tertiary",
+        "displayName": "Rouge, perte",
+        "canonical": "oklch(58% 0.19 25)",
+        "tonalRamp": [
+          "oklch(18% 0.095 25)",
+          "oklch(30% 0.152 25)",
+          "oklch(42% 0.19 25)",
+          "oklch(54% 0.19 25)",
+          "oklch(66% 0.19 25)",
+          "oklch(78% 0.152 25)",
+          "oklch(88% 0.152 25)",
+          "oklch(95% 0.095 25)"
+        ]
+      },
+      "loss-red-soft": {
+        "role": "neutral",
+        "displayName": "Rouge doux",
+        "canonical": "oklch(94% 0.05 25)",
+        "tonalRamp": [
+          "oklch(18% 0.025 25)",
+          "oklch(30% 0.04 25)",
+          "oklch(42% 0.05 25)",
+          "oklch(54% 0.05 25)",
+          "oklch(66% 0.05 25)",
+          "oklch(78% 0.04 25)",
+          "oklch(88% 0.04 25)",
+          "oklch(95% 0.025 25)"
+        ]
+      },
+      "pocket-stock-indigo": {
+        "role": "secondary",
+        "displayName": "Indigo, Actions",
+        "canonical": "oklch(58% 0.2 270)",
+        "tonalRamp": [
+          "oklch(18% 0.1 270)",
+          "oklch(30% 0.16 270)",
+          "oklch(42% 0.2 270)",
+          "oklch(54% 0.2 270)",
+          "oklch(66% 0.2 270)",
+          "oklch(78% 0.16 270)",
+          "oklch(88% 0.16 270)",
+          "oklch(95% 0.1 270)"
+        ]
+      },
+      "pocket-startup-pink": {
+        "role": "secondary",
+        "displayName": "Rose, Start-up",
+        "canonical": "oklch(64% 0.22 345)",
+        "tonalRamp": [
+          "oklch(18% 0.11 345)",
+          "oklch(30% 0.176 345)",
+          "oklch(42% 0.22 345)",
+          "oklch(54% 0.22 345)",
+          "oklch(66% 0.22 345)",
+          "oklch(78% 0.176 345)",
+          "oklch(88% 0.176 345)",
+          "oklch(95% 0.11 345)"
+        ]
+      },
+      "pocket-crypto-orange": {
+        "role": "secondary",
+        "displayName": "Orange, Crypto",
+        "canonical": "oklch(72% 0.18 55)",
+        "tonalRamp": [
+          "oklch(18% 0.09 55)",
+          "oklch(30% 0.144 55)",
+          "oklch(42% 0.18 55)",
+          "oklch(54% 0.18 55)",
+          "oklch(66% 0.18 55)",
+          "oklch(78% 0.144 55)",
+          "oklch(88% 0.144 55)",
+          "oklch(95% 0.09 55)"
+        ]
+      },
+      "pocket-livret-green": {
+        "role": "secondary",
+        "displayName": "Vert, Livrets",
+        "canonical": "oklch(66% 0.17 155)",
+        "tonalRamp": [
+          "oklch(18% 0.085 155)",
+          "oklch(30% 0.136 155)",
+          "oklch(42% 0.17 155)",
+          "oklch(54% 0.17 155)",
+          "oklch(66% 0.17 155)",
+          "oklch(78% 0.136 155)",
+          "oklch(88% 0.136 155)",
+          "oklch(95% 0.085 155)"
+        ]
+      },
+      "pocket-cash-teal": {
+        "role": "secondary",
+        "displayName": "Bleu canard, Cash",
+        "canonical": "oklch(66% 0.13 215)",
+        "tonalRamp": [
+          "oklch(18% 0.065 215)",
+          "oklch(30% 0.104 215)",
+          "oklch(42% 0.13 215)",
+          "oklch(54% 0.13 215)",
+          "oklch(66% 0.13 215)",
+          "oklch(78% 0.104 215)",
+          "oklch(88% 0.104 215)",
+          "oklch(95% 0.065 215)"
+        ]
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Le total du patrimoine, une fois par écran au plus." },
-      "headline": { "displayName": "Headline", "purpose": "La phrase d'ouverture de l'écran, toujours avec un verbe." },
-      "title": { "displayName": "Title", "purpose": "Titres de section, aparté à droite en 13 px." },
-      "body": { "displayName": "Body", "purpose": "Prose, 65ch maximum." },
-      "table": { "displayName": "Table", "purpose": "Tableaux, listes, formulaires, boutons." },
-      "label": { "displayName": "Label", "purpose": "En-têtes de tableau, libellés de champ, puces de date. Jamais en capitales." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "Le total du patrimoine, une fois par écran."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "La phrase d'ouverture de l'écran, avec un verbe."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Titres de section, aparté à droite en 13 px."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose, 65ch maximum."
+      },
+      "table": {
+        "displayName": "Table",
+        "purpose": "Tableaux, listes, champs, boutons."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "En-têtes de tableau en capitales, libellés, puces."
+      }
     },
-    "shadows": [],
+    "shadows": [
+      {
+        "name": "card",
+        "value": "0 1px 2px oklch(20% 0.03 265 / 0.05), 0 6px 20px oklch(20% 0.03 265 / 0.06)",
+        "purpose": "Cartes et onglet actif, rien d'autre."
+      }
+    ],
     "motion": [
-      { "name": "ease-out-quart", "value": "cubic-bezier(0.25, 1, 0.5, 1)", "purpose": "Toutes les transitions d'état." },
-      { "name": "duration-state", "value": "180ms", "purpose": "Fond, bordure, couleur sur survol et focus." },
-      { "name": "duration-press", "value": "120ms", "purpose": "Enfoncement de 1 px au clic." },
-      { "name": "duration-progress", "value": "400ms", "purpose": "Largeur des barres de progression." }
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "purpose": "Toutes les transitions d'état."
+      },
+      {
+        "name": "duration-state",
+        "value": "180ms",
+        "purpose": "Couleurs, bordures, ombres."
+      },
+      {
+        "name": "duration-progress",
+        "value": "400ms",
+        "purpose": "Largeur des barres de progression."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "none",
+        "purpose": "prefers-reduced-motion coupe tout."
+      }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "content", "value": "1024px" }
-    ]
-  },
-  "components": [
-    {
-      "name": "Bouton primaire",
-      "kind": "button",
-      "refersTo": "button-primary",
-      "description": "L'action principale d'un formulaire, en encre pleine. Un seul par formulaire.",
-      "html": "<button class=\"ds-btn ds-btn-primary\">Enregistrer</button>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; font-family: 'Instrument Sans', system-ui, sans-serif; font-size: 14px; font-weight: 500; border-radius: 6px; border: 1px solid transparent; cursor: pointer; transition: background-color 180ms cubic-bezier(0.25,1,0.5,1), border-color 180ms cubic-bezier(0.25,1,0.5,1), transform 120ms cubic-bezier(0.25,1,0.5,1); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(70% 0.14 80 / 0.4); } .ds-btn-primary { background: oklch(25% 0.02 60); color: oklch(97.5% 0.008 80); } .ds-btn-primary:hover { background: oklch(33% 0.02 60); }"
-    },
-    {
-      "name": "Bouton fantôme",
-      "kind": "button",
-      "refersTo": "button-ghost",
-      "description": "Actions secondaires : OK, Créer, Ajouter.",
-      "html": "<button class=\"ds-btn ds-btn-ghost\">Ajouter</button>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 36px; padding: 0 14px; font-family: 'Instrument Sans', system-ui, sans-serif; font-size: 14px; font-weight: 500; border-radius: 6px; border: 1px solid transparent; cursor: pointer; transition: background-color 180ms cubic-bezier(0.25,1,0.5,1), border-color 180ms cubic-bezier(0.25,1,0.5,1), transform 120ms cubic-bezier(0.25,1,0.5,1); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(70% 0.14 80 / 0.4); } .ds-btn-ghost { background: transparent; color: oklch(25% 0.02 60); border-color: oklch(80% 0.015 75); } .ds-btn-ghost:hover { background: oklch(95% 0.012 80); }"
-    },
-    {
-      "name": "Champ",
-      "kind": "input",
-      "refersTo": "field",
-      "description": "Champ de saisie avec libellé au-dessus, focus ocre.",
-      "html": "<label class=\"ds-label\">Montant total €<input class=\"ds-field\" placeholder=\"1 850\" inputmode=\"decimal\"></label>",
-      "css": ".ds-label { display: flex; flex-direction: column; gap: 4px; font-family: 'Instrument Sans', system-ui, sans-serif; font-size: 12px; font-weight: 500; color: oklch(46% 0.02 60); width: 220px; } .ds-field { height: 36px; padding: 0 10px; font: inherit; font-size: 14px; font-weight: 400; background: oklch(99.2% 0.005 85); color: oklch(25% 0.02 60); border: 1px solid oklch(80% 0.015 75); border-radius: 6px; transition: border-color 180ms cubic-bezier(0.25,1,0.5,1), box-shadow 180ms cubic-bezier(0.25,1,0.5,1); } .ds-field::placeholder { color: oklch(62% 0.015 65); } .ds-field:hover { border-color: oklch(62% 0.015 65); } .ds-field:focus-visible { outline: none; border-color: oklch(70% 0.14 80); box-shadow: 0 0 0 3px oklch(70% 0.14 80 / 0.3); }"
-    },
-    {
-      "name": "Navigation",
-      "kind": "nav",
-      "refersTo": "nav",
-      "description": "Barre collante, marque, trois onglets, onglet actif souligné d'un filet en encre.",
-      "html": "<header class=\"ds-header\"><span class=\"ds-brand\">Carnet de bord</span><nav class=\"ds-nav\"><a class=\"ds-tab ds-tab-active\" aria-current=\"page\" href=\"#\">Ce mois</a><a class=\"ds-tab\" href=\"#\">Patrimoine</a><a class=\"ds-tab\" href=\"#\">Journal</a></nav><a class=\"ds-out\" href=\"#\">Sortir</a></header>",
-      "css": ".ds-header { display: flex; align-items: center; gap: 24px; padding: 0 16px; background: oklch(99.2% 0.005 85); border-bottom: 1px solid oklch(89% 0.012 75); font-family: 'Instrument Sans', system-ui, sans-serif; } .ds-brand { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; color: oklch(25% 0.02 60); padding: 12px 0; } .ds-nav { display: flex; gap: 4px; margin-bottom: -1px; } .ds-tab { padding: 12px; font-size: 14px; color: oklch(46% 0.02 60); text-decoration: none; border-bottom: 2px solid transparent; transition: color 200ms cubic-bezier(0.25,1,0.5,1); } .ds-tab:hover { color: oklch(25% 0.02 60); } .ds-tab-active { color: oklch(25% 0.02 60); font-weight: 500; border-bottom-color: oklch(25% 0.02 60); } .ds-out { margin-left: auto; font-size: 13px; color: oklch(62% 0.015 65); text-decoration: none; } .ds-out:hover { color: oklch(25% 0.02 60); }"
-    },
-    {
-      "name": "Puce de date",
-      "kind": "chip",
-      "refersTo": "date-chip",
-      "description": "Échéance devant une action. Variante « en retard » en terracotta, seule surface colorée du système.",
-      "html": "<span class=\"ds-chip\">30/10/2026</span> <span class=\"ds-chip ds-chip-late\">13/10/2026</span>",
-      "css": ".ds-chip { display: inline-block; font-family: 'Instrument Sans', system-ui, sans-serif; font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; padding: 2px 6px; border-radius: 6px; background: oklch(95% 0.012 80); color: oklch(46% 0.02 60); } .ds-chip-late { background: oklch(54% 0.15 30); color: oklch(97.5% 0.008 80); }"
-    },
-    {
-      "name": "Case d'action",
-      "kind": "custom",
-      "refersTo": "check",
-      "description": "Cercle de 24 px qui se remplit d'encre une fois l'action faite.",
-      "html": "<div style=\"display:flex;gap:16px;align-items:center\"><button class=\"ds-check\" aria-label=\"Marquer comme fait\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\"><path d=\"M2.5 6.5l2.5 2.5 4.5-5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button><button class=\"ds-check ds-check-done\" disabled aria-label=\"Fait\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 12 12\"><path d=\"M2.5 6.5l2.5 2.5 4.5-5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></button></div>",
-      "css": ".ds-check { width: 24px; height: 24px; border-radius: 999px; cursor: pointer; border: 1.5px solid oklch(80% 0.015 75); background: oklch(99.2% 0.005 85); color: oklch(97.5% 0.008 80); display: inline-flex; align-items: center; justify-content: center; padding: 0; transition: background-color 180ms cubic-bezier(0.25,1,0.5,1), border-color 180ms cubic-bezier(0.25,1,0.5,1), transform 120ms cubic-bezier(0.25,1,0.5,1); } .ds-check:hover { border-color: oklch(25% 0.02 60); transform: scale(1.06); } .ds-check:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(70% 0.14 80 / 0.4); } .ds-check-done { background: oklch(25% 0.02 60); border-color: oklch(25% 0.02 60); cursor: default; }"
-    },
-    {
-      "name": "Barre de progression avec cible",
-      "kind": "custom",
-      "refersTo": "panel",
-      "description": "Signature du système : réel en couleur de poche, trait de cible en encre, écart signé.",
-      "html": "<div class=\"ds-row\"><div class=\"ds-row-head\"><span class=\"ds-dot\"></span><span>Actions</span><span class=\"ds-meta\">49,6 % sur 55 %</span><span class=\"ds-gain\">+13 828 €</span></div><div class=\"ds-bar\"><i style=\"width:60%\"></i><b style=\"left:66%\"></b></div></div>",
-      "css": ".ds-row { font-family: 'Instrument Sans', system-ui, sans-serif; font-size: 14px; color: oklch(25% 0.02 60); width: 320px; } .ds-row-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; } .ds-dot { width: 10px; height: 10px; border-radius: 999px; background: oklch(70% 0.14 80); } .ds-meta { font-size: 13px; color: oklch(62% 0.015 65); font-variant-numeric: tabular-nums; } .ds-gain { margin-left: auto; font-size: 13px; color: oklch(52% 0.11 150); font-variant-numeric: tabular-nums; } .ds-bar { position: relative; height: 10px; border-radius: 999px; background: oklch(95% 0.012 80); } .ds-bar i { display: block; height: 100%; border-radius: 999px; background: oklch(70% 0.14 80); transition: width 400ms cubic-bezier(0.25,1,0.5,1); } .ds-bar b { position: absolute; top: -3px; width: 2px; height: 16px; border-radius: 2px; background: oklch(25% 0.02 60); }"
-    },
-    {
-      "name": "Panneau",
-      "kind": "card",
-      "refersTo": "panel",
-      "description": "Groupe un formulaire, une progression ou un tableau. Filet 1 px, 14 px de rayon, aucune ombre.",
-      "html": "<div class=\"ds-panel\"><div class=\"ds-panel-title\">Versements du mois</div><p class=\"ds-panel-body\">0 € sur 3 700 €</p></div>",
-      "css": ".ds-panel { width: 320px; padding: 20px; background: oklch(99.2% 0.005 85); border: 1px solid oklch(89% 0.012 75); border-radius: 14px; font-family: 'Instrument Sans', system-ui, sans-serif; color: oklch(25% 0.02 60); } .ds-panel-title { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; } .ds-panel-body { margin: 6px 0 0; font-size: 14px; color: oklch(46% 0.02 60); font-variant-numeric: tabular-nums; }"
+      {
+        "name": "mobile",
+        "maxWidth": "639px"
+      },
+      {
+        "name": "desktop",
+        "minWidth": "640px"
+      }
+    ],
+    "components": [
+      {
+        "id": "ds-btn-primary",
+        "name": "Bouton primaire",
+        "selector": ".btn.btn-primary",
+        "description": "Pilule indigo pleine, texte blanc 600."
+      },
+      {
+        "id": "ds-btn-soft",
+        "name": "Bouton doux",
+        "selector": ".btn.btn-soft",
+        "description": "Pilule indigo doux, pour les saisies inline (Versé, OK)."
+      },
+      {
+        "id": "ds-btn-ghost",
+        "name": "Bouton ghost",
+        "selector": ".btn.btn-ghost",
+        "description": "Pilule blanche à filet fort."
+      },
+      {
+        "id": "ds-field",
+        "name": "Champ",
+        "selector": ".field",
+        "description": "40 px, coins 10 px, focus indigo."
+      },
+      {
+        "id": "ds-nav",
+        "name": "Onglets",
+        "selector": "nav[aria-label=Principal]",
+        "description": "Rail gris en pilule, onglet actif blanc avec ombre."
+      },
+      {
+        "id": "ds-chip",
+        "name": "Puce",
+        "selector": ".chip",
+        "description": "Pilule 24 px ; en retard = rouge doux."
+      },
+      {
+        "id": "ds-check",
+        "name": "Case d'action",
+        "selector": ".check",
+        "description": "Ronde 26 px, se remplit de vert."
+      },
+      {
+        "id": "ds-bar",
+        "name": "Barre de progression",
+        "selector": ".bar",
+        "description": "Pilule 12 px, couleur de la poche, trait de cible en encre."
+      },
+      {
+        "id": "ds-panel",
+        "name": "Carte",
+        "selector": ".panel",
+        "description": "Blanc, 18 px, ombre douce, sans bordure."
+      }
+    ],
+    "narrative": {
+      "northStar": "Clair, joli, un peu fun",
+      "register": "product",
+      "theme": "light-only",
+      "references": [
+        "Copilot Money",
+        "Mercury"
+      ],
+      "rejected": [
+        "Midnight Luxe (v1)",
+        "Papier et encre brune (v2 du 12/10/2026)",
+        "app de banque",
+        "tableur / Grafana",
+        "app crypto"
+      ]
     }
-  ],
-  "narrative": {
-    "northStar": "Le carnet de bord",
-    "overview": "Un carnet qu'on ouvre le 1er du mois à la table de la cuisine : du papier chaud, une encre brune plutôt que noire, des chiffres qu'on lit à bout de bras, et cinq couleurs de crayon, une par poche, qui ne changent jamais de page en page. Le carnet raconte le chemin parcouru et pointe le prochain pas. Il ne vend rien, il ne crie pas, il ne décore pas.\n\nLe système sert un cockpit d'exécution (registre produit) : la hiérarchie est faite par la taille et le poids de la typographie, jamais par l'ornement. Les surfaces sont plates, séparées par des filets fins et des tons de papier légèrement différents. La couleur est réservée aux données : poches, gains et pertes, cible atteinte ou non. Le thème clair est le défaut ; le thème sombre suit le système et garde la même teinte chaude dans ses neutres.",
-    "keyCharacteristics": [
-      "Papier chaud (oklch 97.5 % 0.008 80) et encre brune (oklch 25 % 0.02 60) : jamais de blanc pur ni de noir pur.",
-      "Cinq couleurs de poche, stables partout : ocre, terracotta, orange brûlé, sauge, ardoise.",
-      "Une seule famille typographique, Instrument Sans, chiffres tabulaires sur toute valeur numérique.",
-      "Élévation plate : filets 1 px et tons de papier, zéro ombre portée.",
-      "Le progrès est une forme : barre épaisse arrondie, case ronde qui se remplit d'encre, repère noir de cible.",
-      "Dense sur Mac, une colonne sur iPhone, sans changement de vocabulaire."
-    ],
-    "rules": [
-      { "name": "La règle du crayon unique", "body": "Une poche, une couleur, partout. Interdit d'utiliser une couleur de poche pour autre chose que sa poche, et interdit de donner deux couleurs à une même poche sur deux écrans.", "section": "colors" },
-      { "name": "La règle du signe", "body": "Aucune information portée par la couleur seule. Gain et perte portent toujours + ou − ; l'écart à la cible porte toujours son montant ; la cible est un trait, pas une teinte.", "section": "colors" },
-      { "name": "La règle de l'encre", "body": "L'accent du système est l'encre. Les boutons primaires, la cible, la case cochée, la ligne du graphique sont en encre. Si un élément interactif est coloré, c'est une erreur.", "section": "colors" },
-      { "name": "La règle de la phrase", "body": "Un écran s'ouvre sur une phrase qui dit quoi faire, en Headline, précédée d'un surtitre 13 px. Pas de « gros chiffre, petit label ».", "section": "typography" },
-      { "name": "La règle tabulaire", "body": "Tout nombre, même dans une phrase, porte la classe tnum. Tout nombre dans une colonne porte num.", "section": "typography" },
-      { "name": "La règle du papier", "body": "Si un élément a besoin d'une ombre pour se détacher, c'est qu'il n'a pas le bon ton de papier. Changer le ton, pas ajouter l'ombre.", "section": "elevation" },
-      { "name": "La règle du panneau unique", "body": "Un panneau n'en contient jamais un autre. Les listes dans un panneau sont séparées par des filets, pas par des sous-cartes.", "section": "elevation" }
-    ],
-    "dos": [
-      "Do ouvrir chaque écran sur une phrase d'action en 28 px 600, précédée du mois ou de la date en 13 px.",
-      "Do mettre une pastille de poche de 10 px devant tout instrument, partout, dans la couleur exacte de sa poche.",
-      "Do écrire le signe devant toute variation et le montant à côté de tout écart.",
-      "Do utiliser l'encre pour tout élément interactif principal.",
-      "Do séparer les lignes par un filet de 1 px et teinter le survol en papier enfoncé.",
-      "Do garder les chiffres tabulaires sans exception.",
-      "Do respecter prefers-reduced-motion.",
-      "Do montrer un état vide qui dit ce qui apparaîtra ici."
-    ],
-    "donts": [
-      "Don't reproduire l'ancienne v1 « Midnight Luxe » : fond noir, or, lueurs, dégradés, animations d'entrée.",
-      "Don't faire une app de banque : promos, cartes en grille, icônes décoratives, chiffres noyés dans le chrome.",
-      "Don't faire un tableur ou Grafana : un tableau nu sans titre de section, sans pastille, sans hiérarchie.",
-      "Don't faire une app crypto : néon, chandeliers, rouge et vert saturés.",
-      "Don't utiliser le gabarit « gros chiffre, petit label » ni une grille de cartes identiques.",
-      "Don't utiliser #000, #fff, ni un gris sans teinte.",
-      "Don't mettre une ombre portée, un flou décoratif, un dégradé, un border-left coloré, un texte en dégradé.",
-      "Don't imbriquer un panneau dans un panneau.",
-      "Don't colorer un bouton avec une couleur de poche.",
-      "Don't ouvrir un modal.",
-      "Don't écrire de libellé en capitales, ni de tiret cadratin dans l'interface."
-    ]
   }
 }

@@ -5,7 +5,7 @@ import "./globals.css";
 const instrument = Instrument_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-instrument", display: "swap" });
 
 export const metadata: Metadata = { title: "Carnet de bord", description: "Cockpit patrimonial de Léo et Julie" };
-export const viewport: Viewport = { themeColor: [{ media: "(prefers-color-scheme: light)", color: "#f8f6f1" }, { media: "(prefers-color-scheme: dark)", color: "#1c1917" }] };
+export const viewport: Viewport = { themeColor: "#f7f8fa" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

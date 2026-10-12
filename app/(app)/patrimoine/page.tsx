@@ -58,7 +58,7 @@ export default async function Patrimoine() {
   return (
     <>
       <p className="text-[13px] text-ink-2">Patrimoine au {dateFr(today())}</p>
-      <h1 className="text-[34px] font-semibold tracking-[-0.02em] leading-tight tnum mt-0.5">{eur(total)}</h1>
+      <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum mt-0.5">{eur(total)}</h1>
       <p className="text-[15px] text-ink-2 mt-2">
         <Delta value={Math.round(total - cost)} suffix=" €" /> net des versements ({eur(cost)} versés), soit <Delta value={perf(positions)} suffix=" %" />.
         {first && <> Depuis le {dateFr(first.date)} : <Delta value={Math.round(total - first.value)} suffix=" €" />

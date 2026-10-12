@@ -18,7 +18,7 @@ export function Section({ title, aside, children, className = "" }: { title: Rea
   return (
     <section className={`mt-10 ${className}`}>
       <header className="flex items-baseline justify-between gap-4 mb-3">
-        <h2 className="text-[17px] font-semibold tracking-[-0.01em]">{title}</h2>
+        <h2 className="text-[18px] font-bold tracking-[-0.015em]">{title}</h2>
         {aside && <span className="text-[13px] text-ink-2">{aside}</span>}
       </header>
       {children}
