@@ -1,13 +1,13 @@
 "use client";
 import { useState } from "react";
-import { dateFr, eur } from "@/lib/format";
+import { ago, dateFr, eur } from "@/lib/format";
 import { Delta, Dot, Section } from "@/components/ui";
 import type { Position } from "@/lib/queries";
 
 type Key = "instrument" | "quantity" | "price" | "value" | "cost" | "perf" | "price_date";
 const COLS: [Key, string, string][] = [
   ["instrument", "Instrument", "auto"], ["quantity", "Qté", "11%"], ["price", "Prix", "11%"], ["value", "Valeur", "12%"],
-  ["cost", "Coût", "12%"], ["perf", "+/-", "10%"], ["price_date", "Au", "13%"],
+  ["cost", "Coût", "12%"], ["perf", "+/-", "10%"], ["price_date", "Actualisé", "13%"],
 ];
 const perfOf = (p: Position) => (p.cost ? ((p.value - p.cost) / p.cost) * 100 : 0);
 const val = (p: Position, k: Key) => (k === "perf" ? perfOf(p) : k === "instrument" ? p.instrument.toLowerCase() : p[k] ?? "");
@@ -54,7 +54,7 @@ export function Positions({ positions }: { positions: Position[] }) {
                         <td className="num font-medium">{eur(p.value)}</td>
                         <td className="num text-ink-2">{eur(p.cost)}</td>
                         <td className="num">{p.cost ? <Delta value={perfOf(p)} suffix=" %" /> : ""}</td>
-                        <td className="num text-ink-3 text-[12px]">{dateFr(p.price_date)}</td>
+                        <td className="num text-ink-3 text-[12px]" title={dateFr(p.price_date)}>{ago(p.price_date)}</td>
                       </tr>
                     ))}
                     {aps.length > 1 && <tr className="total"><td>Total</td><td /><td /><td className="num">{eur(sum(aps, "value"))}</td><td className="num">{eur(sum(aps, "cost"))}</td><td className="num"><Delta value={perf(aps)} suffix=" %" /></td><td /></tr>}
