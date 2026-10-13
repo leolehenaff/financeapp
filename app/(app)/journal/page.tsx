@@ -1,20 +1,18 @@
-import { addAction, addInstrument, addTransaction, completeAction, listTransactions } from "@/lib/actions";
+import { addAction, completeAction, listTransactions } from "@/lib/actions";
 import { Transactions } from "@/components/transactions";
-import { GEOS, KINDS } from "@/lib/db";
-import { dateFr, today } from "@/lib/format";
+import { dateFr } from "@/lib/format";
 import { getActions, lists } from "@/lib/queries";
-import { Check, Section, pocket } from "@/components/ui";
+import { Check, Section } from "@/components/ui";
 import { DatePicker } from "@/components/datepicker";
 
 export const dynamic = "force-dynamic";
 
-const TYPES: Record<string, string> = { buy: "Achat", sell: "Vente", dividend: "Dividende" };
 const Field = ({ label, children, className = "" }: { label: string; children: React.ReactNode; className?: string }) => (
   <label className={`flex flex-col gap-1 text-[12px] text-ink-2 ${className}`}>{label}{children}</label>
 );
 
 export default async function Journal() {
-  const { accounts, instruments } = await lists();
+  const { instruments } = await lists();
   const actions = await getActions();
   const first = await listTransactions({ from: "", to: "", instrument: "", type: "" }, 1);
   const sections = [...new Set(actions.map((a) => a.section))];
@@ -24,37 +22,6 @@ export default async function Journal() {
     <>
       <p className="text-[13px] text-ink-2">Journal</p>
       <h1 className="text-[30px] font-bold tracking-[-0.025em] leading-tight mt-0.5">Ce qui a été fait, ce qui reste à faire.</h1>
-
-      <Section title="Saisir une transaction">
-        <form action={addTransaction} className="panel p-5 grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Field label="Date"><DatePicker name="date" defaultValue={today()} /></Field>
-          <Field label="Compte"><select name="account_id" className="field" required>{accounts.map((a) => <option key={a.id} value={a.id}>{a.owner} · {a.name}</option>)}</select></Field>
-          <Field label="Instrument" className="col-span-2">
-            <select name="instrument_id" className="field" required>
-              {KINDS.map((k) => <optgroup key={k} label={pocket(k).label}>{instruments.filter((i) => i.kind === k).map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}</optgroup>)}
-            </select>
-          </Field>
-          <Field label="Type"><select name="type" className="field">{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></Field>
-          <Field label="Quantité"><input name="quantity" inputMode="decimal" placeholder="0 si dividende" className="field" /></Field>
-          <Field label="Montant total €"><input name="amount" inputMode="decimal" placeholder="1 850" className="field" required /></Field>
-          <Field label="Dont argent frais €"><input name="fresh" inputMode="decimal" placeholder="vide = tout, 0 = réinvesti" className="field" /></Field>
-          <Field label="Note"><input name="note" placeholder="Virement du 1er" className="field" /></Field>
-          <div className="col-span-2 md:col-span-4 flex items-center justify-between gap-4 pt-1">
-            <p className="text-[12px] text-ink-3">Sur un achat, l&apos;argent frais est enregistré comme apport externe ; le reste est un réinvestissement.</p>
-            <button type="submit" className="btn btn-primary">Enregistrer</button>
-          </div>
-        </form>
-        <details className="mt-3">
-          <summary className="cursor-pointer text-[13px] text-ink-2 hover:text-ink inline-block">Créer un instrument</summary>
-          <form action={addInstrument} className="panel p-5 mt-2 grid grid-cols-2 md:grid-cols-5 gap-3 items-end">
-            <Field label="Nom"><input name="name" placeholder="MSCI World (CW8)" className="field" required /></Field>
-            <Field label="Ticker Yahoo"><input name="ticker" placeholder="CW8.PA, optionnel" className="field" /></Field>
-            <Field label="Poche"><select name="kind" className="field">{KINDS.map((k) => <option key={k} value={k}>{pocket(k).label}</option>)}</select></Field>
-            <Field label="Zone"><select name="geo" className="field"><option value="">Sans</option>{GEOS.map((g) => <option key={g}>{g}</option>)}</select></Field>
-            <button type="submit" className="btn btn-ghost">Créer</button>
-          </form>
-        </details>
-      </Section>
 
       <Section title="Transactions">
         <Transactions instruments={instruments.map((i) => ({ id: i.id, name: i.name }))} initial={first} />

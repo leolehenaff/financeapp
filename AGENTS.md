@@ -18,11 +18,11 @@ DESIGN.md          design system « Carnet de bord » : tokens, typographie, com
 components/ui.tsx  primitives (Section, Bar, Delta, Dot, Check, Empty) et couleurs par poche (POCKET)
 app/(app)/page.tsx            écran « Ce mois » : versements vs plan, actions à 30 j, écart aux cibles, valorisations périmées
 app/(app)/patrimoine/page.tsx positions par personne et compte, historique, trajectoire FIRE
-app/(app)/journal/page.tsx    saisie et liste des transactions, instruments, actions
+app/(app)/journal/page.tsx    liste filtrée et paginée des transactions, actions
 app/api/cron/*                refresh-prices (Yahoo, jours ouvrés 18h UTC), create-snapshot (minuit)
 lib/db.ts          client Turso, schéma v2 (SCHEMA), constantes KINDS / GEOS
 lib/queries.ts     positions dérivées, allocation, avancement du mois, actions, FIRE
-lib/actions.ts     server actions (login, transaction, prix, action, instrument)
+lib/actions.ts     server actions (login, versement du mois, prix, action, liste des transactions)
 lib/yahoo.ts       cours en EUR via yahoo-finance2
 proxy.ts           garde par cookie signé (AUTH_SECRET), /login et /api/cron exclus
 scripts/migrate.mts         reprise v1 → v2, déjà exécutée le 12/10/2026, refuse de tourner deux fois
@@ -37,7 +37,7 @@ Commence toute session par `docs/README.md`, puis la table `actions` (ou `docs/a
 - `accounts` : qui, nom, kind (PEA, CTO, PEE, AV, Livret, Crypto, Startup, Cash), date d'ouverture (horloge PEA).
 - `instruments` : nom unique, ticker Yahoo unique ou null, kind (Stock, Crypto, Start-up, Livret, Active Cash), geo (US, EU, FR, OTHER), price_source (yahoo ou manual).
 - `transactions` : date, compte, instrument, type (buy, sell, dividend), quantité, montant total en €. Les positions sont dérivées : quantité nette, coût moyen pondéré. Livrets, cash et AV : 1 unité = 1 €, les intérêts se saisissent en buy à montant 0.
-- `contributions` : apports externes par compte (date, montant, négatif pour un retrait). C'est le « versé » du cockpit : un dividende ou une vente réinvestis ne sont pas des apports. `recordFlow` en crée un à chaque versement du mois, le Journal via le champ « dont argent frais » (vide = tout l'achat, 0 = réinvestissement, sinon la part apportée).
+- `contributions` : apports externes par compte (date, montant, négatif pour un retrait). C'est le « versé » du cockpit : un dividende ou une vente réinvestis ne sont pas des apports. `recordFlow` en crée un à chaque versement du mois ; le reste est saisi par l'agent depuis les exports mensuels (checklist dans `docs/revues.md`, relevés dans `docs/releves/AAAA-MM/`), jamais à la main dans l'app.
 - `prices` : un prix par instrument et par jour, en €. Yahoo pour les cotés, saisie manuelle pour le reste.
 - `plan_flows` : versement mensuel cible par personne, compte et instrument (null = n'importe quel instrument du compte), avec from_month et to_month.
 - `actions` : section, titre, échéance, statut (todo, done, dropped).

@@ -2,7 +2,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import { db, KINDS, GEOS } from "./db";
+import { db } from "./db";
 import { createToken } from "./token";
 import { today, TX_PAGE, type TxFilter, type TxRow } from "./format";
 
@@ -25,23 +25,6 @@ export async function login(fd: FormData) {
 export async function logout() {
   (await cookies()).delete("auth_token");
   redirect("/login");
-}
-
-export async function addTransaction(fd: FormData) {
-  const type = str(fd, "type");
-  if (!["buy", "sell", "dividend"].includes(type)) throw new Error("Type invalide");
-  const quantity = type === "dividend" ? 0 : num(fd, "quantity");
-  const amount = num(fd, "amount");
-  if (amount < 0 || quantity < 0) throw new Error("Montants négatifs interdits");
-  const date = str(fd, "date") || today(), account = num(fd, "account_id"), note = str(fd, "note") || null;
-  await db.execute({
-    sql: "INSERT INTO transactions (date, account_id, instrument_id, type, quantity, amount, note) VALUES (?,?,?,?,?,?,?)",
-    args: [date, account, num(fd, "instrument_id"), type, quantity, amount, note],
-  });
-  // Argent frais : la part de l'achat qui vient de ta poche (vide = tout, 0 = réinvestissement pur).
-  const fresh = str(fd, "fresh") === "" ? amount : num(fd, "fresh");
-  if (type === "buy" && fresh > 0) await contribute(date, account, Math.min(fresh, amount), note);
-  refresh();
 }
 
 /** Versement du mois : quantité et prix unitaire, saisis sous le flux. */
@@ -86,16 +69,6 @@ export async function addAction(fd: FormData) {
   refresh();
 }
 
-export async function addInstrument(fd: FormData) {
-  const name = str(fd, "name"), ticker = str(fd, "ticker") || null, kind = str(fd, "kind"), geo = str(fd, "geo") || null;
-  if (!name || !(KINDS as readonly string[]).includes(kind)) throw new Error("Instrument invalide");
-  if (geo && !(GEOS as readonly string[]).includes(geo)) throw new Error("Géo invalide");
-  await db.execute({
-    sql: "INSERT INTO instruments (name, ticker, kind, geo, price_source) VALUES (?,?,?,?,?)",
-    args: [name, ticker, kind, geo, ticker ? "yahoo" : "manual"],
-  });
-  refresh();
-}
 
 
 /** Transactions filtrées et paginées, lues par le tableau du Journal sans recharger la page. */
