@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { completeAction, recordFlow, setPrice } from "@/lib/actions";
 import { dateFr, eur, monthLabel, today } from "@/lib/format";
 import { dueSoon, getActions, getMonthProgress, getPositions, stale, type Action, type Position } from "@/lib/queries";
@@ -88,7 +87,7 @@ export default async function ThisMonth() {
                           <input name="price" type="number" step="any" min="0" defaultValue={f.price ? Math.round(f.price * 100) / 100 : undefined} className="field w-24 h-8 text-[13px]" required /></label>
                         <button className="btn btn-sm btn-soft">Versé</button>
                       </form>
-                    : <Link href="/journal" className="col-start-2 col-span-2 mt-2 text-[13px] underline underline-offset-2">Saisir dans le Journal</Link>)}
+                    : <p className="col-start-2 col-span-2 mt-2 text-[13px] text-ink-3">Saisi par l&apos;agent avec l&apos;export Blast.</p>)}
                 </li>
               );
             })}
