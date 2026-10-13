@@ -14,6 +14,21 @@ Source : « Plan financier familial » de juillet 2026, actualisé le 12 octobre
 | dont vie courante | 1 260 |
 | dont loisirs | 340 |
 
+## Crédit immobilier
+
+Prêt à taux fixe Banque Populaire (réf. 06085109), compte joint. Relevé du 13/10/2026.
+
+| | |
+|---|---|
+| Capital emprunté | 380 000 € |
+| Taux nominal | 3,85 % |
+| Souscrit le | 08/07/2024, fonds débloqués le 26/07/2024 |
+| Durée | 300 mois, fin le 05/08/2049 |
+| Échéance constante | 1 974,44 € le 5 du mois |
+| Capital restant dû au 13/10/2026 | 359 554,76 € |
+
+Le crédit n'est pas dans la base : le cockpit suit le patrimoine financier brut, le bien et la dette restent hors périmètre. À revoir si on veut un patrimoine net.
+
 ## Phases
 
 | Phase | Période | Charges bébé | Surplus | Investi (65 %) |
