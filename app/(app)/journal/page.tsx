@@ -3,6 +3,7 @@ import { db, GEOS, KINDS } from "@/lib/db";
 import { dateFr, eur, today } from "@/lib/format";
 import { getActions, lists } from "@/lib/queries";
 import { Check, Dot, Section, pocket } from "@/components/ui";
+import { DatePicker } from "@/components/datepicker";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,7 @@ export default async function Journal({ searchParams }: { searchParams: Promise<
 
       <Section title="Saisir une transaction">
         <form action={addTransaction} className="panel p-5 grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Field label="Date"><input type="date" name="date" defaultValue={today()} className="field" required /></Field>
+          <Field label="Date"><DatePicker name="date" defaultValue={today()} /></Field>
           <Field label="Compte"><select name="account_id" className="field" required>{accounts.map((a) => <option key={a.id} value={a.id}>{a.owner} · {a.name}</option>)}</select></Field>
           <Field label="Instrument" className="col-span-2">
             <select name="instrument_id" className="field" required>
@@ -70,13 +71,13 @@ export default async function Journal({ searchParams }: { searchParams: Promise<
 
       <Section title="Transactions" aside={`${count} ligne${count > 1 ? "s" : ""}, page ${page} sur ${pages}`}>
         <form className="flex flex-wrap gap-2 mb-3 items-end">
-          <Field label="Du"><input type="date" name="from" defaultValue={f.from} className="field !w-36 !h-8" /></Field>
-          <Field label="Au"><input type="date" name="to" defaultValue={f.to} className="field !w-36 !h-8" /></Field>
+          <Field label="Du"><DatePicker name="from" defaultValue={f.from} placeholder="Début" className="w-36" /></Field>
+          <Field label="Au"><DatePicker name="to" defaultValue={f.to} placeholder="Fin" className="w-36" /></Field>
           <Field label="Instrument">
-            <select name="instrument" defaultValue={f.instrument} className="field !h-8"><option value="">Tous</option>{instruments.map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}</select>
+            <select name="instrument" defaultValue={f.instrument} className="field"><option value="">Tous</option>{instruments.map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}</select>
           </Field>
-          <Field label="Type"><select name="type" defaultValue={f.type} className="field !h-8"><option value="">Tous</option>{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></Field>
-          <button className="btn btn-ghost btn-sm">Filtrer</button>
+          <Field label="Type"><select name="type" defaultValue={f.type} className="field"><option value="">Tous</option>{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></Field>
+          <button className="btn btn-ghost">Filtrer</button>
           {Object.values(f).some(Boolean) && <a href="?" className="text-[13px] text-ink-2 underline underline-offset-2 self-center">Effacer</a>}
         </form>
         <div className="panel overflow-x-auto">
@@ -108,7 +109,7 @@ export default async function Journal({ searchParams }: { searchParams: Promise<
       <Section title="Actions" aside={`${open} ouverte${open > 1 ? "s" : ""}`}>
         <form action={addAction} className="panel p-5 grid grid-cols-2 md:grid-cols-[1fr_auto_auto_auto] gap-3 items-end mb-6">
           <Field label="Nouvelle action" className="col-span-2 md:col-span-1"><input name="title" placeholder="Vendre les 88 derniers Capgemini" className="field" required /></Field>
-          <Field label="Échéance"><input type="date" name="due_date" className="field" /></Field>
+          <Field label="Échéance"><DatePicker name="due_date" placeholder="Sans" /></Field>
           <Field label="Section"><select name="section" className="field">{sections.map((s) => <option key={s}>{s}</option>)}</select></Field>
           <button type="submit" className="btn btn-ghost">Ajouter</button>
         </form>
