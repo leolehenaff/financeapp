@@ -26,7 +26,7 @@ function Targets({ rows, byPocket }: { rows: AllocRow[]; byPocket: boolean }) {
             <div className="relative col-span-2 bar">
               {/* Plein jusqu'au plus petit des deux, puis hachures : surplus en rouge au-delà de la cible, manque dans la couleur de la poche jusqu'à la cible. */}
               <i style={{ width: `${(Math.min(r.actual, r.target) / max) * 100}%`, background: color }} />
-              <span className="absolute inset-y-0 hatch" style={{ left: `${(Math.min(r.actual, r.target) / max) * 100}%`, width: `${(Math.abs(r.actual - r.target) / max) * 100}%`, color: r.actual > r.target ? "var(--down)" : color }} title={r.actual > r.target ? `Surplus ${eur(-r.gap)}` : `Manque ${eur(r.gap)}`} />
+              <span className="absolute inset-y-0 hatch" style={{ left: `${(Math.min(r.actual, r.target) / max) * 100}%`, width: `${(Math.abs(r.actual - r.target) / max) * 100}%`, "--hatch": r.actual > r.target ? "var(--down)" : color } as React.CSSProperties} title={r.actual > r.target ? `Surplus ${eur(-r.gap)}` : `Manque ${eur(r.gap)}`} />
               <span className="absolute top-[-3px] h-[16px] w-[2px] bg-ink rounded-full" style={{ left: `${(r.target / max) * 100}%` }} title={`Cible ${pct(r.target)}`} />
             </div>
           </li>
