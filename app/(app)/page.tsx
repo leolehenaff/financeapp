@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { completeAction, recordFlow, setPrice } from "@/lib/actions";
 import { dateFr, eur, monthLabel, pct, today } from "@/lib/format";
-import { dueSoon, getActions, getAllocation, getMonthProgress, getPositions, stale, type AllocRow, type Position } from "@/lib/queries";
+import { dueSoon, getActions, getAllocation, getMonthProgress, getPositions, stale, type Action, type AllocRow, type Position } from "@/lib/queries";
 import { Bar, Check, Delta, Dot, Empty, Section, pocket } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
@@ -52,6 +52,18 @@ function StaleRow({ p }: { p: Position }) {
   );
 }
 
+function ActionRow({ a, day }: { a: Action; day: string }) {
+  return (
+    <li className="flex gap-3 items-start py-3">
+      <form action={completeAction.bind(null, a.id)} className="pt-0.5"><Check /></form>
+      <div className="text-[14px] leading-snug">
+        <span className={`chip tnum mr-2 ${a.due_date! < day ? "bg-down-soft text-down" : "bg-surface-2 text-ink-2"}`}>{dateFr(a.due_date)}</span>
+        {a.title}
+      </div>
+    </li>
+  );
+}
+
 export default async function ThisMonth() {
   const day = today(), ym = day.slice(0, 7);
   const positions = await getPositions();
@@ -60,8 +72,8 @@ export default async function ThisMonth() {
   const cost = positions.reduce((s, p) => s + p.cost, 0);
   const planned = flows.reduce((s, f) => s + f.planned, 0);
   const done = flows.reduce((s, f) => s + Math.min(f.done, f.planned), 0);
-  const todo = actions.filter((a) => a.status === "todo");
   const due = dueSoon(actions);
+  const later = actions.filter((a) => a.status === "todo" && !due.includes(a));
   const late = due.filter((a) => a.due_date! < day).length;
   const old = stale(positions);
   const remaining = flows.filter((f) => f.done < f.planned);
@@ -133,18 +145,12 @@ export default async function ThisMonth() {
       </Section>
 
       <Section title="Calendrier" aside={due.length ? `${due.length} sous 30 jours${late ? `, ${late} en retard` : ""}` : undefined}>
-        {todo.length === 0 ? <Empty>Rien de programmé.</Empty> : (
-          <ul className="divide-y divide-line">
-            {todo.map((a) => (
-              <li key={a.id} className="flex gap-3 items-start py-3">
-                <form action={completeAction.bind(null, a.id)} className="pt-0.5"><Check /></form>
-                <div className="text-[14px] leading-snug">
-                  <span className={`chip tnum mr-2 ${a.due_date! < day ? "bg-down-soft text-down" : due.includes(a) ? "bg-accent-soft text-accent" : "bg-surface-2 text-ink-2"}`}>{dateFr(a.due_date)}</span>
-                  {a.title}
-                </div>
-              </li>
-            ))}
-          </ul>
+        {due.length === 0 ? <Empty>Rien sous 30 jours.</Empty> : <ul className="divide-y divide-line">{due.map((a) => <ActionRow key={a.id} a={a} day={day} />)}</ul>}
+        {later.length > 0 && (
+          <details className="mt-3">
+            <summary className="cursor-pointer text-[13px] text-ink-2 hover:text-ink inline-block">Plus tard, {later.length} action{later.length > 1 ? "s" : ""}</summary>
+            <ul className="divide-y divide-line mt-1">{later.map((a) => <ActionRow key={a.id} a={a} day={day} />)}</ul>
+          </details>
         )}
       </Section>
 
