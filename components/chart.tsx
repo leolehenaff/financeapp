@@ -9,8 +9,10 @@ const RANGES: [string, number][] = [["1 m", 30], ["3 m", 91], ["6 m", 182], ["1 
 /** Trois KPI de la période (variation nette des versements, performance, versé), sélecteur de période, puis la courbe. */
 /** `flows` : tous les apports externes datés, pour le TRI (en Max, ils remplacent la valeur de départ). */
 type Move = { date: string; type: string; amount: number };
-export function Chart({ points: all, flows, ledger }: { points: Point[]; flows: Flow[]; ledger: Move[] }) {
+type Plan = { from: string; to: string | null; amount: number };
+export function Chart({ points: all, flows, ledger, plan }: { points: Point[]; flows: Flow[]; ledger: Move[]; plan: Plan[] }) {
   const [days, setDays] = useState(365);
+  const [view, setView] = useState<"rythme" | "gain">("rythme");
   const points = days ? all.filter((p) => p.date >= addDays(today(), -days)) : all;
   const first = points[0], last = points.at(-1);
   // Max = depuis le premier euro : base zéro, les KPI retombent sur « valeur moins coût ».
@@ -33,7 +35,13 @@ export function Chart({ points: all, flows, ledger }: { points: Point[]; flows: 
   const annual = (n: number) => `${n > 0 ? "+" : n < 0 ? "−" : ""}${eur(Math.round(Math.abs(n)))} par an`;
   return (
     <div>
-      <div className="flex justify-end mt-3">
+      <div className="flex justify-between items-center mt-3 gap-3">
+        <div className="flex gap-0.5 p-0.5 rounded-full bg-surface-2 text-[12px]" role="tablist" aria-label="Vue">
+          {([["rythme", "Rythme"], ["gain", "Gain"]] as const).map(([v, l]) => (
+            <button key={v} role="tab" aria-selected={v === view} onClick={() => setView(v)}
+              className={`px-2.5 py-1 rounded-full transition-colors ${v === view ? "bg-surface font-semibold shadow-[var(--shadow)]" : "text-ink-2 hover:text-ink"}`}>{l}</button>
+          ))}
+        </div>
         <div className="flex gap-0.5 p-0.5 rounded-full bg-surface-2 text-[12px]" role="tablist" aria-label="Période">
           {RANGES.map(([l, d]) => (
             <button key={l} role="tab" aria-selected={d === days} onClick={() => setDays(d)}
@@ -54,49 +62,97 @@ export function Chart({ points: all, flows, ledger }: { points: Point[]; flows: 
           </div>
         ))}
       </dl>
-      <Bars ledger={ledger} from={days ? addDays(today(), -days) : ""} byYear={!days} />
+      {view === "rythme" ? <Bars ledger={ledger} plan={plan} from={days ? addDays(today(), -days) : ""} byYear={!days} /> : <Gain points={points} />}
     </div>
   );
 }
 
-/** Barres par mois (ou par an en Max) : apports nets, achats, ventes, dividendes. */
-const SERIES: [string, string, string][] = [["contribution", "Versé", "var(--ink)"], ["buy", "Investi", "var(--c-stock)"], ["sell", "Revendu", "var(--c-crypto)"], ["dividend", "Dividendes", "var(--up)"]];
-function Bars({ ledger, from, byYear }: { ledger: Move[]; from: string; byYear: boolean }) {
+/** Rythme : versé net par mois (par an en Max), dividendes empilés par-dessus, trait de l'objectif du plan. */
+function Bars({ ledger, plan, from, byYear }: { ledger: Move[]; plan: Plan[]; from: string; byYear: boolean }) {
   const [i, setI] = useState<number | null>(null);
   const key = (d: string) => (byYear ? d.slice(0, 4) : d.slice(0, 7));
-  const buckets = new Map<string, Record<string, number>>();
+  const buckets = new Map<string, { paid: number; div: number }>();
   for (const m of ledger) {
-    if (m.date < from) continue;
-    const k = key(m.date), b = buckets.get(k) ?? {};
-    b[m.type] = (b[m.type] ?? 0) + m.amount;
+    if (m.date < from || (m.type !== "contribution" && m.type !== "dividend")) continue;
+    const k = key(m.date), b = buckets.get(k) ?? { paid: 0, div: 0 };
+    if (m.type === "contribution") b.paid += m.amount; else b.div += m.amount;
     buckets.set(k, b);
   }
   const rows = [...buckets].sort();
   if (!rows.length) return <p className="text-[14px] text-ink-2 mt-3">Aucun mouvement sur cette période.</p>;
-  const max = Math.max(1, ...rows.flatMap(([, b]) => SERIES.map(([t]) => Math.abs(b[t] ?? 0))));
-  const W = 600, H = 140, gap = 6, gw = (W - gap * (rows.length - 1)) / rows.length, bw = gw / SERIES.length;
+  // Objectif de la période : somme des mois couverts par le plan (12 mois pour une année, jusqu'au mois courant pour l'année en cours).
+  const target = (k: string) => {
+    const months = byYear ? Array.from({ length: 12 }, (_, m) => `${k}-${String(m + 1).padStart(2, "0")}`).filter((ym) => ym <= today().slice(0, 7)) : [k];
+    return months.reduce((s, ym) => s + plan.filter((p) => p.from <= ym && (!p.to || ym <= p.to)).reduce((t, p) => t + p.amount, 0), 0);
+  };
+  const max = Math.max(1, ...rows.map(([k, b]) => Math.max(b.paid + b.div, target(k))));
+  const W = 600, H = 160, slot = W / rows.length, bw = slot * 0.62;
+  const y = (v: number) => H - (v / max) * H;
   const label = (k: string) => (byYear ? k : `${k.slice(5)}/${k.slice(2, 4)}`);
   const p = i == null ? null : rows[i];
   return (
     <div className="mt-4">
       <div className="relative select-none" onPointerLeave={() => setI(null)}>
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-36 block" preserveAspectRatio="none" role="img" aria-label="Mouvements par période">
-          {rows.map(([k, b], r) => (
-            <g key={k} onPointerEnter={() => setI(r)} onPointerDown={() => setI(r)}>
-              <rect x={r * (gw + gap)} y={0} width={gw} height={H} fill={i === r ? "var(--surface-2)" : "transparent"} />
-              {SERIES.map(([t, , color], s) => { const h = (Math.abs(b[t] ?? 0) / max) * H; return <rect key={t} x={r * (gw + gap) + s * bw} y={H - h} width={bw - 1} height={h} fill={color} rx="1" />; })}
-            </g>
-          ))}
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40 block" preserveAspectRatio="none" role="img" aria-label="Versements par période">
+          {rows.map(([k, b], r) => {
+            const x = r * slot + (slot - bw) / 2, t = target(k);
+            return (
+              <g key={k} onPointerEnter={() => setI(r)} onPointerDown={() => setI(r)}>
+                <rect x={r * slot} y={0} width={slot} height={H} fill={i === r ? "var(--surface-2)" : "transparent"} />
+                {b.paid > 0 && <rect x={x} y={y(b.paid)} width={bw} height={H - y(b.paid)} fill="var(--accent)" />}
+                {b.paid < 0 && <rect x={x} y={H - 2} width={bw} height={2} fill="var(--down)" />}
+                {b.div > 0 && <rect x={x} y={y(Math.max(0, b.paid) + b.div)} width={bw} height={(b.div / max) * H} fill="var(--up)" />}
+                {t > 0 && <line x1={x - 3} x2={x + bw + 3} y1={y(t)} y2={y(t)} stroke="var(--ink)" strokeWidth="2" vectorEffect="non-scaling-stroke" />}
+              </g>
+            );
+          })}
         </svg>
         <div className="flex text-[11px] text-ink-3 tnum mt-1">{rows.map(([k]) => <span key={k} className="flex-1 text-center truncate">{rows.length > 14 && !byYear ? (k.endsWith("-01") ? k.slice(0, 4) : "") : label(k)}</span>)}</div>
         {p && (
           <div className="absolute top-0 pointer-events-none panel px-2.5 py-1.5 text-[12px] whitespace-nowrap" style={{ left: `${((i! + 0.5) / rows.length) * 100}%`, transform: `translateX(${i! > rows.length * 0.7 ? "calc(-100% - 8px)" : "8px"})` }}>
             <div className="text-ink-3">{byYear ? p[0] : label(p[0])}</div>
-            {SERIES.map(([t, l]) => <div key={t} className="flex justify-between gap-4 tnum"><span className="text-ink-2">{l}</span><span>{eur(Math.round(p[1][t] ?? 0))}</span></div>)}
+            <div className="flex justify-between gap-4 tnum"><span className="text-ink-2">Versé</span><span>{eur(Math.round(p[1].paid))}</span></div>
+            <div className="flex justify-between gap-4 tnum"><span className="text-ink-2">Dividendes</span><span>{eur(Math.round(p[1].div))}</span></div>
+            {target(p[0]) > 0 && <div className="flex justify-between gap-4 tnum"><span className="text-ink-2">Objectif</span><span>{eur(Math.round(target(p[0])))}</span></div>}
           </div>
         )}
       </div>
-      <p className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-ink-3 mt-2">{SERIES.map(([t, l, color]) => <span key={t} className="flex items-center gap-1.5"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: color }} />{l}</span>)}</p>
+      <p className="flex flex-wrap gap-x-4 gap-y-1 text-[12px] text-ink-3 mt-2">
+        <span className="flex items-center gap-1.5"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: "var(--accent)" }} />Versé</span>
+        <span className="flex items-center gap-1.5"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: "var(--up)" }} />Dividendes</span>
+        <span className="flex items-center gap-1.5"><span className="inline-block w-3 border-t-2 border-ink" />Objectif du plan</span>
+      </p>
+    </div>
+  );
+}
+
+/** Gain : valeur moins versé net, axe serré sur l'amplitude du gain (zéro en pointillé s'il est dans le cadre). */
+function Gain({ points }: { points: Point[] }) {
+  const [i, setI] = useState<number | null>(null);
+  if (points.length < 2) return <p className="text-[14px] text-ink-2 mt-3">Pas assez d&apos;historique sur cette période.</p>;
+  const g = points.map((p) => p.value - p.cost);
+  const W = 600, H = 160, lo = Math.min(...g), hi = Math.max(...g), pad = (hi - lo) * 0.08 || 1;
+  const y = (v: number) => H - ((v - (lo - pad)) / (hi - lo + 2 * pad)) * H;
+  const x = (k: number) => (k / (points.length - 1)) * W;
+  const line = g.map((v, k) => `${x(k)},${y(v)}`).join(" ");
+  const pick = (e: React.PointerEvent<HTMLDivElement>) => { const r = e.currentTarget.getBoundingClientRect(); setI(Math.round(((e.clientX - r.left) / r.width) * (points.length - 1))); };
+  const p = i == null ? null : points[Math.max(0, Math.min(points.length - 1, i))];
+  const left = i == null ? 0 : (i / (points.length - 1)) * 100;
+  return (
+    <div className="relative mt-4 touch-pan-y select-none" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setI(null)}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40 block" preserveAspectRatio="none" role="img" aria-label="Gain cumulé sur la période">
+        <polygon points={`0,${H} ${line} ${W},${H}`} fill={hi > 0 ? "var(--up)" : "var(--down)"} opacity="0.15" />
+        {lo < 0 && hi > 0 && <line x1="0" x2={W} y1={y(0)} y2={y(0)} stroke="var(--ink-3)" strokeWidth="1" strokeDasharray="4 4" vectorEffect="non-scaling-stroke" />}
+        <polyline points={line} fill="none" stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+        {i != null && <line x1={x(i)} x2={x(i)} y1="0" y2={H} stroke="var(--accent)" strokeWidth="1" vectorEffect="non-scaling-stroke" />}
+      </svg>
+      {p && (
+        <div className="absolute top-0 pointer-events-none panel px-2.5 py-1.5 text-[12px] whitespace-nowrap" style={{ left: `${left}%`, transform: `translateX(${left > 70 ? "calc(-100% - 8px)" : "8px"})` }}>
+          <div className="text-ink-3">{dateFr(p.date)}</div>
+          <div className="font-semibold tnum"><Delta value={Math.round(p.value - p.cost)} suffix=" €" /></div>
+          <div className="text-ink-2 tnum">{eur(p.value)} pour {eur(p.cost)} versés</div>
+        </div>
+      )}
     </div>
   );
 }

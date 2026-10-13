@@ -121,6 +121,12 @@ export async function getLedger() {
   return r.rows.map((x) => ({ date: String(x.date), type: String(x.type), amount: Number(x.amount) }));
 }
 
+/** Objectif de versement mensuel par période du plan, pour la ligne de cible du graphique. */
+export async function getPlan() {
+  const r = await db.execute("SELECT from_month, to_month, SUM(monthly_amount) amount FROM plan_flows GROUP BY 1, 2");
+  return r.rows.map((x) => ({ from: String(x.from_month), to: x.to_month ? String(x.to_month) : null, amount: Number(x.amount) }));
+}
+
 /** Tous les apports externes datés, pour le TRI du graphique. */
 export async function getContributions() {
   const r = await db.execute("SELECT date, amount FROM contributions ORDER BY date");
