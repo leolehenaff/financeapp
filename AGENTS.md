@@ -37,6 +37,7 @@ Commence toute session par `docs/README.md`, puis la table `actions` (ou `docs/a
 - `accounts` : qui, nom, kind (PEA, CTO, PEE, AV, Livret, Crypto, Startup, Cash), date d'ouverture (horloge PEA).
 - `instruments` : nom unique, ticker Yahoo unique ou null, kind (Stock, Crypto, Start-up, Livret, Active Cash), geo (US, EU, FR, OTHER), price_source (yahoo ou manual).
 - `transactions` : date, compte, instrument, type (buy, sell, dividend), quantité, montant total en €. Les positions sont dérivées : quantité nette, coût moyen pondéré. Livrets, cash et AV : 1 unité = 1 €, les intérêts se saisissent en buy à montant 0.
+- `contributions` : apports externes par compte (date, montant, négatif pour un retrait). C'est le « versé » du cockpit : un dividende ou une vente réinvestis ne sont pas des apports. `recordFlow` en crée un à chaque versement du mois, le Journal via la case « Argent frais ».
 - `prices` : un prix par instrument et par jour, en €. Yahoo pour les cotés, saisie manuelle pour le reste.
 - `plan_flows` : versement mensuel cible par personne, compte et instrument (null = n'importe quel instrument du compte), avec from_month et to_month.
 - `actions` : section, titre, échéance, statut (todo, done, dropped).
@@ -53,7 +54,7 @@ Commence toute session par `docs/README.md`, puis la table `actions` (ou `docs/a
 
 1. Lire la base avant tout chiffre : snippet dans `docs/README.md`, ou `getPositions()` via `npx tsx`.
 2. Toute décision validée par Léo : ligne dans `actions` (puis `npm run export:actions`), entrée datée dans `journal.md`, et répercussion dans `plan_flows`, `allocation_objectives` ou `hypotheses` si elle touche un chiffre.
-3. Un achat, une vente ou un dividende constaté : une ligne dans `transactions`. Une valorisation à jour : une ligne dans `prices`. Ne jamais modifier une position autrement.
+3. Un achat, une vente ou un dividende constaté : une ligne dans `transactions`. De l'argent frais versé sur un compte : une ligne dans `contributions` en plus de l'achat. Une valorisation à jour : une ligne dans `prices`. Ne jamais modifier une position autrement.
 4. Ne jamais passer d'ordre, ouvrir de compte ni déplacer d'argent : l'agent prépare, Léo exécute, puis l'agent enregistre.
 5. Les recherches de marché (cours, résultats, consensus) se datent et se sourcent. Exclure les résultats d'une autre année.
 6. Les montants en CHF se convertissent au taux du jour, indiqué.

@@ -31,6 +31,10 @@ export const SCHEMA = [
     account_id INTEGER NOT NULL REFERENCES accounts(id),
     instrument_id INTEGER REFERENCES instruments(id),
     monthly_amount REAL NOT NULL, from_month TEXT NOT NULL, to_month TEXT, label TEXT)`,
+  `CREATE TABLE IF NOT EXISTS contributions (
+    id INTEGER PRIMARY KEY, date TEXT NOT NULL,
+    account_id INTEGER NOT NULL REFERENCES accounts(id),
+    amount REAL NOT NULL, note TEXT)`,
   `CREATE TABLE IF NOT EXISTS actions (
     id INTEGER PRIMARY KEY, section TEXT NOT NULL, title TEXT NOT NULL, due_date TEXT,
     status TEXT NOT NULL DEFAULT 'todo' CHECK (status IN ('todo','done','dropped')),

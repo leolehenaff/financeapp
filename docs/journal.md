@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 13 octobre 2026 : le « versé » devient les apports réels
+
+Décision de Léo : le versé net du cockpit mesure l'argent frais entré sur les comptes, pas les achats. Nouvelle table `contributions` (date, compte, montant). Reconstitution : PEA Léo 78 236,40 € (un seul virement, le 24/12/2018) ; Start-up Léo 30 090 € (crédits et retraits du wallet Blast, hors cagnotte offerte, plus Mint Bikes et Wheere payés hors wallet) ; autres comptes, encore en reprise v1, un apport estimé par date égal aux achats, à remplacer au fur et à mesure des exports. Total 210 543 €. Chaque versement du mois saisi dans « Ce mois » crée aussi un apport ; dans le Journal, la case « Argent frais » (cochée par défaut) fait de même.
+
 ## 13 octobre 2026 : relevés espèces du PEA Léo (2018 à 2026)
 
 Léo a fourni les 62 relevés mensuels du compte espèces PEA Banque Populaire. Ils complètent les avis d'opéré : 68 lignes de dividendes réelles de 2019 à 2026 (15 711 € au total, dont 3 187 € en 2026) remplacent les 11 lignes « Dividendes 2026 (reprise v1) » ; 9 souscriptions et 4 rachats d'OPCVM Hisséo 2021 à 2025 (DNCA SRI Europe Growth, Seeyond Europe MinVol, Mirova Euro Environnement, soldés, résultat +763 €) ; la souscription FDJ confirmée (117 titres à l'introduction, 11 gratuites, 2 281,50 €). Blast Army (3 889 €, débité le 09/11/2023) et Blast Army 2 (5 084 €, débité le 24/06/2024) ont été payés depuis le PEA et leurs dividendes y sont crédités (288,43 € le 10/04/2025, 353,43 € et 180,56 € le 24/06/2026) : les deux lignes passent du compte Start-up Léo au PEA Léo, poche Start-up inchangée. Non modélisé : droits de garde et frais de dépôt (1 791 € cumulés) et le solde espèces du PEA (2 956,57 € au 02/10/2026). Un seul apport externe au PEA depuis l'ouverture : 78 236,40 € le 24/12/2018, tout le reste est réinvestissement.

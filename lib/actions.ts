@@ -33,10 +33,13 @@ export async function addTransaction(fd: FormData) {
   const quantity = type === "dividend" ? 0 : num(fd, "quantity");
   const amount = num(fd, "amount");
   if (amount < 0 || quantity < 0) throw new Error("Montants négatifs interdits");
+  const date = str(fd, "date") || today(), account = num(fd, "account_id"), note = str(fd, "note") || null;
   await db.execute({
     sql: "INSERT INTO transactions (date, account_id, instrument_id, type, quantity, amount, note) VALUES (?,?,?,?,?,?,?)",
-    args: [str(fd, "date") || today(), num(fd, "account_id"), num(fd, "instrument_id"), type, quantity, amount, str(fd, "note") || null],
+    args: [date, account, num(fd, "instrument_id"), type, quantity, amount, note],
   });
+  // Argent frais : l'achat est aussi un apport externe sur le compte (sinon c'est un réinvestissement).
+  if (type === "buy" && fd.get("fresh")) await contribute(date, account, amount, note);
   refresh();
 }
 
@@ -47,12 +50,17 @@ export async function recordFlow(fd: FormData) {
   const f = (await db.execute({ sql: "SELECT account_id, instrument_id FROM plan_flows WHERE id = ?", args: [num(fd, "flow_id")] }))
     .rows[0] as unknown as { account_id: number; instrument_id: number | null } | undefined;
   if (!f?.instrument_id) throw new Error("Flux sans instrument : passer par le Journal");
+  const amount = Math.round(quantity * price * 100) / 100;
   await db.execute({
     sql: "INSERT INTO transactions (date, account_id, instrument_id, type, quantity, amount, note) VALUES (?,?,?,'buy',?,?,'versement du mois')",
-    args: [today(), f.account_id, f.instrument_id, quantity, Math.round(quantity * price * 100) / 100],
+    args: [today(), f.account_id, f.instrument_id, quantity, amount],
   });
+  await contribute(today(), f.account_id, amount, "versement du mois");
   refresh();
 }
+
+const contribute = (date: string, account: number, amount: number, note: string | null) =>
+  db.execute({ sql: "INSERT INTO contributions (date, account_id, amount, note) VALUES (?,?,?,?)", args: [date, account, amount, note] });
 
 export async function setPrice(fd: FormData) {
   await db.execute({
