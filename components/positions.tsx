@@ -4,10 +4,10 @@ import { ago, dateFr, eur } from "@/lib/format";
 import { Delta, Dot, Empty, POCKET, Section, pocket } from "@/components/ui";
 import type { Position } from "@/lib/queries";
 
-type Key = "instrument" | "quantity" | "price" | "value" | "cost" | "perf" | "tri" | "price_date";
+type Key = "instrument" | "quantity" | "price" | "value" | "cost" | "perf" | "gain" | "tri" | "price_date";
 const COLS: [Key, string, string][] = [
-  ["instrument", "Instrument", "auto"], ["quantity", "Qté", "11%"], ["price", "Prix", "11%"], ["value", "Valeur", "12%"],
-  ["cost", "Coût", "12%"], ["perf", "+/-", "9%"], ["tri", "Par an", "9%"], ["price_date", "Actualisé", "12%"],
+  ["instrument", "Instrument", "auto"], ["quantity", "Qté", "10%"], ["price", "Prix", "10%"], ["value", "Valeur", "11%"],
+  ["cost", "Coût", "11%"], ["perf", "+/-", "8%"], ["gain", "Gain", "10%"], ["tri", "Par an", "8%"], ["price_date", "Actualisé", "11%"],
 ];
 const perfOf = (p: Position) => (p.cost ? ((p.value - p.cost) / p.cost) * 100 : 0);
 const val = (p: Position, k: Key) => (k === "perf" ? perfOf(p) : k === "tri" ? p.tri ?? -Infinity : k === "instrument" ? p.instrument.toLowerCase() : p[k] ?? "");
@@ -49,7 +49,7 @@ export function Positions({ positions }: { positions: Position[] }) {
         <div className="space-y-4">
         {[...group(shown, (p) => p.account)].sort((a, b) => sum(b[1], "value") - sum(a[1], "value")).map(([account, aps]) => (
           <div key={account} className="panel overflow-x-auto">
-            <table className="tbl min-w-[720px]" style={{ tableLayout: "fixed" }}>
+            <table className="tbl min-w-[800px]" style={{ tableLayout: "fixed" }}>
               <colgroup>{COLS.map(([k, , w]) => <col key={k} style={{ width: w }} />)}</colgroup>
               <thead>
                 <tr>
@@ -72,13 +72,12 @@ export function Positions({ positions }: { positions: Position[] }) {
                     <td className="num font-medium">{eur(p.value)}</td>
                     <td className="num text-ink-2">{eur(p.cost)}</td>
                     <td className="num">{p.cost ? <Delta value={perfOf(p)} suffix=" %" /> : ""}</td>
-                    <td className="num text-[13px]">{p.tri == null ? "" : (p.sold || p.dividends)
-                      ? <span className="tip tip-right" tabIndex={0} data-tip={`Taux annuel sur tout l'historique de la ligne : achats, ${p.sold ? `${eur(p.sold)} de ventes, ` : ""}${p.dividends ? `${eur(p.dividends)} de dividendes, ` : ""}valeur actuelle. Le +/- ne voit que les titres restants.`}><Delta value={p.tri * 100} suffix=" %" /></span>
-                      : <Delta value={p.tri * 100} suffix=" %" />}</td>
+                    <td className="num" title="Valeur plus ventes et dividendes encaissés, moins tous les achats"><Delta value={Math.round(p.gain)} suffix=" €" /></td>
+                    <td className="num text-[13px]" title="Taux de rendement interne annuel, achats, ventes et dividendes datés">{p.tri == null ? "" : <Delta value={p.tri * 100} suffix=" %" />}</td>
                     <td className="num text-ink-3 text-[12px]" title={dateFr(p.price_date)}>{ago(p.price_date)}</td>
                   </tr>
                 ))}
-                {aps.length > 1 && <tr className="total"><td>Total</td><td /><td /><td className="num">{eur(sum(aps, "value"))}</td><td className="num">{eur(sum(aps, "cost"))}</td><td className="num"><Delta value={perf(aps)} suffix=" %" /></td><td /><td /></tr>}
+                {aps.length > 1 && <tr className="total"><td>Total</td><td /><td /><td className="num">{eur(sum(aps, "value"))}</td><td className="num">{eur(sum(aps, "cost"))}</td><td className="num"><Delta value={perf(aps)} suffix=" %" /></td><td className="num"><Delta value={Math.round(aps.reduce((t, p) => t + p.gain, 0))} suffix=" €" /></td><td /><td /></tr>}
               </tbody>
             </table>
           </div>
