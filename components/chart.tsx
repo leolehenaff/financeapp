@@ -1,23 +1,12 @@
 "use client";
 import { useState } from "react";
-import { addDays, dateFr, eur, today } from "@/lib/format";
+import { addDays, dateFr, eur, irr, today, type Flow } from "@/lib/format";
 import { Delta } from "@/components/ui";
 
 type Point = { date: string; value: number; cost: number };
 const RANGES: [string, number][] = [["1 m", 30], ["3 m", 91], ["6 m", 182], ["1 an", 365], ["Max", 0]];
 
 /** Trois KPI de la période (variation nette des versements, performance, versé), sélecteur de période, puis la courbe. */
-type Flow = { date: string; amount: number };
-
-/** Taux de rendement interne annuel (bissection) : flux datés, valeur de départ et valeur finale. */
-function irr(flows: Flow[]) {
-  const t0 = Date.parse(flows[0].date), yr = 31557600000;
-  const npv = (r: number) => flows.reduce((s, f) => s + f.amount / Math.pow(1 + r, (Date.parse(f.date) - t0) / yr), 0);
-  let lo = -0.99, hi = 10;
-  for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (npv(m) > 0) lo = m; else hi = m; }
-  return (lo + hi) / 2;
-}
-
 /** `flows` : tous les apports externes datés, pour le TRI (en Max, ils remplacent la valeur de départ). */
 export function Chart({ points: all, flows }: { points: Point[]; flows: Flow[] }) {
   const [days, setDays] = useState(365);

@@ -4,13 +4,13 @@ import { ago, dateFr, eur } from "@/lib/format";
 import { Delta, Dot, Empty, POCKET, Section, pocket } from "@/components/ui";
 import type { Position } from "@/lib/queries";
 
-type Key = "instrument" | "quantity" | "price" | "value" | "cost" | "perf" | "price_date";
+type Key = "instrument" | "quantity" | "price" | "value" | "cost" | "perf" | "tri" | "price_date";
 const COLS: [Key, string, string][] = [
   ["instrument", "Instrument", "auto"], ["quantity", "Qté", "11%"], ["price", "Prix", "11%"], ["value", "Valeur", "12%"],
-  ["cost", "Coût", "12%"], ["perf", "+/-", "10%"], ["price_date", "Actualisé", "13%"],
+  ["cost", "Coût", "12%"], ["perf", "+/-", "9%"], ["tri", "Par an", "9%"], ["price_date", "Actualisé", "12%"],
 ];
 const perfOf = (p: Position) => (p.cost ? ((p.value - p.cost) / p.cost) * 100 : 0);
-const val = (p: Position, k: Key) => (k === "perf" ? perfOf(p) : k === "instrument" ? p.instrument.toLowerCase() : p[k] ?? "");
+const val = (p: Position, k: Key) => (k === "perf" ? perfOf(p) : k === "tri" ? p.tri ?? -Infinity : k === "instrument" ? p.instrument.toLowerCase() : p[k] ?? "");
 
 function group<T>(items: T[], by: (t: T) => string) {
   return items.reduce<Map<string, T[]>>((m, t) => (m.set(by(t), [...(m.get(by(t)) ?? []), t]), m), new Map());
@@ -49,7 +49,7 @@ export function Positions({ positions }: { positions: Position[] }) {
         <div className="space-y-4">
         {[...group(shown, (p) => p.account)].sort((a, b) => sum(b[1], "value") - sum(a[1], "value")).map(([account, aps]) => (
           <div key={account} className="panel overflow-x-auto">
-            <table className="tbl min-w-[640px]" style={{ tableLayout: "fixed" }}>
+            <table className="tbl min-w-[720px]" style={{ tableLayout: "fixed" }}>
               <colgroup>{COLS.map(([k, , w]) => <col key={k} style={{ width: w }} />)}</colgroup>
               <thead>
                 <tr>
@@ -72,10 +72,11 @@ export function Positions({ positions }: { positions: Position[] }) {
                     <td className="num font-medium">{eur(p.value)}</td>
                     <td className="num text-ink-2">{eur(p.cost)}</td>
                     <td className="num">{p.cost ? <Delta value={perfOf(p)} suffix=" %" /> : ""}</td>
+                    <td className="num text-[13px]" title="Taux de rendement interne annuel, achats, ventes et dividendes datés">{p.tri == null ? "" : <Delta value={p.tri * 100} suffix=" %" />}</td>
                     <td className="num text-ink-3 text-[12px]" title={dateFr(p.price_date)}>{ago(p.price_date)}</td>
                   </tr>
                 ))}
-                {aps.length > 1 && <tr className="total"><td>Total</td><td /><td /><td className="num">{eur(sum(aps, "value"))}</td><td className="num">{eur(sum(aps, "cost"))}</td><td className="num"><Delta value={perf(aps)} suffix=" %" /></td><td /></tr>}
+                {aps.length > 1 && <tr className="total"><td>Total</td><td /><td /><td className="num">{eur(sum(aps, "value"))}</td><td className="num">{eur(sum(aps, "cost"))}</td><td className="num"><Delta value={perf(aps)} suffix=" %" /></td><td /><td /></tr>}
               </tbody>
             </table>
           </div>

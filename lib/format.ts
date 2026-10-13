@@ -19,3 +19,14 @@ export const addDays = (iso: string, d: number) => {
 };
 export const monthLabel = (ym: string) =>
   new Date(`${ym}-01`).toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+
+export type Flow = { date: string; amount: number };
+
+/** Taux de rendement interne annuel (bissection) : flux datés, valeur de départ et valeur finale. */
+export function irr(flows: Flow[]) {
+  const t0 = Date.parse(flows[0].date), yr = 31557600000;
+  const npv = (r: number) => flows.reduce((s, f) => s + f.amount / Math.pow(1 + r, (Date.parse(f.date) - t0) / yr), 0);
+  let lo = -0.99, hi = 10;
+  for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (npv(m) > 0) lo = m; else hi = m; }
+  return (lo + hi) / 2;
+}

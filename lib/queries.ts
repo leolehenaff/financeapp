@@ -1,11 +1,11 @@
 import { db } from "./db";
-import { addDays, today } from "./format";
+import { addDays, irr, today, type Flow } from "./format";
 
 export type Position = {
   account_id: number; account: string; owner: string; account_kind: string;
   instrument_id: number; instrument: string; ticker: string | null; kind: string; geo: string | null;
   price_source: string; quantity: number; cost: number; price: number | null; price_date: string | null;
-  value: number; dividends: number;
+  value: number; dividends: number; tri: number | null;
 };
 
 /** Positions dérivées des transactions (coût moyen pondéré), dernier prix connu. */
@@ -32,7 +32,20 @@ export async function getPositions(): Promise<Position[]> {
     LEFT JOIN lp ON lp.instrument_id = i.id
     WHERE agg.quantity > 0.000001
     ORDER BY a.owner, a.name, value DESC`);
-  return r.rows as unknown as Position[];
+  const positions = r.rows as unknown as Position[];
+  // TRI par ligne : achats sortis de la poche, ventes et dividendes rentrés, valeur actuelle en face. Null sans achat payé ou avant 30 jours d'historique.
+  const tx = await db.execute("SELECT date, account_id, instrument_id, type, amount FROM transactions ORDER BY date");
+  const flows = new Map<string, Flow[]>();
+  for (const t of tx.rows) {
+    const k = `${t.account_id}:${t.instrument_id}`;
+    flows.set(k, [...(flows.get(k) ?? []), { date: String(t.date), amount: (t.type === "buy" ? -1 : 1) * Number(t.amount) }]);
+  }
+  for (const p of positions) {
+    const f = flows.get(`${p.account_id}:${p.instrument_id}`) ?? [];
+    const old = f[0] && Date.parse(today()) - Date.parse(f[0].date) > 30 * 864e5;
+    p.tri = old && f.some((x) => x.amount < 0) ? irr([...f, { date: today(), amount: p.value }]) : null;
+  }
+  return positions;
 }
 
 export type AllocRow = { key: string; target: number; actual: number; value: number; gap: number };
