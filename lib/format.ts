@@ -30,3 +30,7 @@ export function irr(flows: Flow[]) {
   for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (npv(m) > 0) lo = m; else hi = m; }
   return (lo + hi) / 2;
 }
+
+export type TxFilter = { from: string; to: string; instrument: string; type: string };
+export type TxRow = { id: number; date: string; owner: string; account: string; instrument: string; kind: string; type: string; quantity: number; amount: number; note: string | null };
+export const TX_PAGE = 20;

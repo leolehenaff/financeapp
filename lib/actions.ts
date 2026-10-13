@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db, KINDS, GEOS } from "./db";
 import { createToken } from "./token";
-import { today } from "./format";
+import { today, TX_PAGE, type TxFilter, type TxRow } from "./format";
 
 const str = (fd: FormData, k: string) => String(fd.get(k) ?? "").trim();
 const num = (fd: FormData, k: string) => {
@@ -95,4 +95,17 @@ export async function addInstrument(fd: FormData) {
     args: [name, ticker, kind, geo, ticker ? "yahoo" : "manual"],
   });
   refresh();
+}
+
+
+/** Transactions filtrées et paginées, lues par le tableau du Journal sans recharger la page. */
+export async function listTransactions(f: TxFilter, page: number): Promise<{ rows: TxRow[]; count: number }> {
+  const where = ["1=1", f.from && "t.date >= ?", f.to && "t.date <= ?", f.instrument && "t.instrument_id = ?", f.type && "t.type = ?"].filter(Boolean).join(" AND ");
+  const args = [f.from, f.to, f.instrument, f.type].filter(Boolean);
+  const count = Number((await db.execute({ sql: `SELECT COUNT(*) n FROM transactions t WHERE ${where}`, args })).rows[0].n);
+  const rows = (await db.execute({ sql: `
+    SELECT t.id, t.date, a.owner, a.name account, i.name instrument, i.kind, t.type, t.quantity, t.amount, t.note
+    FROM transactions t JOIN accounts a ON a.id = t.account_id JOIN instruments i ON i.id = t.instrument_id
+    WHERE ${where} ORDER BY t.date DESC, t.id DESC LIMIT ${TX_PAGE} OFFSET ${(Math.max(1, page) - 1) * TX_PAGE}`, args })).rows as unknown as TxRow[];
+  return { rows, count };
 }

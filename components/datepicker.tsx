@@ -6,7 +6,7 @@ const MONTHS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet"
 const iso = (y: number, m: number, d: number) => `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 
 /** Champ date au design de l'app : bouton + grille du mois, lundi en premier. Soumet via un input caché `name`. */
-export function DatePicker({ name, defaultValue = "", placeholder = "Date", className = "" }: { name: string; defaultValue?: string; placeholder?: string; className?: string }) {
+export function DatePicker({ name, defaultValue = "", placeholder = "Date", className = "", onChange }: { name: string; defaultValue?: string; placeholder?: string; className?: string; onChange?: (v: string) => void }) {
   const [value, setValue] = useState(defaultValue);
   const [open, setOpen] = useState(false);
   const [ym, setYm] = useState(() => (value || today()).slice(0, 7));
@@ -21,7 +21,7 @@ export function DatePicker({ name, defaultValue = "", placeholder = "Date", clas
     return { d: n, iso: iso(y, month, n), out: false };
   });
   const shift = (k: number) => { const d = new Date(y, month + k, 1); setYm(iso(d.getFullYear(), d.getMonth(), 1).slice(0, 7)); };
-  const pick = (v: string) => { setValue(v); setOpen(false); if (v) setYm(v.slice(0, 7)); };
+  const pick = (v: string) => { setValue(v); setOpen(false); if (v) setYm(v.slice(0, 7)); onChange?.(v); };
 
   return (
     <div className={`relative ${className}`} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false); }}>

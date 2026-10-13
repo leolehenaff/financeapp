@@ -1,8 +1,9 @@
-import { addAction, addInstrument, addTransaction, completeAction } from "@/lib/actions";
-import { db, GEOS, KINDS } from "@/lib/db";
-import { dateFr, eur, today } from "@/lib/format";
+import { addAction, addInstrument, addTransaction, completeAction, listTransactions } from "@/lib/actions";
+import { Transactions } from "@/components/transactions";
+import { GEOS, KINDS } from "@/lib/db";
+import { dateFr, today } from "@/lib/format";
 import { getActions, lists } from "@/lib/queries";
-import { Check, Dot, Section, pocket } from "@/components/ui";
+import { Check, Section, pocket } from "@/components/ui";
 import { DatePicker } from "@/components/datepicker";
 
 export const dynamic = "force-dynamic";
@@ -12,24 +13,10 @@ const Field = ({ label, children, className = "" }: { label: string; children: R
   <label className={`flex flex-col gap-1 text-[12px] text-ink-2 ${className}`}>{label}{children}</label>
 );
 
-const PAGE = 20;
-
-export default async function Journal({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
-  const sp = await searchParams;
-  const f = { from: sp.from ?? "", to: sp.to ?? "", instrument: sp.instrument ?? "", type: sp.type ?? "" };
-  const page = Math.max(1, Number(sp.page) || 1);
+export default async function Journal() {
   const { accounts, instruments } = await lists();
   const actions = await getActions();
-  const where = ["1=1", f.from && "t.date >= ?", f.to && "t.date <= ?", f.instrument && "t.instrument_id = ?", f.type && "t.type = ?"].filter(Boolean).join(" AND ");
-  const args = [f.from, f.to, f.instrument, f.type].filter(Boolean);
-  const count = Number((await db.execute({ sql: `SELECT COUNT(*) n FROM transactions t WHERE ${where}`, args })).rows[0].n);
-  const tx = (await db.execute({ sql: `
-    SELECT t.id, t.date, a.owner, a.name account, i.name instrument, i.kind, t.type, t.quantity, t.amount, t.note
-    FROM transactions t JOIN accounts a ON a.id = t.account_id JOIN instruments i ON i.id = t.instrument_id
-    WHERE ${where} ORDER BY t.date DESC, t.id DESC LIMIT ${PAGE} OFFSET ${(page - 1) * PAGE}`, args })).rows as unknown as
-    { id: number; date: string; owner: string; account: string; instrument: string; kind: string; type: string; quantity: number; amount: number; note: string | null }[];
-  const pages = Math.max(1, Math.ceil(count / PAGE));
-  const href = (n: number) => "?" + new URLSearchParams({ ...Object.fromEntries(Object.entries(f).filter(([, v]) => v)), page: String(n) });
+  const first = await listTransactions({ from: "", to: "", instrument: "", type: "" }, 1);
   const sections = [...new Set(actions.map((a) => a.section))];
   const open = actions.filter((a) => a.status === "todo").length;
 
@@ -69,41 +56,8 @@ export default async function Journal({ searchParams }: { searchParams: Promise<
         </details>
       </Section>
 
-      <Section title="Transactions" aside={`${count} ligne${count > 1 ? "s" : ""}, page ${page} sur ${pages}`}>
-        <form className="flex flex-wrap gap-2 mb-3 items-end">
-          <Field label="Du"><DatePicker name="from" defaultValue={f.from} placeholder="Début" className="w-36" /></Field>
-          <Field label="Au"><DatePicker name="to" defaultValue={f.to} placeholder="Fin" className="w-36" /></Field>
-          <Field label="Instrument">
-            <select name="instrument" defaultValue={f.instrument} className="field"><option value="">Tous</option>{instruments.map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}</select>
-          </Field>
-          <Field label="Type"><select name="type" defaultValue={f.type} className="field"><option value="">Tous</option>{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></Field>
-          <button className="btn btn-ghost">Filtrer</button>
-          {Object.values(f).some(Boolean) && <a href="?" className="text-[13px] text-ink-2 underline underline-offset-2 self-center">Effacer</a>}
-        </form>
-        <div className="panel overflow-x-auto">
-          <table className="tbl">
-            <thead><tr><th>Date</th><th>Instrument</th><th>Compte</th><th>Type</th><th className="num">Qté</th><th className="num">Montant</th><th>Note</th></tr></thead>
-            <tbody>
-              {tx.map((t) => (
-                <tr key={t.id}>
-                  <td className="tnum text-ink-2 whitespace-nowrap">{dateFr(t.date)}</td>
-                  <td><div className="flex items-center gap-2"><Dot kind={t.kind} />{t.instrument}</div></td>
-                  <td className="text-ink-2 whitespace-nowrap">{t.owner} · {t.account}</td>
-                  <td>{TYPES[t.type]}</td>
-                  <td className="num text-ink-2">{t.quantity.toLocaleString("fr-FR", { maximumFractionDigits: 4 })}</td>
-                  <td className="num font-medium">{eur(t.amount)}</td>
-                  <td className="text-ink-3 text-[13px]">{t.note}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        {pages > 1 && (
-          <p className="flex justify-between text-[13px] mt-3">
-            <span>{page > 1 ? <a href={href(page - 1)} className="underline underline-offset-2">Précédent</a> : <span className="text-ink-3">Précédent</span>}</span>
-            <span>{page < pages ? <a href={href(page + 1)} className="underline underline-offset-2">Suivant</a> : <span className="text-ink-3">Suivant</span>}</span>
-          </p>
-        )}
+      <Section title="Transactions">
+        <Transactions instruments={instruments.map((i) => ({ id: i.id, name: i.name }))} initial={first} />
       </Section>
 
       <Section title="Actions" aside={`${open} ouverte${open > 1 ? "s" : ""}`}>
