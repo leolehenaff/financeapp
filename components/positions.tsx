@@ -17,15 +17,16 @@ function group<T>(items: T[], by: (t: T) => string) {
 }
 
 /** Un tableau par compte (toutes personnes mêlées, filtre par personne à la demande) : colonnes à largeur fixe (alignées d'un tableau à l'autre), tri partagé au clic sur l'en-tête. */
-export function Positions({ positions }: { positions: Position[] }) {
+export function Positions({ positions, closed }: { positions: Position[]; closed: Position[] }) {
   const [sort, setSort] = useState<{ key: Key; dir: 1 | -1 }>({ key: "value", dir: -1 });
   const [q, setQ] = useState("");
   const [kinds, setKinds] = useState<string[]>([]);
   const [who, setWho] = useState("");
   const owners = [...new Set(positions.map((p) => p.owner))];
   const norm = (t: string) => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const shown = positions.filter((p) => (!who || p.owner === who) && (!kinds.length || kinds.includes(p.kind))
-    && (!q || norm(`${p.instrument} ${p.account} ${p.geo ?? ""}`).includes(norm(q))));
+  const match = (p: Position) => (!who || p.owner === who) && (!kinds.length || kinds.includes(p.kind))
+    && (!q || norm(`${p.instrument} ${p.account} ${p.geo ?? ""}`).includes(norm(q)));
+  const shown = positions.filter(match), gone = closed.filter(match).sort((a, b) => (a.last_date < b.last_date ? 1 : -1));
   const toggle = (k: string) => setKinds((ks) => (ks.includes(k) ? ks.filter((x) => x !== k) : [...ks, k]));
   const chip = (on: boolean) => `chip cursor-pointer transition-colors ${on ? "bg-ink text-surface" : "bg-surface-2 text-ink-2 hover:text-ink"}`;
   const click = (key: Key) => setSort((s) => ({ key, dir: s.key === key ? (s.dir === 1 ? -1 : 1) : key === "instrument" ? 1 : -1 }));
@@ -83,6 +84,29 @@ export function Positions({ positions }: { positions: Position[] }) {
           </div>
         ))}
         </div>
+        {gone.length > 0 && (
+          <details className="mt-6">
+            <summary className="cursor-pointer text-[13px] text-ink-2 hover:text-ink inline-block">Lignes soldées, {gone.length}, gain cumulé <Delta value={Math.round(gone.reduce((t, p) => t + p.gain, 0))} suffix=" €" /></summary>
+            <div className="panel overflow-x-auto mt-3">
+              <table className="tbl min-w-[640px]" style={{ tableLayout: "fixed" }}>
+                <colgroup>{["auto", "16%", "13%", "13%", "13%", "11%"].map((w, i) => <col key={i} style={{ width: w }} />)}</colgroup>
+                <thead><tr><th>Instrument</th><th className="num">Soldée le</th><th className="num">Achats</th><th className="num">Ventes et div.</th><th className="num">Gain</th><th className="num">Par an</th></tr></thead>
+                <tbody>
+                  {gone.map((p) => (
+                    <tr key={`${p.account_id}:${p.instrument_id}`}>
+                      <td><div className="flex items-center gap-2 min-w-0"><Dot kind={p.kind} /><span className="truncate">{p.instrument}</span><span className="text-ink-3 text-[12px] truncate">{p.account}</span></div></td>
+                      <td className="num text-ink-3 text-[12px]">{dateFr(p.last_date)}</td>
+                      <td className="num text-ink-2">{eur(p.bought)}</td>
+                      <td className="num text-ink-2">{eur(p.sold + p.dividends)}</td>
+                      <td className="num font-medium"><Delta value={Math.round(p.gain)} suffix=" €" /></td>
+                      <td className="num text-[13px]">{p.tri == null ? "" : <Delta value={p.tri * 100} suffix=" %" />}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </details>
+        )}
       </Section>
     </>
   );

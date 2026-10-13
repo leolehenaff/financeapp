@@ -23,7 +23,7 @@ function Composition({ positions, total }: { positions: Position[]; total: numbe
 
 export default async function Patrimoine() {
   const positions = await getPositions();
-  const [history, flows, contributions] = await Promise.all([getHistory(), getMonthProgress(today().slice(0, 7)), getContributions()]);
+  const [history, flows, contributions, closed] = await Promise.all([getHistory(), getMonthProgress(today().slice(0, 7)), getContributions(), getPositions(true)]);
   const monthly = flows.reduce((s, f) => s + f.planned, 0);
   const fire = await getFire(positions, monthly);
   const total = positions.reduce((s, p) => s + p.value, 0);
@@ -61,7 +61,7 @@ export default async function Patrimoine() {
         </ol>
       </Section>
 
-      <Positions positions={positions.map((p) => ({ ...p }))} />
+      <Positions positions={positions.map((p) => ({ ...p }))} closed={closed.map((p) => ({ ...p }))} />
     </>
   );
 }

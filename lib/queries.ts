@@ -5,11 +5,11 @@ export type Position = {
   account_id: number; account: string; owner: string; account_kind: string;
   instrument_id: number; instrument: string; ticker: string | null; kind: string; geo: string | null;
   price_source: string; quantity: number; cost: number; price: number | null; price_date: string | null;
-  value: number; dividends: number; sold: number; bought: number; gain: number; tri: number | null;
+  value: number; dividends: number; sold: number; bought: number; gain: number; tri: number | null; last_date: string;
 };
 
-/** Positions dérivées des transactions (coût moyen pondéré), dernier prix connu. */
-export async function getPositions(): Promise<Position[]> {
+/** Positions dérivées des transactions (coût moyen pondéré), dernier prix connu. `closed` : les lignes soldées (quantité nulle) à la place. */
+export async function getPositions(closed = false): Promise<Position[]> {
   const r = await db.execute(`
     WITH agg AS (
       SELECT account_id, instrument_id,
@@ -17,7 +17,8 @@ export async function getPositions(): Promise<Position[]> {
         SUM(CASE type WHEN 'buy' THEN amount ELSE 0 END) AS bought,
         SUM(CASE type WHEN 'buy' THEN quantity ELSE 0 END) AS bought_qty,
         SUM(CASE type WHEN 'dividend' THEN amount ELSE 0 END) AS dividends,
-        SUM(CASE type WHEN 'sell' THEN amount ELSE 0 END) AS sold
+        SUM(CASE type WHEN 'sell' THEN amount ELSE 0 END) AS sold,
+        MAX(date) AS last_date
       FROM transactions GROUP BY 1, 2),
     lp AS (
       SELECT instrument_id, price, date FROM prices p
@@ -27,12 +28,12 @@ export async function getPositions(): Promise<Position[]> {
       agg.quantity,
       CASE WHEN agg.bought_qty > 0 THEN agg.bought / agg.bought_qty * agg.quantity ELSE 0 END AS cost,
       lp.price, lp.date price_date, agg.quantity * COALESCE(lp.price, 0) AS value, agg.dividends, agg.sold, agg.bought,
-      agg.quantity * COALESCE(lp.price, 0) + agg.sold + agg.dividends - agg.bought AS gain
+      agg.quantity * COALESCE(lp.price, 0) + agg.sold + agg.dividends - agg.bought AS gain, agg.last_date
     FROM agg
     JOIN accounts a ON a.id = agg.account_id
     JOIN instruments i ON i.id = agg.instrument_id
     LEFT JOIN lp ON lp.instrument_id = i.id
-    WHERE agg.quantity > 0.000001
+    WHERE agg.quantity ${closed ? "<=" : ">"} 0.000001
     ORDER BY a.owner, a.name, value DESC`);
   const positions = r.rows as unknown as Position[];
   // TRI par ligne : achats sortis de la poche, ventes et dividendes rentrés, valeur actuelle en face. Null sans achat payé ou avant 30 jours d'historique.
@@ -45,7 +46,7 @@ export async function getPositions(): Promise<Position[]> {
   for (const p of positions) {
     const f = flows.get(`${p.account_id}:${p.instrument_id}`) ?? [];
     const old = f[0] && Date.parse(today()) - Date.parse(f[0].date) > 30 * 864e5;
-    p.tri = old && f.some((x) => x.amount < 0) ? irr([...f, { date: today(), amount: p.value }]) : null;
+    p.tri = old && f.some((x) => x.amount < 0) ? irr(closed ? f : [...f, { date: today(), amount: p.value }]) : null;
   }
   return positions;
 }
