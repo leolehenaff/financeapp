@@ -137,9 +137,14 @@ function Gain({ points }: { points: Point[] }) {
   const pick = (e: React.PointerEvent<HTMLDivElement>) => { const r = e.currentTarget.getBoundingClientRect(); setI(Math.round(((e.clientX - r.left) / r.width) * (points.length - 1))); };
   const k = i == null ? null : Math.max(0, Math.min(points.length - 1, i));
   const left = k == null ? 0 : (k / (points.length - 1)) * 100;
+  // Repères de dates : premier point de chaque mois ; au-delà de 14 mois, seulement les janviers.
+  const ticks = points.map((p, j) => ({ j, m: p.date.slice(0, 7) })).filter((t, j, a) => j > 0 && t.m !== a[j - 1].m);
+  const yearly = ticks.length > 14, shown = yearly ? ticks.filter((t) => t.m.endsWith("-01")) : ticks;
+  const tickLabel = (m: string) => yearly ? m.slice(0, 4) : new Date(`${m}-15`).toLocaleDateString("fr-FR", { month: "short", year: "2-digit" });
   return (
     <div className="relative mt-4 touch-pan-y select-none" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setI(null)}>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40 block" preserveAspectRatio="none" role="img" aria-label="Patrimoine et versé cumulé">
+        {shown.map((t) => <line key={t.m} x1={x(t.j)} x2={x(t.j)} y1="0" y2={H} stroke="var(--line)" strokeWidth="1" vectorEffect="non-scaling-stroke" />)}
         {/* Deux couches : le versé en teinte accent, le gain en vert par-dessus. */}
         <polygon points={`0,${H} ${paid} ${W},${H}`} fill="var(--accent)" opacity="0.14" />
         <polygon points={`${line} ${paid.split(" ").reverse().join(" ")}`} fill="var(--up)" opacity="0.22" />
@@ -147,6 +152,9 @@ function Gain({ points }: { points: Point[] }) {
         <polyline points={line} fill="none" stroke="var(--accent)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
         {k != null && <line x1={x(k)} x2={x(k)} y1="0" y2={H} stroke="var(--ink)" strokeWidth="1" vectorEffect="non-scaling-stroke" />}
       </svg>
+      <div className="relative h-4 text-[11px] text-ink-3 tnum">
+        {shown.map((t) => <span key={t.m} className="absolute top-0 capitalize whitespace-nowrap" style={{ left: `${(t.j / (points.length - 1)) * 100}%`, transform: "translateX(-50%)" }}>{tickLabel(t.m)}</span>)}
+      </div>
       {k != null && (
         <div className="absolute top-0 pointer-events-none panel px-2.5 py-1.5 text-[12px] whitespace-nowrap" style={{ left: `${left}%`, transform: `translateX(${left > 70 ? "calc(-100% - 8px)" : "8px"})` }}>
           <div className="text-ink-3">{dateFr(points[k].date)}</div>
