@@ -61,3 +61,7 @@ Contexte marché : Capgemini -30 % depuis janvier sur la crainte IA, consensus 1
 ## Juillet 2026
 
 Plan financier familial rédigé : coût de vie 3 956 €, objectif FIRE vers 40 ans, deux phases avant et après bébé.
+
+## 13 octobre 2026 : recalcul des snapshots quotidiens
+
+Une fois tous les comptes réimportés (PEA, Nexo, Bitstack, cold wallet, Trade Republic, Livret A Léo, AV), les 269 snapshots depuis le 17/01/2026 ont été recalculés par `scripts/rebuild-snapshots.mts` à partir des transactions datées et des cours de clôture Yahoo (prix manuels reportés). Le jour manquant du 23/04/2026 a été ajouté. Écarts avec les anciens snapshots de l'ordre de 1 à 2 k€ (17/01 : 260 760 devient 261 711 ; 12/10 : 272 887 devient 275 104), venant surtout du solde réel EUROX, des espèces PEA et du recalage du Livret A Léo. La marche de 6,5 k€ entre le 12 et le 13 octobre, due aux imports de la journée, disparaît. L'action « recalculer les snapshots » est close.

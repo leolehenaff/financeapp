@@ -53,4 +53,4 @@ Généré depuis la table `actions` par `npm run export:actions`. Modifier la ba
 
 ## Historique
 
-- [ ] Agent : recalculer les snapshots depuis le 17/01/2026 à partir des transactions datées et des cours historiques, une fois tous les comptes importés (Trade Republic, cold wallet, Livrets, PEE, AV).
+- [x] Agent : recalculer les snapshots depuis le 17/01/2026 à partir des transactions datées et des cours historiques, une fois tous les comptes importés (Trade Republic, cold wallet, Livrets, PEE, AV). (fait le )
