@@ -26,7 +26,7 @@ Règles fixes (`docs/plan-financier.md`, `docs/strategie.md`) :
 
 - Léo 1 850 € = 1 350 PEA + 250 Bitstack (DCA automatique) + 250 lissés pour le ticket start-up.
 - PEA Léo : 1 350 € au prorata des gaps géo positifs hors France, arrondis à 50 € (le script le fait). Jamais un euro vers FR, jamais une nouvelle ligne de titre vif.
-- Julie 1 850 € : MSCI World (DCAM) sur PEA Trade Republic.
+- Julie 1 850 € : MSCI World (CW8) sur PEA Trade Republic, le reliquat (moins d'une part CW8) en S&P 500 (ESE).
 - Si l'action « recharge Livrets » est active (après le mariage, 500 € chacun pendant 6 à 8 mois) : retirer 500 € du flux Stock de chacun vers les Livrets A, jusqu'à 25 k€ cumulés.
 - Ticket start-up 1 000 € : dû si le dernier date de 4 mois ou plus.
 - Transfert Bitstack vers cold wallet : dû si le dernier date de 6 mois ou plus.
@@ -40,7 +40,7 @@ Section `Versements`, échéance le 1er du mois en cours (le 15 pour les relevé
 set -a && source .env.local && set +a && npx tsx -e 'import { db } from "./lib/db"; (async () => {
 await db.batch([
   { sql: "INSERT INTO actions (section, title, due_date) VALUES (?, ?, ?)", args: ["Versements", "Léo : PEA 1 350 € = ESE 650, ETZ 400, PAEJ 300", "2026-11-01"] },
-  { sql: "INSERT INTO actions (section, title, due_date) VALUES (?, ?, ?)", args: ["Versements", "Julie : 1 850 € MSCI World (DCAM)", "2026-11-01"] },
+  { sql: "INSERT INTO actions (section, title, due_date) VALUES (?, ?, ?)", args: ["Versements", "Julie : 1 850 € MSCI World (CW8), reliquat en ESE", "2026-11-01"] },
 ]); })();'
 ```
 

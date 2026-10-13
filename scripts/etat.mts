@@ -40,7 +40,7 @@ open.forEach((g, i) => {
   left -= amt;
   console.log(`${etf[g.key].padEnd(18)} ${amt} €`);
 });
-console.log(`Julie : ${PLAN.monthly["Julie"]} € MSCI World (DCAM) sur PEA Trade Republic`);
+console.log(`Julie : ${PLAN.monthly["Julie"]} € MSCI World (CW8) sur PEA Trade Republic, reliquat en ESE`);
 
 console.log("\n## Échéances récurrentes");
 const last = async (sql: string) => String((await db.execute(sql)).rows[0]?.d ?? "jamais");
