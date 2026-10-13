@@ -1,5 +1,26 @@
 # Revues
 
+## Clôture mensuelle (10 minutes, le 1er du mois)
+
+Léo dépose les exports dans `docs/releves/AAAA-MM/` puis dit « saisis <mois> ». L'agent propose un tableau de ce qu'il va écrire (transactions, apports, prix), Léo valide, l'agent écrit en base et met à jour le journal. Le formulaire du Journal reste pour une opération isolée.
+
+Chaque mois :
+
+1. PEA Banque Populaire Léo : relevé du compte espèces du mois (PDF) et les avis d'opéré du mois. Donne achats, ventes, dividendes, droits de garde, solde espèces.
+2. Trade Republic Julie : export des transactions du mois (CSV ou PDF, menu Activité). Donne les achats (frais compris), dividendes, virements entrants.
+3. Nexo : export des transactions du mois (CSV). Donne dépôt de 500 €, intérêts, dépenses carte, conversions.
+4. Bitstack : export des transactions du mois (CSV). Donne les achats DCA et frais.
+5. Blast Club : export des opérations financières si un investissement, une sortie ou un remboursement a eu lieu dans le mois.
+
+Seulement s'il y a eu un mouvement (versement, retrait, intérêts annuels) :
+
+6. Livret A Léo et Livret A Julie : capture du solde et du dernier mouvement.
+7. AV Generali Léo et Julie : capture de la valeur de rachat.
+8. PEE CIC Julie : relevé si versement, abondement ou valorisation.
+9. Cold wallet : rien, sauf transfert entrant ou sortant (adresse ou capture Ledger).
+
+Pas besoin d'export pour les cours : Yahoo les met à jour chaque jour ouvré. Les valorisations manuelles (start-up, AV, PEE) se corrigent dans « Ce mois » dès qu'un chiffre est connu.
+
 ## Revue trimestrielle (20 minutes), janvier, avril, juillet, octobre
 
 1. Ouvrir l'app, page allocation : noter l'écart à chaque cible type et géo.
