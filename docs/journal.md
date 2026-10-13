@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 13 octobre 2026 : historique réel du Livret A Léo (juin 2018 à janvier 2026)
+
+Huit relevés annuels Banque Populaire fournis par Léo. La ligne « Reprise v1 » (16 445 € pour 15 945 € de coût) est remplacée par 76 opérations : versements et retraits à leur date (apports nets 15 479 €), intérêts annuels au 31/12 en achat à 0 € (1 817 € cumulés de 2018 à 2025). Chaque solde annuel du relevé a été vérifié au centime contre le cumul, ouverture le 21/06/2018. Solde au 02/01/2026 : 17 295,96 €. La base indiquait 16 445 € : une ligne d'ajustement de retrait de 850,96 € datée du 17/01/2026 comble l'écart en attendant le détail des opérations 2026.
+
 ## 13 octobre 2026 : historique réel du PEA Trade Republic Julie (février 2025 à septembre 2026)
 
 Export Trade Republic fourni par Léo. Les 6 lignes « Reprise v1 » sont remplacées par 20 achats datés (avril 2025 à septembre 2026, frais de 1 € et TTF compris) et 3 dividendes (BNP Paribas 23,13 € et 29,07 €, Vetoquinol 5,58 €). Quantités identiques à la reprise sauf les achats du 02/09/2026 qui manquaient (10 S&P 500 ESE et 1 MSCI World CW8) : 200 ESE, 11 CW8, 7 PABZ, 32 PALAT, 9 BNP, 6 Vetoquinol. Apports : les 20 virements vers le PEA, 14 983 €, chacun calé sur un achat ; les achats de septembre 2026 ont été financés à 28,71 € par les dividendes et 1 € par le bonus d'activation, donc en réinvestissement. Le PEA a été activé le 22/02/2025 (date d'ouverture corrigée, la base disait 01/10/2025). Le compte espèces Trade Republic hors PEA (27 € restants) n'est pas suivi.
