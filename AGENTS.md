@@ -42,7 +42,7 @@ Commence toute session par `docs/README.md`, puis la table `actions` (ou `docs/a
 - `plan_flows` : versement mensuel cible par personne, compte et instrument (null = n'importe quel instrument du compte), avec from_month et to_month.
 - `actions` : section, titre, échéance, statut (todo, done, dropped).
 - `allocation_objectives` et `hypotheses` : cibles d'allocation et taux de rendement, inchangées depuis la v1.
-- `snapshots` : total quotidien, alimenté par le cron. Les tables `assets` et `dividends` sont des vestiges v1, en lecture seule, à supprimer après l'état des lieux.
+- `snapshots` : total quotidien, alimenté par le cron.
 
 ## Sources de vérité
 

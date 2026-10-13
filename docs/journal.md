@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 13 octobre 2026 : inventaire des actions
+
+Revue des 33 actions avec Léo. Closes : FDJ (328 titres réels, l'écart venait de la reprise v1), AV Generali (valorisées, poche Livret conservée), état des lieux (tous les comptes réimportés), Project X (vente à 0 € le 13/10/2026, start-up perdue), suppression des tables v1 `assets` et `dividends`. Abandonnées car doublons du calendrier : Capgemini solder ou garder, les cinq ventes de novembre, NEXO vers BTC ; abandonnées sans suite : certificat LPP, notes IR-PME des start-up. Déclaration commune, barème C1N et allocations genevoises passent en démarches administratives. Nouveau point ouvert : Swissquote pour une part du flux de Julie. Reste 22 actions ouvertes.
+
 ## 13 octobre 2026 : AV Generali Léo et Julie recalées
 
 D'après l'espace Banque Populaire : contrat Generali souscrit le 12/11/2020, solde 1 814,12 € au 13/10/2026. Léo indique que le contrat de Julie est identique. Pour chaque AV : versement initial de 1 500 € daté du 12/11/2020 (apport à cette date), revalorisation de 314,12 € en achat à 0 € au 13/10/2026 (même convention que les intérêts des livrets), 1 unité = 1 €. La reprise v1 valorisait chaque contrat 1 800 €.
