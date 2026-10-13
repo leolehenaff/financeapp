@@ -14,7 +14,7 @@ docs/
   revues.md          checklists revue trimestrielle et annuelle
   journal.md         historique daté des décisions et de leur contexte
 PRODUCT.md         contexte produit pour le design (registre, usages, personnalité, anti-références)
-DESIGN.md          design system « Carnet de bord » : tokens, typographie, composants, règles. À lire avant tout écran
+DESIGN.md          design system « Remco » (nom et portrait de l'app : Remco, le CGP de Julie et Léo) : tokens, typographie, composants, règles. À lire avant tout écran
 components/ui.tsx  primitives (Section, Bar, Delta, Dot, Check, Empty) et couleurs par poche (POCKET)
 app/(app)/page.tsx            écran « Ce mois » : apports du mois par personne vs plan, calendrier des actions datées, valorisations périmées
 app/(app)/patrimoine/page.tsx écart aux cibles (poche, zone), positions par compte, historique, trajectoire FIRE

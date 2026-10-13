@@ -4,8 +4,8 @@ import "./globals.css";
 
 const instrument = Instrument_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-instrument", display: "swap" });
 
-export const metadata: Metadata = { title: "Carnet de bord", description: "Cockpit patrimonial de Léo et Julie" };
-export const viewport: Viewport = { themeColor: "#f7f8fa" };
+export const metadata: Metadata = { title: "Remco", description: "Le gestionnaire de patrimoine de Julie et Léo", icons: "/remco-renard.png" };
+export const viewport: Viewport = { themeColor: "#f7f8fa", viewportFit: "cover" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

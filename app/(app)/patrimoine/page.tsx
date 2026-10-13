@@ -48,30 +48,45 @@ export default async function Patrimoine() {
 
   return (
     <>
-      <div className="flex items-center justify-between gap-4"><p className="text-[13px] text-ink-2">Patrimoine au {dateFr(today())}</p><Refresh /></div>
-      <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum mt-0.5">{eur(total)}</h1>
+      <p className="text-[13px] text-ink-2">Patrimoine au {dateFr(today())}</p>
+      <div className="flex items-center gap-3 mt-0.5">
+        <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum">{eur(total)}</h1>
+        <Refresh />
+      </div>
       <Chart points={live} flows={contributions} ledger={ledger} plan={plan} />
-      <Section title="Trajectoire" aside={`${pct(fire.real * 100)} réels attendus (${pct(fire.rate * 100)} moins 2 % d'inflation), ${eur(monthly)} par mois`}>
-        {/* Une seule piste, remplie au prorata du chemin vers le seuil complet ; les seuils sont des repères, pas des étapes franchies. */}
-        <div className="relative h-3 rounded-full bg-surface-2">
+      {/* Carte héros : la seule mise en avant de la page, fond dégradé indigo pâle. Une piste remplie au prorata du seuil complet ; les seuils sont des repères. */}
+      <section className="panel mt-10 p-5 sm:p-6 bg-[linear-gradient(135deg,var(--accent-soft),var(--surface)_75%)]">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-[13px] font-semibold text-accent">Trajectoire</h2>
+            <p className="text-[22px] sm:text-[26px] font-bold tracking-[-0.02em] leading-tight mt-1">Seuil hors crédit en {year + fire.partial}</p>
+            <p className="text-[14px] text-ink-2 mt-1 tnum">dans {fire.partial} ans, seuil complet en {year + fire.full}</p>
+          </div>
+          <div className="text-right shrink-0">
+            <div className="text-[26px] sm:text-[30px] font-bold tracking-[-0.03em] leading-none tnum text-accent">{pct(Math.min(100, (total / FIRE.full) * 100))}</div>
+            <div className="text-[12px] text-ink-3 mt-1">du seuil complet</div>
+          </div>
+        </div>
+        <div className="relative h-3.5 rounded-full bg-surface mt-5 shadow-[inset_0_0_0_1px_var(--line)]">
           <div className="absolute inset-y-0 left-0 rounded-full" style={{ width: `${Math.min(100, (total / FIRE.full) * 100)}%`, background: "var(--accent)" }} />
-          {[FIRE.partial / FIRE.full, 1].map((f) => <span key={f} className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-ink" style={{ left: `${f * 100}%` }} />)}
+          {[FIRE.partial / FIRE.full, 1].map((f) => <span key={f} className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-ink ring-2 ring-surface" style={{ left: `${f * 100}%` }} />)}
         </div>
         <ol className="grid grid-cols-3 text-[13px] mt-3">
           {[
             ["Aujourd'hui", eur(total), year, "text-left", "", ""],
-            ["Seuil hors crédit", "870 k€", year + fire.partial, "text-center", "Capital, en euros d'aujourd'hui, qui couvre le coût de vie avec un enfant d'âge scolaire (4 550 €/mois) sauf le crédit immobilier (1 974 €), à 3,5 % de retrait brut par an, soit 28 fois 31 000 €. Fiscalité des retraits non déduite.", "2 580 € par mois, crédit payé par ailleurs"],
-            ["Seuil complet", "1,53 M€", year + fire.full, "text-right", "Capital, en euros d'aujourd'hui, qui couvre tout le coût de vie avec un enfant d'âge scolaire (4 550 €/mois), crédit compris, à 3,5 % de retrait brut par an, soit 28 fois 54 600 €. Année estimée au rendement réel (nominal moins 2 % d'inflation) avec 3 700 € par mois indexés.", "4 550 € par mois, crédit compris"],
+            ["Seuil hors crédit", "870 k€", year + fire.partial, "text-center", "Capital, en euros d'aujourd'hui, qui couvre le coût de vie avec un enfant d'âge scolaire (4 550 €/mois) sauf le crédit immobilier (1 974 €), à 3,5 % de retrait brut par an, soit 28 fois 31 000 €. Fiscalité des retraits non déduite.", "2 580 €/mois"],
+            ["Seuil complet", "1,53 M€", year + fire.full, "text-right", "Capital, en euros d'aujourd'hui, qui couvre tout le coût de vie avec un enfant d'âge scolaire (4 550 €/mois), crédit compris, à 3,5 % de retrait brut par an, soit 28 fois 54 600 €. Année estimée au rendement réel (nominal moins 2 % d'inflation) avec 3 700 € par mois indexés.", "4 550 €/mois"],
           ].map(([l, v, y, a, tip, lives]) => (
             <li key={l} className={String(a)}>
               <div className="text-ink-3">{tip ? <span className={`tip ${a === "text-right" ? "tip-right" : ""}`} tabIndex={0} data-tip={tip}>{l}</span> : l}</div>
               <div className="font-semibold text-[15px] tnum">{v}</div>
               <div className="text-ink-2 tnum">{y}, {Number(y) - 1997} ans</div>
-              {lives && <div className="text-ink-3 tnum text-[12px] mt-0.5">pour vivre avec {lives}</div>}
+              {lives && <div className="text-ink-3 tnum text-[12px] mt-0.5">pour vivre avec <span className="whitespace-nowrap">{lives}</span></div>}
             </li>
           ))}
         </ol>
-      </Section>
+        <p className="text-[12px] text-ink-3 mt-4 pt-3 border-t border-line">{pct(fire.real * 100)} réels attendus ({pct(fire.rate * 100)} moins 2 % d&apos;inflation), {eur(monthly)} versés par mois.</p>
+      </section>
 
       <div className="grid md:grid-cols-2 gap-x-10">
         <Section title="Par poche"><Targets rows={alloc.type} byPocket /></Section>

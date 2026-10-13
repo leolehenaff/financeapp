@@ -1,5 +1,5 @@
 ---
-name: Carnet de bord
+name: Remco
 description: Cockpit patrimonial clair et coloré, blanc sur gris très pâle, une couleur vive par poche, formes rondes.
 colors:
   page: "oklch(97.5% 0.006 250)"
@@ -123,7 +123,7 @@ components:
     textColor: "#ffffff"
 ---
 
-# Design System: Carnet de bord
+# Design System: Remco
 
 ## 1. Overview
 
@@ -192,7 +192,7 @@ Blanc, 18 px, ombre douce. Padding 20 px pour un formulaire ou une progression, 
 40 px, blanc, filet fort 1,5 px, coins 10 px, texte 14 px. Libellé au-dessus en 12 px. Focus : bordure indigo et anneau 4 px à 18 %. Erreur : 13 px rouge sous le champ, `role="alert"`. Les classes `.field`, `.btn`, `.panel` vivent dans `@layer components` pour que les utilitaires Tailwind (largeur, hauteur) les surchargent.
 
 ### Navigation
-Rail en pilule gris pâle avec trois onglets ; l'actif est blanc, 600, avec l'ombre douce. Marque « Carnet de bord » en 17 px 700 à gauche (masquée sous 640 px), « Sortir » en encre pâle à droite. Barre collante sur fond page translucide.
+Rail en pilule gris pâle avec trois onglets ; l'actif est blanc, 600, avec l'ombre douce. Sous 640 px, le rail laisse place à une barre d'onglets fixée en bas (icône et libellé, actif en indigo sur pastille indigo pâle, marge de safe area). Marque à gauche : portrait de Remco, un renard à lunettes et écharpe indigo (34 px, rond, `public/remco-renard.png`), « Remco » en 16 px 700 et « Le CGP de Julie & Léo » en 12 px encre pâle, « Sortir » en encre pâle à droite. Barre collante sur fond page translucide.
 
 ### Progress bar (signature)
 Pilule de 12 px (14 px pour le total du mois, 6 px pour une ligne), piste en surface enfoncée, remplissage couleur de la poche (indigo accent pour le total), largeur animée 400 ms. Sur les cibles d'allocation, un trait vertical en encre de 2 px marque la cible, l'écart signé en € à droite.

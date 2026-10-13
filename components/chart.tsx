@@ -49,16 +49,17 @@ export function Chart({ points: all, flows, ledger, plan }: { points: Point[]; f
           ))}
         </div>
       </div>
-      <dl className="grid grid-cols-3 gap-3 mt-3">
+      {/* Mobile : une carte à trois lignes, chiffre à droite. Dès 640 px : trois cartes. */}
+      <dl className="panel divide-y divide-line mt-3 sm:grid sm:grid-cols-3 sm:gap-3 sm:divide-y-0 sm:bg-transparent sm:shadow-none">
         {[
           ["Variation nette", <Delta key="n" value={Math.round(net)} suffix=" €" />, `hors versements, ${annual(net * perYear)}`],
           ["Performance", <Delta key="p" value={pctNet * 100} suffix=" %" />, `TRI ${(tri * 100).toLocaleString("fr-FR", { maximumFractionDigits: 1, signDisplay: "exceptZero" })} % par an`],
           ["Versé", <span key="v" className="tnum">{eur(Math.round(paid))}</span>, `${since}, ${eur(Math.round(paid * perYear))} par an`],
         ].map(([l, v, sub]) => (
-          <div key={String(l)} className="panel px-3 py-2.5 sm:px-4 sm:py-3 min-w-0">
-            <dt className="text-[12px] text-ink-3 whitespace-nowrap">{l}</dt>
-            <dd className="text-[16px] sm:text-[20px] font-bold tracking-[-0.02em] leading-tight mt-0.5 whitespace-nowrap">{v}</dd>
-            <dd className="text-[11px] sm:text-[12px] text-ink-3 mt-0.5 tnum">{sub}</dd>
+          <div key={String(l)} className="grid grid-cols-[1fr_auto] items-center gap-x-3 px-4 py-3 min-w-0 sm:block sm:bg-surface sm:rounded-[var(--r-lg)] sm:shadow-[var(--shadow)]">
+            <dt className="text-[13px] sm:text-[12px] text-ink-2 sm:text-ink-3 whitespace-nowrap">{l}</dt>
+            <dd className="row-span-2 text-[18px] sm:text-[20px] font-bold tracking-[-0.02em] leading-tight sm:mt-0.5 whitespace-nowrap">{v}</dd>
+            <dd className="text-[12px] text-ink-3 mt-0.5 tnum">{sub}</dd>
           </div>
         ))}
       </dl>

@@ -41,12 +41,18 @@ export function Positions({ positions, closed }: { positions: Position[]; closed
       <Section title={<>Positions <span className="text-ink-2 font-normal tnum">{eur(sum(shown, "value"))}</span></>} aside={<Delta value={perf(shown)} suffix=" %" />}>
       <div className="flex flex-wrap items-center gap-2 mb-4">
           <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Instrument ou compte" aria-label="Rechercher une position" className="field !h-9 !w-full sm:!w-56 text-[13px]" />
-          <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filtrer par poche">
-            {Object.keys(POCKET).map((k) => <button key={k} type="button" aria-pressed={kinds.includes(k)} onClick={() => toggle(k)} className={chip(kinds.includes(k))}><Dot kind={k} className="mr-1.5" />{pocket(k).label}</button>)}
+          {/* Mobile : une seule ligne qui défile, bord à bord. Dès 640 px : retour à la ligne, personnes à droite. */}
+          <div className="flex items-center gap-1.5 w-[calc(100%+2rem)] -mx-4 px-4 overflow-x-auto [scrollbar-width:none] sm:w-auto sm:flex-1 sm:mx-0 sm:px-0 sm:overflow-visible sm:flex-wrap [&>*]:shrink-0">
+            <div className="flex gap-1.5 [&>*]:shrink-0 [&>*]:whitespace-nowrap" role="group" aria-label="Filtrer par poche">
+              {Object.keys(POCKET).map((k) => <button key={k} type="button" aria-pressed={kinds.includes(k)} onClick={() => toggle(k)} className={chip(kinds.includes(k))}><Dot kind={k} className="mr-1.5" />{pocket(k).label}</button>)}
+            </div>
+            {owners.length > 1 && <>
+              <span className="w-px h-5 bg-line-strong mx-1 sm:hidden" aria-hidden="true" />
+              <div className="flex gap-1.5 sm:ml-auto [&>*]:shrink-0" role="group" aria-label="Filtrer par personne">
+                {owners.map((o) => <button key={o} type="button" aria-pressed={who === o} onClick={() => setWho(who === o ? "" : o)} className={chip(who === o)}>{o}</button>)}
+              </div>
+            </>}
           </div>
-          {owners.length > 1 && <div className="flex gap-1.5 sm:ml-auto" role="group" aria-label="Filtrer par personne">
-            {owners.map((o) => <button key={o} type="button" aria-pressed={who === o} onClick={() => setWho(who === o ? "" : o)} className={chip(who === o)}>{o}</button>)}
-          </div>}
         </div>
         {shown.length === 0 && <Empty>Aucune position ne correspond.</Empty>}
         <div className="space-y-4">
