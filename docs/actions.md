@@ -50,3 +50,7 @@ Généré depuis la table `actions` par `npm run export:actions`. Modifier la ba
 - [x] ~~Alertes haute/basse : aucune configurée.~~ (abandonné)
 - [ ] Project X : passer en sorti.
 - [ ] Après l'état des lieux : supprimer les tables v1 (assets, dividends) devenues inutiles.
+
+## Historique
+
+- [ ] Agent : recalculer les snapshots depuis le 17/01/2026 à partir des transactions datées et des cours historiques, une fois tous les comptes importés (Trade Republic, cold wallet, Livrets, PEE, AV).
