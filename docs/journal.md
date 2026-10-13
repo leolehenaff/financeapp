@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 13 octobre 2026 : historique réel des start-up (Blast Club)
+
+Export des opérations financières Blast Club fourni par Léo (juin 2023 à juillet 2026). Les 25 lignes « Reprise v1 » du compte Start-up Léo (hors Blast Army 1 et 2, qui ne passent pas par ce wallet) sont remplacées par 26 transactions datées : 25 investissements et la vente partielle Wheere du 27/10/2025 (500 € de nominal vendus 1 500 €, commission sur plus-value de 200 € déduite). Convention : 1 unité = 1 € de nominal, montant = nominal plus frais de structuration de 5 % (même logique que le PEA, frais compris). Mint Bikes et Wheere datent d'avant le wallet, leur nominal est déduit des frais (1 455 € et 2 057 €). Whitelab passe de 643 à 646 €. Trois instruments renommés d'après l'export : YC Winter 26, Cementic, Finisterestes. Les 2 500 € d'adhésion au club (2023 et 2025) ne sont pas comptés comme investissement. Compte après import : 27 lignes, 53 229 € de valeur pour 38 976 € de coût.
+
 ## 13 octobre 2026 : historique réel du PEA Léo
 
 Le graphique montrait une marche de 19 k€ de « versé » le 24/02/2026 sans hausse de valeur : la reprise v1 avait daté cinq achats de ce jour-là sans les ventes qui les finançaient (Kering, un S&P 500 Amundi, Engie, Veolia). Léo a fourni les 46 avis d'opéré Banque Populaire (décembre 2018 à février 2026). Les 19 lignes « Reprise v1 » du PEA sont remplacées par 44 transactions réelles plus une ligne reconstituée pour l'introduction en bourse FDJ (128 titres, 2 281 €, pas d'avis). Quantités par ligne inchangées, coût moyen 95 560 € pour 107 855 € de valeur. Versé net du PEA depuis l'ouverture : 81 210 € (achats moins ventes). Six instruments soldés ajoutés pour l'historique : Arkema, Renault, Kering, SMCP, Valeo, S&P 500 (PE500). Conséquence sur le cockpit : le « versé net » du graphique et des KPI vient du cumul des transactions, donc de l'argent réellement injecté, et non plus du coût moyen des positions.
