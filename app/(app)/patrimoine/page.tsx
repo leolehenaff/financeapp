@@ -1,5 +1,5 @@
 import { dateFr, eur, pct, today } from "@/lib/format";
-import { FIRE, getAllocation, getFire, getContributions, getHistory, getLedger, getPlan, getMonthProgress, getPositions, type AllocRow, type Position } from "@/lib/queries";
+import { FIRE, getAllocation, getFire, getContributions, getHistory, getLedger, getPlan, getMonthProgress, getPositions, type AllocRow } from "@/lib/queries";
 import { Delta, Dot, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
 import { Positions } from "@/components/positions";

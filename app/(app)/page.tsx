@@ -2,7 +2,7 @@ import Link from "next/link";
 import { completeAction, recordFlow, setPrice } from "@/lib/actions";
 import { dateFr, eur, monthLabel, today } from "@/lib/format";
 import { dueSoon, getActions, getMonthProgress, getPositions, stale, type Action, type Position } from "@/lib/queries";
-import { Bar, Check, Delta, Dot, Empty, Section, pocket } from "@/components/ui";
+import { Bar, Check, Dot, Empty, Section, pocket } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -41,8 +41,6 @@ export default async function ThisMonth() {
   const day = today(), ym = day.slice(0, 7);
   const positions = await getPositions();
   const [flows, actions] = await Promise.all([getMonthProgress(ym), getActions()]);
-  const total = positions.reduce((s, p) => s + p.value, 0);
-  const cost = positions.reduce((s, p) => s + p.cost, 0);
   const planned = flows.reduce((s, f) => s + f.planned, 0);
   const done = flows.reduce((s, f) => s + Math.min(f.done, f.planned), 0);
   const due = dueSoon(actions);
@@ -63,10 +61,6 @@ export default async function ThisMonth() {
         <span className="tnum text-[15px] font-semibold whitespace-nowrap">{planned ? Math.round((done / planned) * 100) : 0} %</span>
       </div>
       <p className="text-[13px] text-ink-2 mt-1.5 tnum">{eur(done)} versés sur {eur(planned)}</p>
-      <p className="text-[15px] text-ink-2 mt-4 max-w-[65ch]">
-        Patrimoine {eur(total)}, soit <Delta value={cost ? ((total - cost) / cost) * 100 : 0} suffix=" %" /> sur un coût d&apos;achat de {eur(cost)}.
-        {due.length > 0 && <> {due.length} action{due.length > 1 ? "s" : ""} à échéance dans les 30 jours{late ? `, dont ${late} en retard` : ""}.</>}
-      </p>
 
       <Section title="Versements du mois" aside={`${remaining.length} flux restant${remaining.length > 1 ? "s" : ""}`}>
         <div className="panel p-5">
