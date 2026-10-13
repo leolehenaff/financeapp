@@ -114,6 +114,13 @@ export const stale = (positions: Position[]) =>
   positions.filter((p) => p.price_source === "manual" && !["Livret", "Active Cash"].includes(p.kind)
     && (!p.price_date || p.price_date < addDays(today(), p.kind === "Start-up" ? -365 : -90)));
 
+/** Mouvements datés pour le graphique par période : achats, ventes, dividendes (montant non nul) et apports. */
+export async function getLedger() {
+  const r = await db.execute(`SELECT date, type, amount FROM transactions WHERE amount <> 0
+    UNION ALL SELECT date, 'contribution', amount FROM contributions ORDER BY date`);
+  return r.rows.map((x) => ({ date: String(x.date), type: String(x.type), amount: Number(x.amount) }));
+}
+
 /** Tous les apports externes datés, pour le TRI du graphique. */
 export async function getContributions() {
   const r = await db.execute("SELECT date, amount FROM contributions ORDER BY date");

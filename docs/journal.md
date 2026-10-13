@@ -65,3 +65,7 @@ Plan financier familial rédigé : coût de vie 3 956 €, objectif FIRE vers 40
 ## 13 octobre 2026 : recalcul des snapshots quotidiens
 
 Une fois tous les comptes réimportés (PEA, Nexo, Bitstack, cold wallet, Trade Republic, Livret A Léo, AV), les 269 snapshots depuis le 17/01/2026 ont été recalculés par `scripts/rebuild-snapshots.mts` à partir des transactions datées et des cours de clôture Yahoo (prix manuels reportés). Le jour manquant du 23/04/2026 a été ajouté. Écarts avec les anciens snapshots de l'ordre de 1 à 2 k€ (17/01 : 260 760 devient 261 711 ; 12/10 : 272 887 devient 275 104), venant surtout du solde réel EUROX, des espèces PEA et du recalage du Livret A Léo. La marche de 6,5 k€ entre le 12 et le 13 octobre, due aux imports de la journée, disparaît. L'action « recalculer les snapshots » est close.
+
+## 13 octobre 2026 : le graphique Patrimoine passe de la courbe de valeur aux mouvements par période
+
+Décision de Léo : la courbe valeur contre versé net n'apportait rien de plus que les trois KPI. Elle est remplacée par des barres par mois (par an en Max) tirées du journal : versé (apports nets), investi (achats payés), revendu (ventes) et dividendes. Les intérêts saisis en achat à 0 (livrets, Nexo) n'y figurent pas, les transferts internes (Bitstack vers cold wallet) apparaissent à la fois en revendu et en investi. Le tableau des positions gagne une recherche, des filtres par poche et par personne, les colonnes Gain (valeur plus ventes et dividendes moins achats) et Annualisé (TRI par ligne), et un bloc replié des lignes soldées.

@@ -1,5 +1,5 @@
 import { dateFr, eur, pct, today } from "@/lib/format";
-import { FIRE, getFire, getContributions, getHistory, getMonthProgress, getPositions, type Position } from "@/lib/queries";
+import { FIRE, getFire, getContributions, getHistory, getLedger, getMonthProgress, getPositions, type Position } from "@/lib/queries";
 import { Dot, POCKET, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
 import { Positions } from "@/components/positions";
@@ -23,7 +23,7 @@ function Composition({ positions, total }: { positions: Position[]; total: numbe
 
 export default async function Patrimoine() {
   const positions = await getPositions();
-  const [history, flows, contributions, closed] = await Promise.all([getHistory(), getMonthProgress(today().slice(0, 7)), getContributions(), getPositions(true)]);
+  const [history, flows, contributions, closed, ledger] = await Promise.all([getHistory(), getMonthProgress(today().slice(0, 7)), getContributions(), getPositions(true), getLedger()]);
   const monthly = flows.reduce((s, f) => s + f.planned, 0);
   const fire = await getFire(positions, monthly);
   const total = positions.reduce((s, p) => s + p.value, 0);
@@ -35,8 +35,7 @@ export default async function Patrimoine() {
     <>
       <p className="text-[13px] text-ink-2">Patrimoine au {dateFr(today())}</p>
       <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum mt-0.5">{eur(total)}</h1>
-      <Chart points={live} flows={contributions} />
-      <p className="flex gap-5 text-[12px] text-ink-3 mt-1.5"><span><span className="inline-block w-4 border-t-[1.5px] border-ink align-middle mr-1.5" />Valeur</span><span><span className="inline-block w-4 border-t border-dashed border-ink-3 align-middle mr-1.5" />Versé net</span></p>
+      <Chart points={live} flows={contributions} ledger={ledger} />
       <div className="mt-6"><Composition positions={positions} total={total} /></div>
 
       <Section title="Trajectoire" aside={`${pct(fire.real * 100)} réels attendus (${pct(fire.rate * 100)} moins 2 % d'inflation), ${eur(monthly)} par mois`}>
