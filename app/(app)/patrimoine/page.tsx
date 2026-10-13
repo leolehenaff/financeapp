@@ -1,10 +1,37 @@
 import { dateFr, eur, pct, today } from "@/lib/format";
-import { FIRE, getFire, getContributions, getHistory, getLedger, getPlan, getMonthProgress, getPositions, type Position } from "@/lib/queries";
-import { Dot, POCKET, Section, pocket } from "@/components/ui";
+import { FIRE, getAllocation, getFire, getContributions, getHistory, getLedger, getPlan, getMonthProgress, getPositions, type AllocRow, type Position } from "@/lib/queries";
+import { Delta, Dot, POCKET, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
 import { Positions } from "@/components/positions";
 
 export const dynamic = "force-dynamic";
+
+/** Barre horizontale par poche : réel en couleur, repère de cible, écart signé en €. */
+function Targets({ rows, byPocket }: { rows: AllocRow[]; byPocket: boolean }) {
+  const max = Math.max(...rows.map((r) => Math.max(r.actual, r.target))) * 1.1;
+  return (
+    <ul className="space-y-3">
+      {rows.map((r) => {
+        const color = byPocket ? pocket(r.key).color : "var(--c-cash)";
+        const label = byPocket ? pocket(r.key).label : { US: "États-Unis", EU: "Europe hors FR", FR: "France", OTHER: "Asie et émergents" }[r.key] ?? r.key;
+        return (
+          <li key={r.key} className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 items-center">
+            <div className="flex items-center gap-2 text-[14px] min-w-0">
+              {byPocket && <Dot kind={r.key} />}
+              <span className="truncate">{label}</span>
+              <span className="text-ink-3 text-[13px] tnum">{pct(r.actual)} sur {pct(r.target)}</span>
+            </div>
+            <Delta value={Math.round(r.gap)} suffix=" €" className="text-[13px]" />
+            <div className="relative col-span-2 bar">
+              <i style={{ width: `${(r.actual / max) * 100}%`, background: color }} />
+              <span className="absolute top-[-3px] h-[16px] w-[2px] bg-ink rounded-full" style={{ left: `${(r.target / max) * 100}%` }} title={`Cible ${pct(r.target)}`} />
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
 
 /** Bande de composition : la signature visuelle, une poche = un segment. */
 function Composition({ positions, total }: { positions: Position[]; total: number }) {
@@ -23,7 +50,7 @@ function Composition({ positions, total }: { positions: Position[]; total: numbe
 
 export default async function Patrimoine() {
   const positions = await getPositions();
-  const [history, flows, contributions, closed, ledger, plan] = await Promise.all([getHistory(), getMonthProgress(today().slice(0, 7)), getContributions(), getPositions(true), getLedger(), getPlan()]);
+  const [history, flows, contributions, closed, ledger, plan, alloc] = await Promise.all([getHistory(), getMonthProgress(today().slice(0, 7)), getContributions(), getPositions(true), getLedger(), getPlan(), getAllocation(positions)]);
   const monthly = flows.reduce((s, f) => s + f.planned, 0);
   const fire = await getFire(positions, monthly);
   const total = positions.reduce((s, p) => s + p.value, 0);
@@ -37,6 +64,13 @@ export default async function Patrimoine() {
       <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum mt-0.5">{eur(total)}</h1>
       <Chart points={live} flows={contributions} ledger={ledger} plan={plan} />
       <div className="mt-6"><Composition positions={positions} total={total} /></div>
+
+      <div className="grid md:grid-cols-2 gap-x-10">
+        <Section title="Par poche" aside="start-up au coût d'achat"><Targets rows={alloc.type} byPocket /></Section>
+        <Section title="Actions par zone" aside="poche actions seule"><Targets rows={alloc.geo} byPocket={false} /></Section>
+      </div>
+      <p className="text-[12px] text-ink-3 mt-3">Le trait noir est la cible. Un écart positif veut dire « sous la cible » : c&apos;est là que vont les prochains versements.</p>
+
 
       <Section title="Trajectoire" aside={`${pct(fire.real * 100)} réels attendus (${pct(fire.rate * 100)} moins 2 % d'inflation), ${eur(monthly)} par mois`}>
         {/* Une seule piste, remplie au prorata du chemin vers le seuil complet ; les seuils sont des repères, pas des étapes franchies. */}

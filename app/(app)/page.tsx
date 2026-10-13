@@ -1,37 +1,10 @@
 import Link from "next/link";
 import { completeAction, recordFlow, setPrice } from "@/lib/actions";
-import { dateFr, eur, monthLabel, pct, today } from "@/lib/format";
-import { dueSoon, getActions, getAllocation, getMonthProgress, getPositions, stale, type Action, type AllocRow, type Position } from "@/lib/queries";
+import { dateFr, eur, monthLabel, today } from "@/lib/format";
+import { dueSoon, getActions, getMonthProgress, getPositions, stale, type Action, type Position } from "@/lib/queries";
 import { Bar, Check, Delta, Dot, Empty, Section, pocket } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
-
-/** Barre horizontale par poche : réel en couleur, repère de cible, écart signé en €. */
-function Targets({ rows, byPocket }: { rows: AllocRow[]; byPocket: boolean }) {
-  const max = Math.max(...rows.map((r) => Math.max(r.actual, r.target))) * 1.1;
-  return (
-    <ul className="space-y-3">
-      {rows.map((r) => {
-        const color = byPocket ? pocket(r.key).color : "var(--c-cash)";
-        const label = byPocket ? pocket(r.key).label : { US: "États-Unis", EU: "Europe hors FR", FR: "France", OTHER: "Asie et émergents" }[r.key] ?? r.key;
-        return (
-          <li key={r.key} className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 items-center">
-            <div className="flex items-center gap-2 text-[14px] min-w-0">
-              {byPocket && <Dot kind={r.key} />}
-              <span className="truncate">{label}</span>
-              <span className="text-ink-3 text-[13px] tnum">{pct(r.actual)} sur {pct(r.target)}</span>
-            </div>
-            <Delta value={Math.round(r.gap)} suffix=" €" className="text-[13px]" />
-            <div className="relative col-span-2 bar">
-              <i style={{ width: `${(r.actual / max) * 100}%`, background: color }} />
-              <span className="absolute top-[-3px] h-[16px] w-[2px] bg-ink rounded-full" style={{ left: `${(r.target / max) * 100}%` }} title={`Cible ${pct(r.target)}`} />
-            </div>
-          </li>
-        );
-      })}
-    </ul>
-  );
-}
 
 function StaleRow({ p }: { p: Position }) {
   return (
@@ -67,7 +40,7 @@ function ActionRow({ a, day }: { a: Action; day: string }) {
 export default async function ThisMonth() {
   const day = today(), ym = day.slice(0, 7);
   const positions = await getPositions();
-  const [alloc, flows, actions] = await Promise.all([getAllocation(positions), getMonthProgress(ym), getActions()]);
+  const [flows, actions] = await Promise.all([getMonthProgress(ym), getActions()]);
   const total = positions.reduce((s, p) => s + p.value, 0);
   const cost = positions.reduce((s, p) => s + p.cost, 0);
   const planned = flows.reduce((s, f) => s + f.planned, 0);
@@ -154,11 +127,6 @@ export default async function ThisMonth() {
         )}
       </Section>
 
-      <div className="grid md:grid-cols-2 gap-x-10">
-        <Section title="Par poche" aside="start-up au coût d'achat"><Targets rows={alloc.type} byPocket /></Section>
-        <Section title="Actions par zone" aside="poche actions seule"><Targets rows={alloc.geo} byPocket={false} /></Section>
-      </div>
-      <p className="text-[12px] text-ink-3 mt-3">Le trait noir est la cible. Un écart positif veut dire « sous la cible » : c&apos;est là que vont les prochains versements.</p>
 
     </>
   );
