@@ -28,25 +28,6 @@ export async function logout() {
   redirect("/login");
 }
 
-/** Versement du mois : quantité et prix unitaire, saisis sous le flux. */
-export async function recordFlow(fd: FormData) {
-  const quantity = num(fd, "quantity"), price = num(fd, "price");
-  if (quantity <= 0 || price <= 0) throw new Error("Quantité et prix doivent être positifs");
-  const f = (await db.execute({ sql: "SELECT account_id, instrument_id FROM plan_flows WHERE id = ?", args: [num(fd, "flow_id")] }))
-    .rows[0] as unknown as { account_id: number; instrument_id: number | null } | undefined;
-  if (!f?.instrument_id) throw new Error("Flux sans instrument : passer par le Journal");
-  const amount = Math.round(quantity * price * 100) / 100;
-  await db.execute({
-    sql: "INSERT INTO transactions (date, account_id, instrument_id, type, quantity, amount, note) VALUES (?,?,?,'buy',?,?,'versement du mois')",
-    args: [today(), f.account_id, f.instrument_id, quantity, amount],
-  });
-  await contribute(today(), f.account_id, amount, "versement du mois");
-  refresh();
-}
-
-const contribute = (date: string, account: number, amount: number, note: string | null) =>
-  db.execute({ sql: "INSERT INTO contributions (date, account_id, amount, note) VALUES (?,?,?,?)", args: [date, account, amount, note] });
-
 export async function setPrice(fd: FormData) {
   await db.execute({
     sql: "INSERT OR REPLACE INTO prices (instrument_id, date, price) VALUES (?,?,?)",

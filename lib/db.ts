@@ -26,11 +26,6 @@ export const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS prices (
     instrument_id INTEGER NOT NULL REFERENCES instruments(id), date TEXT NOT NULL,
     price REAL NOT NULL, PRIMARY KEY (instrument_id, date))`,
-  `CREATE TABLE IF NOT EXISTS plan_flows (
-    id INTEGER PRIMARY KEY, owner TEXT NOT NULL,
-    account_id INTEGER NOT NULL REFERENCES accounts(id),
-    instrument_id INTEGER REFERENCES instruments(id),
-    monthly_amount REAL NOT NULL, from_month TEXT NOT NULL, to_month TEXT, label TEXT)`,
   `CREATE TABLE IF NOT EXISTS contributions (
     id INTEGER PRIMARY KEY, date TEXT NOT NULL,
     account_id INTEGER NOT NULL REFERENCES accounts(id),

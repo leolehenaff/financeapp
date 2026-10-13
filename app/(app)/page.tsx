@@ -1,7 +1,7 @@
-import { completeAction, recordFlow, setPrice } from "@/lib/actions";
+import { completeAction, setPrice } from "@/lib/actions";
 import { dateFr, eur, monthLabel, today } from "@/lib/format";
 import { dueSoon, getActions, getMonthProgress, getPositions, stale, type Action, type Position } from "@/lib/queries";
-import { Bar, Check, Dot, Empty, Section, pocket } from "@/components/ui";
+import { Bar, Check, Dot, Empty, Section } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -47,7 +47,6 @@ export default async function ThisMonth() {
   const late = due.filter((a) => a.due_date! < day).length;
   const old = stale(positions);
   const remaining = flows.filter((f) => f.done < f.planned);
-  const kindOf = (f: (typeof flows)[number]) => positions.find((p) => p.account === f.account)?.kind ?? "Stock";
 
   return (
     <>
@@ -61,39 +60,22 @@ export default async function ThisMonth() {
       </div>
       <p className="text-[13px] text-ink-2 mt-1.5 tnum">{eur(done)} versés sur {eur(planned)}</p>
 
-      <Section title="Versements du mois" aside={`${remaining.length} flux restant${remaining.length > 1 ? "s" : ""}`}>
-        <div className="panel p-5">
-          <ul className="divide-y divide-line">
-            {flows.map((f) => {
-              const ok = f.done >= f.planned;
-              return (
-                <li key={f.id} className="grid grid-cols-[auto_1fr_auto] gap-x-3 items-center py-2.5">
-                  <Dot kind={kindOf(f)} />
-                  <div className="min-w-0">
-                    <div className={`text-[14px] truncate ${ok ? "text-ink-3" : ""}`}>{f.label}</div>
-                    <div className="text-[12px] text-ink-3 truncate">{f.owner}, {f.account}</div>
-                  </div>
-                  <div className="num text-[14px]">
-                    <span className={ok ? "text-ink-3" : "font-semibold"}>{eur(f.done)}</span>
-                    <span className="text-ink-3"> / {eur(f.planned)}</span>
-                  </div>
-                  <div className="col-start-2 col-span-2 mt-1.5"><Bar value={f.done} max={f.planned} color={pocket(kindOf(f)).color} className="h-1.5" /></div>
-                  {!ok && (f.instrument_id
-                    ? <form action={recordFlow} className="col-start-2 col-span-2 mt-2 flex justify-end gap-2">
-                        <input type="hidden" name="flow_id" value={f.id} />
-                        <label className="flex items-center gap-1.5 text-[12px] text-ink-3">Qté
-                          <input name="quantity" type="number" step="any" min="0" placeholder={f.price ? ((f.planned - f.done) / f.price).toFixed(f.price > 1000 ? 5 : 2) : ""} className="field w-24 h-8 text-[13px]" required /></label>
-                        <label className="flex items-center gap-1.5 text-[12px] text-ink-3">Prix
-                          <input name="price" type="number" step="any" min="0" defaultValue={f.price ? Math.round(f.price * 100) / 100 : undefined} className="field w-24 h-8 text-[13px]" required /></label>
-                        <button className="btn btn-sm btn-soft">Versé</button>
-                      </form>
-                    : <p className="col-start-2 col-span-2 mt-2 text-[13px] text-ink-3">Saisi par l&apos;agent avec l&apos;export Blast.</p>)}
-                </li>
-              );
-            })}
-          </ul>
-          <p className="text-[12px] text-ink-3 mt-4">Quantité achetée et prix unitaire payé : le montant versé en découle. Le prix est pré-rempli au dernier cours connu, la quantité suggérée est le reste à verser divisé par ce prix. Pour une autre date, passe par le Journal.</p>
-        </div>
+      <Section title="Versements du mois" aside={remaining.length ? `${remaining.length} personne${remaining.length > 1 ? "s" : ""} en attente` : undefined}>
+        <ul className="panel p-5 divide-y divide-line">
+          {flows.map((f) => {
+            const ok = f.done >= f.planned;
+            return (
+              <li key={f.owner} className="py-2.5">
+                <div className="flex items-center justify-between gap-3 text-[14px]">
+                  <span className={ok ? "text-ink-3" : ""}>{f.owner}</span>
+                  <span className="num"><span className={ok ? "text-ink-3" : "font-semibold"}>{eur(f.done)}</span><span className="text-ink-3"> / {eur(f.planned)}</span></span>
+                </div>
+                <Bar value={f.done} max={f.planned} color="var(--accent)" className="h-1.5 mt-1.5" />
+              </li>
+            );
+          })}
+        </ul>
+        <p className="text-[12px] text-ink-3 mt-3">Apports externes du mois, saisis par l&apos;agent depuis les exports. La répartition par instrument est dans le calendrier chaque 1er du mois.</p>
       </Section>
 
       <Section title="Valorisations à rafraîchir" aside={old.length ? `${old.length} ligne${old.length > 1 ? "s" : ""} de plus de 90 jours` : undefined}>

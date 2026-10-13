@@ -1,5 +1,5 @@
 import { dateFr, eur, pct, today } from "@/lib/format";
-import { FIRE, getAllocation, getFire, getContributions, getHistory, getLedger, getPlan, getMonthProgress, getPositions, type AllocRow } from "@/lib/queries";
+import { FIRE, getAllocation, getFire, getContributions, getHistory, getLedger, getPlan, getPositions, planTotal, type AllocRow } from "@/lib/queries";
 import { Delta, Dot, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
 import { Positions } from "@/components/positions";
@@ -38,8 +38,8 @@ function Targets({ rows, byPocket }: { rows: AllocRow[]; byPocket: boolean }) {
 
 export default async function Patrimoine() {
   const positions = await getPositions();
-  const [history, flows, contributions, closed, ledger, plan, alloc] = await Promise.all([getHistory(), getMonthProgress(today().slice(0, 7)), getContributions(), getPositions(true), getLedger(), getPlan(), getAllocation(positions)]);
-  const monthly = flows.reduce((s, f) => s + f.planned, 0);
+  const [history, contributions, closed, ledger, alloc] = await Promise.all([getHistory(), getContributions(), getPositions(true), getLedger(), getAllocation(positions)]);
+  const plan = getPlan(), monthly = planTotal();
   const fire = await getFire(positions, monthly);
   const total = positions.reduce((s, p) => s + p.value, 0);
   const year = Number(today().slice(0, 4));

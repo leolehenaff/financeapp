@@ -16,7 +16,7 @@ docs/
 PRODUCT.md         contexte produit pour le design (registre, usages, personnalité, anti-références)
 DESIGN.md          design system « Carnet de bord » : tokens, typographie, composants, règles. À lire avant tout écran
 components/ui.tsx  primitives (Section, Bar, Delta, Dot, Check, Empty) et couleurs par poche (POCKET)
-app/(app)/page.tsx            écran « Ce mois » : versements vs plan, calendrier des actions datées, valorisations périmées
+app/(app)/page.tsx            écran « Ce mois » : apports du mois par personne vs plan, calendrier des actions datées, valorisations périmées
 app/(app)/patrimoine/page.tsx écart aux cibles (poche, zone), positions par compte, historique, trajectoire FIRE
 app/(app)/journal/page.tsx    liste filtrée et paginée des transactions
 app/api/cron/*                refresh-prices (Yahoo, jours ouvrés 18h UTC), create-snapshot (minuit)
@@ -37,9 +37,9 @@ Commence toute session par `docs/README.md`, puis `docs/actions.md` (sans date) 
 - `accounts` : qui, nom, kind (PEA, CTO, PEE, AV, Livret, Crypto, Startup, Cash), date d'ouverture (horloge PEA).
 - `instruments` : nom unique, ticker Yahoo unique ou null, kind (Stock, Crypto, Start-up, Livret, Active Cash), geo (US, EU, FR, OTHER), price_source (yahoo ou manual).
 - `transactions` : date, compte, instrument, type (buy, sell, dividend), quantité, montant total en €. Les positions sont dérivées : quantité nette, coût moyen pondéré. Livrets, cash et AV : 1 unité = 1 €, les intérêts se saisissent en buy à montant 0.
-- `contributions` : apports externes par compte (date, montant, négatif pour un retrait). C'est le « versé » du cockpit : un dividende ou une vente réinvestis ne sont pas des apports. `recordFlow` en crée un à chaque versement du mois ; le reste est saisi par l'agent depuis les exports mensuels (checklist dans `docs/revues.md`, relevés dans `docs/releves/AAAA-MM/`), jamais à la main dans l'app.
+- Le plan d'épargne (1 850 €/mois par personne) n'est pas en base : il vit dans `docs/plan-financier.md` et dans la constante `PLAN` de `lib/queries.ts`. Chaque 1er du mois, l'agent propose la répartition par instrument sous forme d'actions datées.
+- `contributions` : apports externes par compte (date, montant, négatif pour un retrait). C'est le « versé » du cockpit : un dividende ou une vente réinvestis ne sont pas des apports. Saisis par l'agent depuis les exports mensuels (checklist dans `docs/revues.md`, relevés dans `docs/releves/AAAA-MM/`), jamais à la main dans l'app.
 - `prices` : un prix par instrument et par jour, en €. Yahoo pour les cotés, saisie manuelle pour le reste.
-- `plan_flows` : versement mensuel cible par personne, compte et instrument (null = n'importe quel instrument du compte), avec from_month et to_month.
 - `actions` : section, titre, échéance (obligatoire), statut (todo, done, dropped). Seules les actions datées y vivent ; les autres sont dans `docs/actions.md`.
 - `allocation_objectives` et `hypotheses` : cibles d'allocation et taux de rendement, inchangées depuis la v1.
 - `snapshots` : total quotidien, alimenté par le cron.
@@ -53,7 +53,7 @@ Commence toute session par `docs/README.md`, puis `docs/actions.md` (sans date) 
 ## Comment travailler
 
 1. Lire la base avant tout chiffre : snippet dans `docs/README.md`, ou `getPositions()` via `npx tsx`.
-2. Toute décision validée par Léo : ligne dans `actions` si elle a une échéance, sinon dans `docs/actions.md` ; entrée datée dans `journal.md`, et répercussion dans `plan_flows`, `allocation_objectives` ou `hypotheses` si elle touche un chiffre.
+2. Toute décision validée par Léo : ligne dans `actions` si elle a une échéance, sinon dans `docs/actions.md` ; entrée datée dans `journal.md`, et répercussion dans `allocation_objectives`, `hypotheses` ou la constante `PLAN` de `lib/queries.ts` si elle touche un chiffre.
 3. Un achat, une vente ou un dividende constaté : une ligne dans `transactions`. De l'argent frais versé sur un compte : une ligne dans `contributions` en plus de l'achat. Une valorisation à jour : une ligne dans `prices`. Ne jamais modifier une position autrement.
 4. Ne jamais passer d'ordre, ouvrir de compte ni déplacer d'argent : l'agent prépare, Léo exécute, puis l'agent enregistre.
 5. Les recherches de marché (cours, résultats, consensus) se datent et se sourcent. Exclure les résultats d'une autre année.

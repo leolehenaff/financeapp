@@ -72,28 +72,19 @@ export async function getAllocation(positions: Position[]) {
   };
 }
 
-export type FlowProgress = { id: number; owner: string; account: string; label: string; planned: number; done: number; instrument_id: number | null; price: number | null };
+/** Plan d'épargne : cible mensuelle par personne, décidée dans docs/plan-financier.md (12/10/2026). L'app ne stocke pas le plan, seulement le réel. */
+export const PLAN = { from: "2026-10", monthly: { Léo: 1850, Julie: 1850 } as Record<string, number> };
+export const planTotal = () => Object.values(PLAN.monthly).reduce((s, n) => s + n, 0);
 
+export type FlowProgress = { owner: string; planned: number; done: number };
+/** Avancement du mois par personne : apports externes positifs du mois contre la cible du plan. */
 export async function getMonthProgress(ym: string): Promise<FlowProgress[]> {
-  const flows = (await db.execute({
-    sql: `SELECT f.id, f.owner, f.account_id, f.instrument_id, f.monthly_amount, a.name account,
-            COALESCE(f.label, i.name) label,
-            (SELECT price FROM prices WHERE instrument_id = f.instrument_id ORDER BY date DESC LIMIT 1) price
-          FROM plan_flows f JOIN accounts a ON a.id = f.account_id LEFT JOIN instruments i ON i.id = f.instrument_id
-          WHERE f.from_month <= ? AND (f.to_month IS NULL OR f.to_month >= ?) ORDER BY f.owner, f.id`,
-    args: [ym, ym],
-  })).rows as unknown as { id: number; owner: string; account_id: number; instrument_id: number | null; monthly_amount: number; account: string; label: string; price: number | null }[];
   const done = (await db.execute({
-    sql: `SELECT account_id, instrument_id, SUM(amount) amount FROM transactions
-          WHERE type = 'buy' AND substr(date, 1, 7) = ? GROUP BY 1, 2`,
+    sql: `SELECT a.owner, SUM(c.amount) amount FROM contributions c JOIN accounts a ON a.id = c.account_id
+          WHERE c.amount > 0 AND substr(c.date, 1, 7) = ? GROUP BY 1`,
     args: [ym],
-  })).rows as unknown as { account_id: number; instrument_id: number; amount: number }[];
-  return flows.map((f) => ({
-    id: f.id, owner: f.owner, account: f.account, label: f.label, planned: f.monthly_amount, instrument_id: f.instrument_id, price: f.price,
-    done: done
-      .filter((d) => d.account_id === f.account_id && (f.instrument_id === null || d.instrument_id === f.instrument_id))
-      .reduce((s, d) => s + d.amount, 0),
-  }));
+  })).rows as unknown as { owner: string; amount: number }[];
+  return Object.entries(PLAN.monthly).map(([owner, planned]) => ({ owner, planned, done: done.find((d) => d.owner === owner)?.amount ?? 0 }));
 }
 
 export type Action = { id: number; section: string; title: string; due_date: string | null; status: string; done_on: string | null };
@@ -121,11 +112,8 @@ export async function getLedger() {
   return r.rows.map((x) => ({ date: String(x.date), type: String(x.type), amount: Number(x.amount) }));
 }
 
-/** Objectif de versement mensuel par période du plan, pour la ligne de cible du graphique. */
-export async function getPlan() {
-  const r = await db.execute("SELECT from_month, to_month, SUM(monthly_amount) amount FROM plan_flows GROUP BY 1, 2");
-  return r.rows.map((x) => ({ from: String(x.from_month), to: x.to_month ? String(x.to_month) : null, amount: Number(x.amount) }));
-}
+/** Objectif de versement mensuel, pour la ligne de cible du graphique. */
+export const getPlan = () => [{ from: PLAN.from, to: null as string | null, amount: planTotal() }];
 
 /** Tous les apports externes datés, pour le TRI du graphique. */
 export async function getContributions() {

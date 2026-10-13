@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 13 octobre 2026 : plan d'épargne hors base, répartition mensuelle par l'agent
+
+Décision de Léo : la table `plan_flows` est supprimée. Le plan (3 700 €/mois, 1 850 par personne) vit dans ce doc et dans une constante de l'app ; le réel vient des apports datés (`contributions`). Chaque 1er du mois, l'agent calcule la répartition par instrument à partir de l'écart aux cibles et la crée en actions datées. Le bouton « Versé » de l'écran Ce mois disparaît, toute saisie passe par l'agent depuis les exports.
+
 ## 13 octobre 2026 : inventaire des actions
 
 Revue des 33 actions avec Léo. Closes : FDJ (328 titres réels, l'écart venait de la reprise v1), AV Generali (valorisées, poche Livret conservée), état des lieux (tous les comptes réimportés), Project X (vente à 0 € le 13/10/2026, start-up perdue), suppression des tables v1 `assets` et `dividends`. Abandonnées car doublons du calendrier : Capgemini solder ou garder, les cinq ventes de novembre, NEXO vers BTC ; abandonnées sans suite : certificat LPP, notes IR-PME des start-up. Déclaration commune, barème C1N et allocations genevoises passent en démarches administratives. Nouveau point ouvert : Swissquote pour une part du flux de Julie. Reste 22 actions ouvertes.
