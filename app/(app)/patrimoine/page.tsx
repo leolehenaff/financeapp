@@ -24,7 +24,9 @@ function Targets({ rows, byPocket }: { rows: AllocRow[]; byPocket: boolean }) {
             </div>
             <Delta value={Math.round(r.gap)} suffix=" €" className="text-[13px]" />
             <div className="relative col-span-2 bar">
-              <i style={{ width: `${(r.actual / max) * 100}%`, background: color }} />
+              {/* Plein jusqu'au plus petit des deux, puis hachures : surplus en rouge au-delà de la cible, manque dans la couleur de la poche jusqu'à la cible. */}
+              <i style={{ width: `${(Math.min(r.actual, r.target) / max) * 100}%`, background: color }} />
+              <span className="absolute inset-y-0 hatch" style={{ left: `${(Math.min(r.actual, r.target) / max) * 100}%`, width: `${(Math.abs(r.actual - r.target) / max) * 100}%`, color: r.actual > r.target ? "var(--down)" : color }} title={r.actual > r.target ? `Surplus ${eur(-r.gap)}` : `Manque ${eur(r.gap)}`} />
               <span className="absolute top-[-3px] h-[16px] w-[2px] bg-ink rounded-full" style={{ left: `${(r.target / max) * 100}%` }} title={`Cible ${pct(r.target)}`} />
             </div>
           </li>
@@ -75,7 +77,7 @@ export default async function Patrimoine() {
         <Section title="Par poche"><Targets rows={alloc.type} byPocket /></Section>
         <Section title="Actions par zone" aside="poche actions seule"><Targets rows={alloc.geo} byPocket={false} /></Section>
       </div>
-      <p className="text-[12px] text-ink-3 mt-3">Le trait noir est la cible. Un écart positif veut dire « sous la cible » : c&apos;est là que vont les prochains versements.</p>
+      <p className="text-[12px] text-ink-3 mt-3">Le trait noir est la cible. Hachures dans la couleur de la poche : manque à combler, c&apos;est là que vont les prochains versements. Hachures rouges : surplus au-delà de la cible.</p>
 
 
 
