@@ -31,5 +31,5 @@ for (const [d, v] of out) if (!old.has(d) || [START, dates[1], dates.at(-1)].inc
 console.log(`${out.length} jours, ${out.filter(([d]) => !old.has(d)).length} nouveaux`);
 if (!WRITE) process.exit(0);
 const tx = await db.transaction("write");
-for (const [d, v] of out) await tx.execute({ sql: "INSERT INTO snapshots (snapshot_date, total_value) VALUES (?, ?) ON CONFLICT(snapshot_date) DO UPDATE SET total_value=excluded.total_value", args: [d, v] });
+for (const [d, v] of out) await tx.execute(old.has(d) ? { sql: "UPDATE snapshots SET total_value=? WHERE snapshot_date=?", args: [v, d] } : { sql: "INSERT INTO snapshots (snapshot_date, total_value, data_json) VALUES (?, ?, '{}')", args: [d, v] });
 await tx.commit(); console.log("écrit");
