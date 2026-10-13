@@ -89,3 +89,7 @@ Apports constatés contre plan : septembre 500 € Léo et 999 € Julie (1 850 
 ## 13 octobre 2026 : répartition PEA recalculée chaque mois, skills `/mois` et `/trimestre`, récap par mail
 
 Décision de Léo : les 1 350 € mensuels du PEA se répartissent chaque 1er au prorata des écarts géo positifs hors France (arrondi à 50 €), et non plus selon le 800/300/250 fixe, qui reste la valeur indicative de `plan-financier.md`. Deux skills Claude Code portent les rituels : `/mois` (clôture, actions de versement) et `/trimestre` (checklist de `revues.md`, recherche sur chaque titre vif, ventes sur catalyseur validées ligne par ligne). Chacun termine par un mail de récap envoyé via Resend à Léo et Julie, expéditeur « Remco - Le CGP de Julie & Léo ».
+
+## 13 octobre 2026 (soir) : second recalcul des snapshots
+
+Le Livret A Julie 2026, saisi jusque-là en une ligne nette de −550 € au 01/10, est éclaté en ses 16 opérations réelles (relevé en ligne). Avec la reprise PEE Julie corrigée dans la journée, les snapshots calculés le matin étaient périmés : le 17/01 passe de 261 711 à 258 129 €. Sans ce recalcul, la variation nette 1 an tombait à environ +4,9 k€ (base de départ surévaluée) ; elle revient à +8,5 k€ (+3,1 %). Règle : relancer `scripts/rebuild-snapshots.mts write` après toute reprise d'historique.
