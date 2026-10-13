@@ -3,6 +3,7 @@ import { FIRE, getAllocation, getFire, getContributions, getHistory, getLedger, 
 import { Delta, Dot, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
 import { Positions } from "@/components/positions";
+import { Refresh } from "@/components/refresh";
 
 export const dynamic = "force-dynamic";
 
@@ -45,7 +46,7 @@ export default async function Patrimoine() {
 
   return (
     <>
-      <p className="text-[13px] text-ink-2">Patrimoine au {dateFr(today())}</p>
+      <div className="flex items-center justify-between gap-4"><p className="text-[13px] text-ink-2">Patrimoine au {dateFr(today())}</p><Refresh /></div>
       <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum mt-0.5">{eur(total)}</h1>
       <Chart points={live} flows={contributions} ledger={ledger} plan={plan} />
       <Section title="Trajectoire" aside={`${pct(fire.real * 100)} réels attendus (${pct(fire.rate * 100)} moins 2 % d'inflation), ${eur(monthly)} par mois`}>

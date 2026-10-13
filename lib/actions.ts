@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "./db";
 import { createToken } from "./token";
 import { today, TX_PAGE, type TxFilter, type TxRow } from "./format";
+import { refreshPrices } from "./prices";
 
 const str = (fd: FormData, k: string) => String(fd.get(k) ?? "").trim();
 const num = (fd: FormData, k: string) => {
@@ -71,4 +72,10 @@ export async function listTransactions(f: TxFilter, page: number): Promise<{ row
     FROM transactions t JOIN accounts a ON a.id = t.account_id JOIN instruments i ON i.id = t.instrument_id
     WHERE ${where} ORDER BY t.date DESC, t.id DESC LIMIT ${TX_PAGE} OFFSET ${(Math.max(1, page) - 1) * TX_PAGE}`, args })).rows.map((r) => ({ ...r })) as unknown as TxRow[];
   return { rows, count };
+}
+
+export async function refreshQuotes() {
+  const r = await refreshPrices();
+  refresh();
+  return r;
 }

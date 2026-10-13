@@ -24,6 +24,7 @@ lib/db.ts          client Turso, schéma v2 (SCHEMA), constantes KINDS / GEOS
 lib/queries.ts     positions dérivées, allocation, avancement du mois, actions, FIRE
 lib/actions.ts     server actions (login, versement du mois, prix, action faite, liste des transactions)
 lib/yahoo.ts       cours en EUR via yahoo-finance2
+lib/prices.ts      refreshPrices(), partagé par le cron et le bouton « Actualiser les cours » de Patrimoine
 proxy.ts           garde par cookie signé (AUTH_SECRET), /login et /api/cron exclus
 scripts/migrate.mts         reprise v1 → v2, déjà exécutée le 12/10/2026, refuse de tourner deux fois
 .env.local         TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, AUTH_PASSWORD, AUTH_SECRET, CRON_SECRET (ne jamais afficher)
