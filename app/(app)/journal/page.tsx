@@ -39,9 +39,10 @@ export default async function Journal() {
           <Field label="Type"><select name="type" className="field">{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></Field>
           <Field label="Quantité"><input name="quantity" inputMode="decimal" placeholder="0 si dividende" className="field" /></Field>
           <Field label="Montant total €"><input name="amount" inputMode="decimal" placeholder="1 850" className="field" required /></Field>
+          <Field label="Dont argent frais €"><input name="fresh" inputMode="decimal" placeholder="vide = tout, 0 = réinvesti" className="field" /></Field>
           <Field label="Note"><input name="note" placeholder="Virement du 1er" className="field" /></Field>
           <div className="col-span-2 md:col-span-4 flex items-center justify-between gap-4 pt-1">
-            <label className="flex items-center gap-2 text-[13px] text-ink-2"><input type="checkbox" name="fresh" defaultChecked className="accent-[var(--accent)]" />Argent frais : l&apos;achat est un apport externe, pas un réinvestissement</label>
+            <p className="text-[12px] text-ink-3">Sur un achat, l&apos;argent frais est enregistré comme apport externe ; le reste est un réinvestissement.</p>
             <button type="submit" className="btn btn-primary">Enregistrer</button>
           </div>
         </form>

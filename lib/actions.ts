@@ -38,8 +38,9 @@ export async function addTransaction(fd: FormData) {
     sql: "INSERT INTO transactions (date, account_id, instrument_id, type, quantity, amount, note) VALUES (?,?,?,?,?,?,?)",
     args: [date, account, num(fd, "instrument_id"), type, quantity, amount, note],
   });
-  // Argent frais : l'achat est aussi un apport externe sur le compte (sinon c'est un réinvestissement).
-  if (type === "buy" && fd.get("fresh")) await contribute(date, account, amount, note);
+  // Argent frais : la part de l'achat qui vient de ta poche (vide = tout, 0 = réinvestissement pur).
+  const fresh = str(fd, "fresh") === "" ? amount : num(fd, "fresh");
+  if (type === "buy" && fresh > 0) await contribute(date, account, Math.min(fresh, amount), note);
   refresh();
 }
 

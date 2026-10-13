@@ -2,7 +2,7 @@
 
 ## 13 octobre 2026 : le « versé » devient les apports réels
 
-Décision de Léo : le versé net du cockpit mesure l'argent frais entré sur les comptes, pas les achats. Nouvelle table `contributions` (date, compte, montant). Reconstitution : PEA Léo 78 236,40 € (un seul virement, le 24/12/2018) ; Start-up Léo 30 090 € (crédits et retraits du wallet Blast, hors cagnotte offerte, plus Mint Bikes et Wheere payés hors wallet) ; autres comptes, encore en reprise v1, un apport estimé par date égal aux achats, à remplacer au fur et à mesure des exports. Total 210 543 €. Chaque versement du mois saisi dans « Ce mois » crée aussi un apport ; dans le Journal, la case « Argent frais » (cochée par défaut) fait de même.
+Décision de Léo : le versé net du cockpit mesure l'argent frais entré sur les comptes, pas les achats. Nouvelle table `contributions` (date, compte, montant). Reconstitution : PEA Léo 78 236,40 € (un seul virement, le 24/12/2018) ; Start-up Léo 30 090 € (crédits et retraits du wallet Blast, hors cagnotte offerte, plus Mint Bikes et Wheere payés hors wallet) ; autres comptes, encore en reprise v1, un apport estimé par date égal aux achats, à remplacer au fur et à mesure des exports. Total 210 543 €. Chaque versement du mois saisi dans « Ce mois » crée aussi un apport ; dans le Journal, le champ « dont argent frais » fixe la part apportée (vide = tout l'achat, 0 = réinvestissement pur, sinon le montant, par exemple 400 € d'apport sur un achat de 1 000 € dont 600 € réinvestis).
 
 ## 13 octobre 2026 : relevés espèces du PEA Léo (2018 à 2026)
 

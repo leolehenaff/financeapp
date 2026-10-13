@@ -37,7 +37,7 @@ Commence toute session par `docs/README.md`, puis la table `actions` (ou `docs/a
 - `accounts` : qui, nom, kind (PEA, CTO, PEE, AV, Livret, Crypto, Startup, Cash), date d'ouverture (horloge PEA).
 - `instruments` : nom unique, ticker Yahoo unique ou null, kind (Stock, Crypto, Start-up, Livret, Active Cash), geo (US, EU, FR, OTHER), price_source (yahoo ou manual).
 - `transactions` : date, compte, instrument, type (buy, sell, dividend), quantité, montant total en €. Les positions sont dérivées : quantité nette, coût moyen pondéré. Livrets, cash et AV : 1 unité = 1 €, les intérêts se saisissent en buy à montant 0.
-- `contributions` : apports externes par compte (date, montant, négatif pour un retrait). C'est le « versé » du cockpit : un dividende ou une vente réinvestis ne sont pas des apports. `recordFlow` en crée un à chaque versement du mois, le Journal via la case « Argent frais ».
+- `contributions` : apports externes par compte (date, montant, négatif pour un retrait). C'est le « versé » du cockpit : un dividende ou une vente réinvestis ne sont pas des apports. `recordFlow` en crée un à chaque versement du mois, le Journal via le champ « dont argent frais » (vide = tout l'achat, 0 = réinvestissement, sinon la part apportée).
 - `prices` : un prix par instrument et par jour, en €. Yahoo pour les cotés, saisie manuelle pour le reste.
 - `plan_flows` : versement mensuel cible par personne, compte et instrument (null = n'importe quel instrument du compte), avec from_month et to_month.
 - `actions` : section, titre, échéance, statut (todo, done, dropped).
