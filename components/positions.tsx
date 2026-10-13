@@ -7,7 +7,7 @@ import type { Position } from "@/lib/queries";
 type Key = "instrument" | "quantity" | "price" | "value" | "cost" | "perf" | "gain" | "tri" | "price_date";
 const COLS: [Key, string, string][] = [
   ["instrument", "Instrument", "auto"], ["quantity", "Qté", "10%"], ["price", "Prix", "10%"], ["value", "Valeur", "11%"],
-  ["cost", "Coût", "11%"], ["perf", "+/-", "8%"], ["gain", "Gain", "10%"], ["tri", "Par an", "8%"], ["price_date", "Actualisé", "11%"],
+  ["cost", "Coût", "11%"], ["perf", "+/-", "8%"], ["gain", "Gain", "10%"], ["tri", "Annualisé", "9%"], ["price_date", "Actualisé", "10%"],
 ];
 const perfOf = (p: Position) => (p.cost ? ((p.value - p.cost) / p.cost) * 100 : 0);
 const val = (p: Position, k: Key) => (k === "perf" ? perfOf(p) : k === "tri" ? p.tri ?? -Infinity : k === "instrument" ? p.instrument.toLowerCase() : p[k] ?? "");
@@ -88,9 +88,9 @@ export function Positions({ positions, closed }: { positions: Position[]; closed
           <details className="mt-6">
             <summary className="cursor-pointer text-[13px] text-ink-2 hover:text-ink inline-block">Lignes soldées, {gone.length}, gain cumulé <Delta value={Math.round(gone.reduce((t, p) => t + p.gain, 0))} suffix=" €" /></summary>
             <div className="panel overflow-x-auto mt-3">
-              <table className="tbl min-w-[640px]" style={{ tableLayout: "fixed" }}>
-                <colgroup>{["auto", "16%", "13%", "13%", "13%", "11%"].map((w, i) => <col key={i} style={{ width: w }} />)}</colgroup>
-                <thead><tr><th>Instrument</th><th className="num">Soldée le</th><th className="num">Achats</th><th className="num">Ventes et div.</th><th className="num">Gain</th><th className="num">Par an</th></tr></thead>
+              <table className="tbl min-w-[720px]" style={{ tableLayout: "fixed" }}>
+                <colgroup>{["auto", "14%", "12%", "13%", "12%", "9%", "11%"].map((w, i) => <col key={i} style={{ width: w }} />)}</colgroup>
+                <thead><tr><th>Instrument</th><th className="num">Soldée le</th><th className="num">Achats</th><th className="num">Ventes et div.</th><th className="num">Gain</th><th className="num">+/-</th><th className="num">Annualisé</th></tr></thead>
                 <tbody>
                   {gone.map((p) => (
                     <tr key={`${p.account_id}:${p.instrument_id}`}>
@@ -99,6 +99,7 @@ export function Positions({ positions, closed }: { positions: Position[]; closed
                       <td className="num text-ink-2">{eur(p.bought)}</td>
                       <td className="num text-ink-2">{eur(p.sold + p.dividends)}</td>
                       <td className="num font-medium"><Delta value={Math.round(p.gain)} suffix=" €" /></td>
+                      <td className="num">{p.bought ? <Delta value={(p.gain / p.bought) * 100} suffix=" %" /> : ""}</td>
                       <td className="num text-[13px]">{p.tri == null ? "" : <Delta value={p.tri * 100} suffix=" %" />}</td>
                     </tr>
                   ))}
