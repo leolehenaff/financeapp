@@ -9,7 +9,7 @@ docs/
   README.md          index des docs, règle d'or, snippet de lecture des positions
   strategie.md       cibles d'allocation (type, géo), principes, hypothèses de rendement
   plan-financier.md  revenus, coût de vie, phases, flux mensuels par personne, FIRE
-  actions.md         GÉNÉRÉ depuis la table actions (npm run export:actions), ne pas éditer à la main
+  actions.md         actions SANS date (à trancher, démarches, mise en place), tenues à la main ; les actions datées vivent en base
   julie-suisse.md    salaire CHF, impôt à la source, LPP, obligations déclaratives
   revues.md          checklists revue trimestrielle et annuelle
   journal.md         historique daté des décisions et de leur contexte
@@ -26,11 +26,10 @@ lib/actions.ts     server actions (login, versement du mois, prix, action, liste
 lib/yahoo.ts       cours en EUR via yahoo-finance2
 proxy.ts           garde par cookie signé (AUTH_SECRET), /login et /api/cron exclus
 scripts/migrate.mts         reprise v1 → v2, déjà exécutée le 12/10/2026, refuse de tourner deux fois
-scripts/export-actions.mts  régénère docs/actions.md
 .env.local         TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, AUTH_PASSWORD, AUTH_SECRET, CRON_SECRET (ne jamais afficher)
 ```
 
-Commence toute session par `docs/README.md`, puis la table `actions` (ou `docs/actions.md`).
+Commence toute session par `docs/README.md`, puis `docs/actions.md` (sans date) et la table `actions` (datées, snippet dans actions.md).
 
 ## Modèle de données (Turso)
 
@@ -40,20 +39,20 @@ Commence toute session par `docs/README.md`, puis la table `actions` (ou `docs/a
 - `contributions` : apports externes par compte (date, montant, négatif pour un retrait). C'est le « versé » du cockpit : un dividende ou une vente réinvestis ne sont pas des apports. `recordFlow` en crée un à chaque versement du mois ; le reste est saisi par l'agent depuis les exports mensuels (checklist dans `docs/revues.md`, relevés dans `docs/releves/AAAA-MM/`), jamais à la main dans l'app.
 - `prices` : un prix par instrument et par jour, en €. Yahoo pour les cotés, saisie manuelle pour le reste.
 - `plan_flows` : versement mensuel cible par personne, compte et instrument (null = n'importe quel instrument du compte), avec from_month et to_month.
-- `actions` : section, titre, échéance, statut (todo, done, dropped).
+- `actions` : section, titre, échéance (obligatoire), statut (todo, done, dropped). Seules les actions datées y vivent ; les autres sont dans `docs/actions.md`.
 - `allocation_objectives` et `hypotheses` : cibles d'allocation et taux de rendement, inchangées depuis la v1.
 - `snapshots` : total quotidien, alimenté par le cron.
 
 ## Sources de vérité
 
 - Les chiffres vivent dans la base. Les docs ne les recopient qu'en résumé daté.
-- Les actions vivent dans la table `actions` ; `docs/actions.md` en est l'export. Les décisions et leur raisonnement vivent dans `docs/journal.md`.
+- Les actions datées vivent dans la table `actions` (app), les actions sans date dans `docs/actions.md`, jamais les deux. Les décisions et leur raisonnement vivent dans `docs/journal.md`.
 - En cas d'écart entre un doc et la base, la base a raison sur les montants, le doc a raison sur l'intention. Signaler l'écart, ne pas corriger en silence.
 
 ## Comment travailler
 
 1. Lire la base avant tout chiffre : snippet dans `docs/README.md`, ou `getPositions()` via `npx tsx`.
-2. Toute décision validée par Léo : ligne dans `actions` (puis `npm run export:actions`), entrée datée dans `journal.md`, et répercussion dans `plan_flows`, `allocation_objectives` ou `hypotheses` si elle touche un chiffre.
+2. Toute décision validée par Léo : ligne dans `actions` si elle a une échéance, sinon dans `docs/actions.md` ; entrée datée dans `journal.md`, et répercussion dans `plan_flows`, `allocation_objectives` ou `hypotheses` si elle touche un chiffre.
 3. Un achat, une vente ou un dividende constaté : une ligne dans `transactions`. De l'argent frais versé sur un compte : une ligne dans `contributions` en plus de l'achat. Une valorisation à jour : une ligne dans `prices`. Ne jamais modifier une position autrement.
 4. Ne jamais passer d'ordre, ouvrir de compte ni déplacer d'argent : l'agent prépare, Léo exécute, puis l'agent enregistre.
 5. Les recherches de marché (cours, résultats, consensus) se datent et se sourcent. Exclure les résultats d'une autre année.

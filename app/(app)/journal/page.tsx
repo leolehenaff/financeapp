@@ -1,6 +1,6 @@
 import { addAction, completeAction, listTransactions } from "@/lib/actions";
 import { Transactions } from "@/components/transactions";
-import { dateFr } from "@/lib/format";
+import { dateFr, today } from "@/lib/format";
 import { getActions, lists } from "@/lib/queries";
 import { Check, Section } from "@/components/ui";
 import { DatePicker } from "@/components/datepicker";
@@ -30,7 +30,7 @@ export default async function Journal() {
       <Section title="Actions" aside={`${open} ouverte${open > 1 ? "s" : ""}`}>
         <form action={addAction} className="panel p-5 grid grid-cols-2 md:grid-cols-[1fr_auto_auto_auto] gap-3 items-end mb-6">
           <Field label="Nouvelle action" className="col-span-2 md:col-span-1"><input name="title" placeholder="Vendre les 88 derniers Capgemini" className="field" required /></Field>
-          <Field label="Échéance"><DatePicker name="due_date" placeholder="Sans" /></Field>
+          <Field label="Échéance"><DatePicker name="due_date" defaultValue={today()} /></Field>
           <Field label="Section"><select name="section" className="field">{sections.map((s) => <option key={s}>{s}</option>)}</select></Field>
           <button type="submit" className="btn btn-ghost">Ajouter</button>
         </form>

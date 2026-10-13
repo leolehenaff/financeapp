@@ -6,7 +6,7 @@ Documentation vivante du projet patrimonial. Les chiffres de référence vivent 
 |---|---|---|
 | [strategie.md](strategie.md) | Cibles d'allocation, principes, hypothèses de rendement | Revue annuelle (juillet) |
 | [plan-financier.md](plan-financier.md) | Revenus, coût de vie, flux mensuels, trajectoire FIRE | Revue annuelle (juillet) |
-| [actions.md](actions.md) | Généré depuis la table `actions` (`npm run export:actions`) : ventes programmées, flux, points ouverts, démarches | Chaque revue trimestrielle |
+| [actions.md](actions.md) | Actions sans date (points ouverts, démarches, mise en place), tenues à la main ; les actions datées sont en base, snippet de lecture dans le fichier | Chaque revue trimestrielle |
 | [julie-suisse.md](julie-suisse.md) | Salaire CHF, LPP, 3e pilier, obligations déclaratives | Quand la situation suisse change |
 | [revues.md](revues.md) | Checklists de la revue trimestrielle et de la revue annuelle | À chaque revue |
 | [journal.md](journal.md) | Historique des changements de stratégie, un paragraphe par date | Ajouter à chaque décision |
@@ -25,4 +25,4 @@ import { getPositions } from "./lib/queries";
 getPositions().then(p => console.table(p.map(x => ({ qui: x.owner, compte: x.account, instr: x.instrument, valeur: Math.round(x.value), cout: Math.round(x.cost) }))));'
 ```
 
-Un versement, une vente, un dividende : une ligne dans `transactions` (via l'écran Journal ou SQL). Une valorisation manuelle (start-up, PEE, AV) : une ligne dans `prices`.
+Un versement, une vente, un dividende : une ligne dans `transactions` (saisie par l'agent depuis les exports mensuels). Une valorisation manuelle (start-up, PEE, AV) : une ligne dans `prices`.

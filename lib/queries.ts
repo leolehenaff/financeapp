@@ -100,7 +100,7 @@ export type Action = { id: number; section: string; title: string; due_date: str
 
 export async function getActions(): Promise<Action[]> {
   const r = await db.execute(
-    "SELECT id, section, title, due_date, status, done_on FROM actions ORDER BY due_date IS NULL, due_date, id");
+    "SELECT id, section, title, due_date, status, done_on FROM actions WHERE due_date IS NOT NULL ORDER BY due_date, id");
   return r.rows as unknown as Action[];
 }
 

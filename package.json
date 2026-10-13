@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "migrate": "tsx scripts/migrate.mts",
-    "export:actions": "tsx scripts/export-actions.mts"
+    "migrate": "tsx scripts/migrate.mts"
   },
   "dependencies": {
     "@libsql/client": "^0.17.0",

@@ -61,10 +61,10 @@ export async function completeAction(id: number) {
 
 export async function addAction(fd: FormData) {
   const title = str(fd, "title");
-  if (!title) throw new Error("Titre requis");
+  if (!title || !str(fd, "due_date")) throw new Error("Titre et échéance requis : une action sans date va dans docs/actions.md");
   await db.execute({
     sql: "INSERT INTO actions (section, title, due_date) VALUES (?,?,?)",
-    args: [str(fd, "section") || "Points ouverts (à trancher)", title, str(fd, "due_date") || null],
+    args: [str(fd, "section") || "Calendrier des ventes et achats", title, str(fd, "due_date")],
   });
   refresh();
 }
