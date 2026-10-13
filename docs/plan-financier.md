@@ -74,3 +74,4 @@ Virements automatiques au 1er du mois, avant toute dépense. Ces flux sont la ta
 - Anciens repères (juillet 2026) : 680 k€ et 1,4 M€, calculés sans enfant et en nominal. Abandonnés le 12/10/2026 car trop optimistes.
 - La maison est exclue du calcul : sa valeur sert d'apport pour la maison définitive.
 - Capital au 12/10/2026 : 272 482 €, coût d'achat 240 826 €.
+- Axe d'amélioration (noté le 13/10/2026, pas fait) : seuils nets de fiscalité. La taxe porte sur la part de gain des retraits (17,2 % PEA, 30 % CTO et crypto), soit environ 11 % de frottement sur un portefeuille moitié gain : seuil complet vers 1,70 M€ au lieu de 1,53 M€, 1 à 2 ans de plus. À activer quand Léo le demande.
