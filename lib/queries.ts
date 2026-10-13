@@ -98,10 +98,10 @@ export const stale = (positions: Position[]) =>
   positions.filter((p) => p.price_source === "manual" && p.kind !== "Livret"
     && (!p.price_date || p.price_date < addDays(today(), p.kind === "Start-up" ? -365 : -90)));
 
-/** Date du premier apport externe, point de départ de l'annualisation en mode Max. */
-export async function getFirstContribution() {
-  const r = await db.execute("SELECT MIN(date) d FROM contributions");
-  return String(r.rows[0]?.d ?? today());
+/** Tous les apports externes datés, pour le TRI du graphique. */
+export async function getContributions() {
+  const r = await db.execute("SELECT date, amount FROM contributions ORDER BY date");
+  return r.rows.map((x) => ({ date: String(x.date), amount: Number(x.amount) }));
 }
 
 /** Tout l'historique : valeur, et versé net (coût d'achat) depuis les snapshots v2 seulement.

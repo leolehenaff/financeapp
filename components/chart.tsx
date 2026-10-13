@@ -7,8 +7,19 @@ type Point = { date: string; value: number; cost: number };
 const RANGES: [string, number][] = [["1 m", 30], ["3 m", 91], ["6 m", 182], ["1 an", 365], ["Max", 0]];
 
 /** Trois KPI de la période (variation nette des versements, performance, versé), sélecteur de période, puis la courbe. */
-/** `start` : date du premier apport, base du calcul annualisé en mode Max. */
-export function Chart({ points: all, start }: { points: Point[]; start: string }) {
+type Flow = { date: string; amount: number };
+
+/** Taux de rendement interne annuel (bissection) : flux datés, valeur de départ et valeur finale. */
+function irr(flows: Flow[]) {
+  const t0 = Date.parse(flows[0].date), yr = 31557600000;
+  const npv = (r: number) => flows.reduce((s, f) => s + f.amount / Math.pow(1 + r, (Date.parse(f.date) - t0) / yr), 0);
+  let lo = -0.99, hi = 10;
+  for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (npv(m) > 0) lo = m; else hi = m; }
+  return (lo + hi) / 2;
+}
+
+/** `flows` : tous les apports externes datés, pour le TRI (en Max, ils remplacent la valeur de départ). */
+export function Chart({ points: all, flows }: { points: Point[]; flows: Flow[] }) {
   const [days, setDays] = useState(365);
   const points = days ? all.filter((p) => p.date >= addDays(today(), -days)) : all;
   const first = points[0], last = points.at(-1);
@@ -19,9 +30,16 @@ export function Chart({ points: all, start }: { points: Point[]; start: string }
   const engaged = base.value + paid;
   const since = days && first ? `depuis le ${dateFr(first.date)}` : "depuis le début";
   // Annualisé sur la durée réelle couverte : du premier point (ou du premier apport en Max) au dernier.
-  const span = last ? Math.max(1, (Date.parse(last.date) - Date.parse(days && first ? first.date : start)) / 864e5) : 1;
+  const from = days && first ? first.date : flows[0]?.date ?? today();
+  const span = last ? Math.max(1, (Date.parse(last.date) - Date.parse(from)) / 864e5) : 1;
   const perYear = 365 / span;
   const pctNet = engaged ? net / engaged : 0;
+  // TRI : argent sorti de la poche (négatif) aux vraies dates, valeur finale en face. Hors Max, la valeur de départ est le premier flux.
+  const tri = first && last ? irr([
+    ...(days ? [{ date: first.date, amount: -first.value }] : []),
+    ...flows.filter((f) => (days ? f.date > first.date : true) && f.date <= last.date).map((f) => ({ ...f, amount: -f.amount })),
+    { date: last.date, amount: last.value },
+  ]) : 0;
   const annual = (n: number) => `${n > 0 ? "+" : n < 0 ? "−" : ""}${eur(Math.round(Math.abs(n)))} par an`;
   return (
     <div>
@@ -36,7 +54,7 @@ export function Chart({ points: all, start }: { points: Point[]; start: string }
       <dl className="grid grid-cols-3 gap-3 mt-3">
         {[
           ["Variation nette", <Delta key="n" value={Math.round(net)} suffix=" €" />, `hors versements, ${annual(net * perYear)}`],
-          ["Performance", <Delta key="p" value={pctNet * 100} suffix=" %" />, `${(pctNet > -1 ? (Math.pow(1 + pctNet, perYear) - 1) * 100 : -100).toLocaleString("fr-FR", { maximumFractionDigits: 1, signDisplay: "exceptZero" })} % par an`],
+          ["Performance", <Delta key="p" value={pctNet * 100} suffix=" %" />, `TRI ${(tri * 100).toLocaleString("fr-FR", { maximumFractionDigits: 1, signDisplay: "exceptZero" })} % par an`],
           ["Versé", <span key="v" className="tnum">{eur(Math.round(paid))}</span>, `${since}, ${eur(Math.round(paid * perYear))} par an`],
         ].map(([l, v, sub]) => (
           <div key={String(l)} className="panel px-3 py-2.5 sm:px-4 sm:py-3 min-w-0">
