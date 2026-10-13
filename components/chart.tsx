@@ -126,14 +126,15 @@ function Bars({ ledger, plan, from, byYear }: { ledger: Move[]; plan: Plan[]; fr
   );
 }
 
-/** Gain : patrimoine (trait plein) et versé cumulé (pointillé), en valeurs absolues. */
+/** Gain : patrimoine moins versé cumulé, en euros, autour de zéro. */
 function Gain({ points }: { points: Point[] }) {
   const [i, setI] = useState<number | null>(null);
   if (points.length < 2) return <p className="text-[14px] text-ink-2 mt-3">Pas assez d&apos;historique sur cette période.</p>;
-  const W = 600, H = 160, lo = 0, hi = Math.max(...points.map((p) => p.value)), pad = hi * 0.04 || 1;
-  const y = (n: number) => H - ((n - lo) / (hi - lo + pad)) * H;
+  const g = points.map((p) => p.value - p.cost);
+  const W = 600, H = 160, lo = Math.min(0, ...g), hi = Math.max(0, ...g), pad = (hi - lo) * 0.06 || 1;
+  const y = (n: number) => H - ((n - lo + pad) / (hi - lo + 2 * pad)) * H;
   const x = (k: number) => (k / (points.length - 1)) * W;
-  const line = points.map((p, k) => `${x(k)},${y(p.value)}`).join(" "), paid = points.map((p, k) => `${x(k)},${y(p.cost)}`).join(" ");
+  const line = g.map((v, k) => `${x(k)},${y(v)}`).join(" "), z = y(0);
   const pick = (e: React.PointerEvent<HTMLDivElement>) => { const r = e.currentTarget.getBoundingClientRect(); setI(Math.round(((e.clientX - r.left) / r.width) * (points.length - 1))); };
   const k = i == null ? null : Math.max(0, Math.min(points.length - 1, i));
   const left = k == null ? 0 : (k / (points.length - 1)) * 100;
@@ -143,13 +144,18 @@ function Gain({ points }: { points: Point[] }) {
   const tickLabel = (m: string) => yearly ? m.slice(0, 4) : new Date(`${m}-15`).toLocaleDateString("fr-FR", { month: "short", year: "2-digit" });
   return (
     <div className="relative mt-4 touch-pan-y select-none" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setI(null)}>
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40 block" preserveAspectRatio="none" role="img" aria-label="Patrimoine et versé cumulé">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40 block" preserveAspectRatio="none" role="img" aria-label="Gain, patrimoine moins versé cumulé">
         {shown.map((t) => <line key={t.m} x1={x(t.j)} x2={x(t.j)} y1="0" y2={H} stroke="var(--line)" strokeWidth="1" vectorEffect="non-scaling-stroke" />)}
-        {/* Deux couches : le versé en teinte accent, le gain en vert par-dessus. */}
-        <polygon points={`0,${H} ${paid} ${W},${H}`} fill="var(--accent)" opacity="0.14" />
-        <polygon points={`${line} ${paid.split(" ").reverse().join(" ")}`} fill="var(--up)" opacity="0.22" />
-        <polyline points={paid} fill="none" stroke="var(--ink-3)" strokeWidth="1" strokeDasharray="4 4" vectorEffect="non-scaling-stroke" />
-        <polyline points={line} fill="none" stroke="var(--accent)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+        {/* Aire verte au-dessus de zéro, rouge en dessous : deux clips sur la même surface. */}
+        <defs>
+          <clipPath id="gain-up"><rect x="0" y="0" width={W} height={z} /></clipPath>
+          <clipPath id="gain-down"><rect x="0" y={z} width={W} height={H - z} /></clipPath>
+        </defs>
+        <polygon points={`0,${z} ${line} ${W},${z}`} fill="var(--up)" opacity="0.22" clipPath="url(#gain-up)" />
+        <polygon points={`0,${z} ${line} ${W},${z}`} fill="var(--down)" opacity="0.22" clipPath="url(#gain-down)" />
+        <line x1="0" x2={W} y1={z} y2={z} stroke="var(--ink-3)" strokeWidth="1" strokeDasharray="4 4" vectorEffect="non-scaling-stroke" />
+        <polyline points={line} fill="none" stroke="var(--up)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" clipPath="url(#gain-up)" />
+        <polyline points={line} fill="none" stroke="var(--down)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" clipPath="url(#gain-down)" />
         {k != null && <line x1={x(k)} x2={x(k)} y1="0" y2={H} stroke="var(--ink)" strokeWidth="1" vectorEffect="non-scaling-stroke" />}
       </svg>
       <div className="relative h-4 text-[11px] text-ink-3 tnum">
@@ -158,11 +164,10 @@ function Gain({ points }: { points: Point[] }) {
       {k != null && (
         <div className="absolute top-0 pointer-events-none panel px-2.5 py-1.5 text-[12px] whitespace-nowrap" style={{ left: `${left}%`, transform: `translateX(${left > 70 ? "calc(-100% - 8px)" : "8px"})` }}>
           <div className="text-ink-3">{dateFr(points[k].date)}</div>
-          <div className="font-semibold tnum">{eur(points[k].value)}</div>
-          <div className="text-ink-2 tnum">versé {eur(points[k].cost)}, gain <Delta value={Math.round(points[k].value - points[k].cost)} suffix=" €" /></div>
+          <div className="font-semibold tnum"><Delta value={Math.round(g[k])} suffix=" €" /></div>
+          <div className="text-ink-2 tnum">{eur(points[k].value)} pour {eur(points[k].cost)} versés</div>
         </div>
       )}
-      <p className="flex gap-5 text-[12px] text-ink-3 mt-2"><span><span className="inline-block w-4 border-t-[1.5px] align-middle mr-1.5" style={{ borderTopColor: "var(--accent)" }} />Patrimoine</span><span><span className="inline-block w-4 border-t border-dashed border-ink-3 align-middle mr-1.5" />Versé cumulé</span><span className="flex items-center gap-1.5"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: "var(--up)", opacity: 0.5 }} />Gain</span></p>
     </div>
   );
 }
