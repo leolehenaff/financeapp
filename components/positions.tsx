@@ -72,7 +72,9 @@ export function Positions({ positions }: { positions: Position[] }) {
                     <td className="num font-medium">{eur(p.value)}</td>
                     <td className="num text-ink-2">{eur(p.cost)}</td>
                     <td className="num">{p.cost ? <Delta value={perfOf(p)} suffix=" %" /> : ""}</td>
-                    <td className="num text-[13px]" title="Taux de rendement interne annuel, achats, ventes et dividendes datés">{p.tri == null ? "" : <Delta value={p.tri * 100} suffix=" %" />}</td>
+                    <td className="num text-[13px]">{p.tri == null ? "" : (p.sold || p.dividends)
+                      ? <span className="tip tip-right" tabIndex={0} data-tip={`Taux annuel sur tout l'historique de la ligne : achats, ${p.sold ? `${eur(p.sold)} de ventes, ` : ""}${p.dividends ? `${eur(p.dividends)} de dividendes, ` : ""}valeur actuelle. Le +/- ne voit que les titres restants.`}><Delta value={p.tri * 100} suffix=" %" /></span>
+                      : <Delta value={p.tri * 100} suffix=" %" />}</td>
                     <td className="num text-ink-3 text-[12px]" title={dateFr(p.price_date)}>{ago(p.price_date)}</td>
                   </tr>
                 ))}

@@ -5,7 +5,7 @@ export type Position = {
   account_id: number; account: string; owner: string; account_kind: string;
   instrument_id: number; instrument: string; ticker: string | null; kind: string; geo: string | null;
   price_source: string; quantity: number; cost: number; price: number | null; price_date: string | null;
-  value: number; dividends: number; tri: number | null;
+  value: number; dividends: number; sold: number; tri: number | null;
 };
 
 /** Positions dérivées des transactions (coût moyen pondéré), dernier prix connu. */
@@ -16,7 +16,8 @@ export async function getPositions(): Promise<Position[]> {
         SUM(CASE type WHEN 'buy' THEN quantity WHEN 'sell' THEN -quantity ELSE 0 END) AS quantity,
         SUM(CASE type WHEN 'buy' THEN amount ELSE 0 END) AS bought,
         SUM(CASE type WHEN 'buy' THEN quantity ELSE 0 END) AS bought_qty,
-        SUM(CASE type WHEN 'dividend' THEN amount ELSE 0 END) AS dividends
+        SUM(CASE type WHEN 'dividend' THEN amount ELSE 0 END) AS dividends,
+        SUM(CASE type WHEN 'sell' THEN amount ELSE 0 END) AS sold
       FROM transactions GROUP BY 1, 2),
     lp AS (
       SELECT instrument_id, price, date FROM prices p
@@ -25,7 +26,7 @@ export async function getPositions(): Promise<Position[]> {
       i.id instrument_id, i.name instrument, i.ticker, i.kind, i.geo, i.price_source,
       agg.quantity,
       CASE WHEN agg.bought_qty > 0 THEN agg.bought / agg.bought_qty * agg.quantity ELSE 0 END AS cost,
-      lp.price, lp.date price_date, agg.quantity * COALESCE(lp.price, 0) AS value, agg.dividends
+      lp.price, lp.date price_date, agg.quantity * COALESCE(lp.price, 0) AS value, agg.dividends, agg.sold
     FROM agg
     JOIN accounts a ON a.id = agg.account_id
     JOIN instruments i ON i.id = agg.instrument_id
