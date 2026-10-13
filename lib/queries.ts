@@ -95,7 +95,7 @@ export const dueSoon = (actions: Action[], days = 30) => {
 
 /** Valorisation périmée : manuelle et plus vieille que 90 jours (un an pour les start-up, jamais pour les livrets). */
 export const stale = (positions: Position[]) =>
-  positions.filter((p) => p.price_source === "manual" && p.kind !== "Livret"
+  positions.filter((p) => p.price_source === "manual" && !["Livret", "Active Cash"].includes(p.kind)
     && (!p.price_date || p.price_date < addDays(today(), p.kind === "Start-up" ? -365 : -90)));
 
 /** Tous les apports externes datés, pour le TRI du graphique. */
