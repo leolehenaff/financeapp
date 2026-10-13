@@ -50,7 +50,7 @@ export default async function Patrimoine() {
       <Chart points={live} flows={contributions} ledger={ledger} plan={plan} />
 
       <div className="grid md:grid-cols-2 gap-x-10">
-        <Section title="Par poche" aside="start-up au coût d'achat"><Targets rows={alloc.type} byPocket /></Section>
+        <Section title="Par poche"><Targets rows={alloc.type} byPocket /></Section>
         <Section title="Actions par zone" aside="poche actions seule"><Targets rows={alloc.geo} byPocket={false} /></Section>
       </div>
       <p className="text-[12px] text-ink-3 mt-3">Le trait noir est la cible. Un écart positif veut dire « sous la cible » : c&apos;est là que vont les prochains versements.</p>
