@@ -63,6 +63,8 @@ function Curve({ points }: { points: Point[] }) {
   return (
     <div className="relative mt-4 touch-pan-y select-none" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setI(null)}>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-32 block" preserveAspectRatio="none" role="img" aria-label="Valeur et montant versé sur la période">
+        {/* Deux couches empilées : le versé (teinte légère) puis la plus-value par-dessus, pas de trou couleur de page. */}
+        <polygon points={`0,${H} ${cost.join(" ")} ${W},${H}`} fill="var(--c-stock)" opacity="0.07" />
         <polygon points={[...value, ...[...cost].reverse()].join(" ")} fill="var(--c-stock)" opacity="0.2" />
         <polyline points={cost.join(" ")} fill="none" stroke="var(--ink-3)" strokeWidth="1" strokeDasharray="4 4" vectorEffect="non-scaling-stroke" />
         <polyline points={value.join(" ")} fill="none" stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
