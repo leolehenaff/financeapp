@@ -16,13 +16,13 @@ docs/
 PRODUCT.md         contexte produit pour le design (registre, usages, personnalité, anti-références)
 DESIGN.md          design system « Carnet de bord » : tokens, typographie, composants, règles. À lire avant tout écran
 components/ui.tsx  primitives (Section, Bar, Delta, Dot, Check, Empty) et couleurs par poche (POCKET)
-app/(app)/page.tsx            écran « Ce mois » : versements vs plan, calendrier des actions datées (liste, ajout), écart aux cibles, valorisations périmées
+app/(app)/page.tsx            écran « Ce mois » : versements vs plan, calendrier des actions datées, écart aux cibles, valorisations périmées
 app/(app)/patrimoine/page.tsx positions par personne et compte, historique, trajectoire FIRE
 app/(app)/journal/page.tsx    liste filtrée et paginée des transactions
 app/api/cron/*                refresh-prices (Yahoo, jours ouvrés 18h UTC), create-snapshot (minuit)
 lib/db.ts          client Turso, schéma v2 (SCHEMA), constantes KINDS / GEOS
 lib/queries.ts     positions dérivées, allocation, avancement du mois, actions, FIRE
-lib/actions.ts     server actions (login, versement du mois, prix, action, liste des transactions)
+lib/actions.ts     server actions (login, versement du mois, prix, action faite, liste des transactions)
 lib/yahoo.ts       cours en EUR via yahoo-finance2
 proxy.ts           garde par cookie signé (AUTH_SECRET), /login et /api/cron exclus
 scripts/migrate.mts         reprise v1 → v2, déjà exécutée le 12/10/2026, refuse de tourner deux fois

@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { addAction, completeAction, recordFlow, setPrice } from "@/lib/actions";
-import { DatePicker } from "@/components/datepicker";
+import { completeAction, recordFlow, setPrice } from "@/lib/actions";
 import { dateFr, eur, monthLabel, pct, today } from "@/lib/format";
 import { dueSoon, getActions, getAllocation, getMonthProgress, getPositions, stale, type AllocRow, type Position } from "@/lib/queries";
 import { Bar, Check, Delta, Dot, Empty, Section, pocket } from "@/components/ui";
@@ -147,12 +146,6 @@ export default async function ThisMonth() {
             ))}
           </ul>
         )}
-        <form action={addAction} className="mt-4 flex flex-wrap gap-2 items-end">
-          <label className="flex flex-col gap-1 text-[12px] text-ink-2 flex-1 basis-64">Nouvelle action<input name="title" placeholder="Vendre les 88 derniers Capgemini" className="field" required /></label>
-          <label className="flex flex-col gap-1 text-[12px] text-ink-2">Échéance<DatePicker name="due_date" defaultValue={day} className="w-40" /></label>
-          <button type="submit" className="btn btn-ghost">Ajouter</button>
-        </form>
-        <p className="text-[12px] text-ink-3 mt-2">Seules les actions datées vivent ici. Les points à trancher et les démarches sont dans docs/actions.md.</p>
       </Section>
 
       <div className="grid md:grid-cols-2 gap-x-10">
