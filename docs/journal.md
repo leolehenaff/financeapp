@@ -77,3 +77,11 @@ Une fois tous les comptes réimportés (PEA, Nexo, Bitstack, cold wallet, Trade 
 ## 13 octobre 2026 : le graphique Patrimoine passe de la courbe de valeur aux mouvements par période
 
 Décision de Léo : la courbe valeur contre versé net n'apportait rien de plus que les trois KPI. Elle est remplacée par des barres par mois (par an en Max) tirées du journal : versé (apports nets), investi (achats payés), revendu (ventes) et dividendes. Les intérêts saisis en achat à 0 (livrets, Nexo) n'y figurent pas, les transferts internes (Bitstack vers cold wallet) apparaissent à la fois en revendu et en investi. Le tableau des positions gagne une recherche, des filtres par poche et par personne, les colonnes Gain (valeur plus ventes et dividendes moins achats) et Annualisé (TRI par ligne), et un bloc replié des lignes soldées.
+
+## 13 octobre 2026 : première clôture mensuelle par le skill `/mois`
+
+Apports constatés contre plan : septembre 500 € Léo et 999 € Julie (1 850 € chacun attendus), octobre 500 € Léo et 0 € Julie au 13. Les virements automatiques ne sont pas encore en place (voir `actions.md`). Répartition posée pour octobre, calculée au prorata des écarts géo hors France (US 28 % contre 50, EU 7 % contre 20, Autres 6 % contre 15) : Léo PEA 1 350 € en S&P 500 650, STOXX 600 400, EM Asia 300, plus DCA Bitstack 250 € ; Julie 1 850 € MSCI World. Deux rappels ajoutés : relevé PEE CIC Julie (valorisation du 4 mai) et transfert Bitstack vers le cold wallet (dernier le 28 octobre 2025, cadence 6 mois). Ticket start-up : prochain dû fin novembre (dernier le 24 juillet). Livrets à 14 % : pas de recharge ce mois.
+
+## 13 octobre 2026 : répartition PEA recalculée chaque mois, skills `/mois` et `/trimestre`, récap par mail
+
+Décision de Léo : les 1 350 € mensuels du PEA se répartissent chaque 1er au prorata des écarts géo positifs hors France (arrondi à 50 €), et non plus selon le 800/300/250 fixe, qui reste la valeur indicative de `plan-financier.md`. Deux skills Claude Code portent les rituels : `/mois` (clôture, actions de versement) et `/trimestre` (checklist de `revues.md`, recherche sur chaque titre vif, ventes sur catalyseur validées ligne par ligne). Chacun termine par un mail de récap envoyé via Resend à Léo et Julie, expéditeur « Remco - Le CGP de Julie & Léo ».

@@ -1,6 +1,6 @@
 # Revues
 
-## Clôture mensuelle (10 minutes, le 1er du mois)
+## Clôture mensuelle (10 minutes, le 1er du mois) : skill `/mois`
 
 Léo dépose les exports dans `docs/releves/AAAA-MM/` puis dit « saisis <mois> ». L'agent propose un tableau de ce qu'il va écrire (transactions, apports, prix), Léo valide, l'agent écrit en base et met à jour le journal. Le formulaire du Journal reste pour une opération isolée.
 
@@ -21,7 +21,7 @@ Seulement s'il y a eu un mouvement (versement, retrait, intérêts annuels) :
 
 Pas besoin d'export pour les cours : Yahoo les met à jour chaque jour ouvré. Les valorisations manuelles (start-up, AV, PEE) se corrigent dans « Ce mois » dès qu'un chiffre est connu.
 
-## Revue trimestrielle (20 minutes), janvier, avril, juillet, octobre
+## Revue trimestrielle (20 minutes), janvier, avril, juillet, octobre : skill `/trimestre`
 
 1. Ouvrir l'app, page allocation : noter l'écart à chaque cible type et géo.
 2. Vérifier que les virements automatiques sont passés (coût d'achat cumulé en hausse de ≈3 700 € par mois dans les snapshots).

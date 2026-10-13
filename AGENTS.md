@@ -26,8 +26,12 @@ lib/actions.ts     server actions (login, versement du mois, prix, action faite,
 lib/yahoo.ts       cours en EUR via yahoo-finance2
 lib/prices.ts      refreshPrices(), partagé par le cron et le bouton « Actualiser les cours » de Patrimoine
 proxy.ts           garde par cookie signé (AUTH_SECRET), /login et /api/cron exclus
+scripts/etat.mts            état du portefeuille pour les skills (npm run etat) : écarts, apports, répartition PEA, échéances, titres vifs
+scripts/mail.mts            récap des skills par mail via Resend (npm run mail -- "Sujet" < recap.md), env RESEND_API_KEY, MAIL_FROM, MAIL_TO
 scripts/migrate.mts         reprise v1 → v2, déjà exécutée le 12/10/2026, refuse de tourner deux fois
-.env.local         TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, AUTH_PASSWORD, AUTH_SECRET, CRON_SECRET (ne jamais afficher)
+.claude/skills/mois         /mois : clôture du 1er du mois, pose les actions de versement
+.claude/skills/trimestre    /trimestre : revue trimestrielle, recherche sur les titres vifs, ventes sur catalyseur
+.env.local         TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, AUTH_PASSWORD, AUTH_SECRET, CRON_SECRET, RESEND_API_KEY, MAIL_FROM, MAIL_TO (ne jamais afficher)
 ```
 
 Commence toute session par `docs/README.md`, puis `docs/actions.md` (sans date) et la table `actions` (datées, snippet dans actions.md).
