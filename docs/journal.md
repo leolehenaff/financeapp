@@ -2,7 +2,7 @@
 
 ## 13 octobre 2026 : historique réel du Livret A Léo (juin 2018 à janvier 2026)
 
-Huit relevés annuels Banque Populaire fournis par Léo. La ligne « Reprise v1 » (16 445 € pour 15 945 € de coût) est remplacée par 17 lignes : versements et retraits regroupés en une ligne nette par an, datée du dernier mouvement de l'année (apports nets 15 479 €, détail des montants versés et retirés dans la note), intérêts annuels au 31/12 en achat à 0 € (1 817 € cumulés de 2018 à 2025). Chaque solde annuel du relevé a été vérifié au centime contre le cumul, ouverture le 21/06/2018. Solde au 02/01/2026 : 17 295,96 €. La base indiquait 16 445 € : une ligne d'ajustement de retrait de 850,96 € datée du 17/01/2026 comble l'écart en attendant le détail des opérations 2026.
+Huit relevés annuels Banque Populaire fournis par Léo. La ligne « Reprise v1 » (16 445 € pour 15 945 € de coût) est remplacée par 17 lignes : versements et retraits regroupés en une ligne nette par an, datée du dernier mouvement de l'année (apports nets 15 479 €, détail des montants versés et retirés dans la note), intérêts annuels au 31/12 en achat à 0 € (1 817 € cumulés de 2018 à 2025). Chaque solde annuel du relevé a été vérifié au centime contre le cumul, ouverture le 21/06/2018. Solde au 02/01/2026 : 17 295,96 €. Opérations 2026 d'après le relevé en ligne : 750 € versés (trois fois 250 €), 2 250 € retirés (cinq virements), solde 15 795,96 € au 13/10/2026 ; la reprise v1 disait 16 445 €, elle était fausse de 649 €.
 
 ## 13 octobre 2026 : historique réel du PEA Trade Republic Julie (février 2025 à septembre 2026)
 
