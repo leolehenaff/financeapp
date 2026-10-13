@@ -34,7 +34,8 @@ export function Chart({ points: all, flows, ledger, plan }: { points: Point[]; f
   ]) : 0;
   const annual = (n: number) => `${n > 0 ? "+" : n < 0 ? "−" : ""}${eur(Math.round(Math.abs(n)))} par an`;
   return (
-    <div>
+    // Appui long sur mobile : ni sélection de texte ni menu contextuel, le doigt sert à lire le graphique.
+    <div className="select-none [-webkit-touch-callout:none]" onContextMenu={(e) => e.preventDefault()}>
       <div className="flex justify-between items-center mt-3 gap-3">
         <div className="flex gap-0.5 p-0.5 rounded-full bg-surface-2 text-[12px]" role="tablist" aria-label="Vue">
           {([["rythme", "Rythme"], ["gain", "Gain"]] as const).map(([v, l]) => (
@@ -91,14 +92,15 @@ function Bars({ ledger, plan, from, byYear }: { ledger: Move[]; plan: Plan[]; fr
   const y = (v: number) => H - (v / max) * H;
   const label = (k: string) => (byYear ? k : `${k.slice(5)}/${k.slice(2, 4)}`);
   const p = i == null ? null : rows[i];
+  const pick = (e: React.PointerEvent<HTMLDivElement>) => { const b = e.currentTarget.getBoundingClientRect(); setI(Math.max(0, Math.min(rows.length - 1, Math.floor(((e.clientX - b.left) / b.width) * rows.length)))); };
   return (
     <div className="mt-4">
-      <div className="relative select-none" onPointerLeave={() => setI(null)}>
+      <div className="relative touch-pan-y" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setI(null)}>
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40 block" preserveAspectRatio="none" role="img" aria-label="Versements par période">
           {rows.map(([k, b], r) => {
             const x = r * slot + (slot - bw) / 2, t = target(k);
             return (
-              <g key={k} onPointerEnter={() => setI(r)} onPointerDown={() => setI(r)}>
+              <g key={k}>
                 <rect x={r * slot} y={0} width={slot} height={H} fill={i === r ? "var(--surface-2)" : "transparent"} />
                 {b.paid > 0 && <rect x={x} y={y(b.paid)} width={bw} height={H - y(b.paid)} fill="var(--accent)" />}
                 {b.paid < 0 && <rect x={x} y={H - 2} width={bw} height={2} fill="var(--down)" />}
@@ -144,7 +146,7 @@ function Gain({ points }: { points: Point[] }) {
   const yearly = ticks.length > 14, shown = yearly ? ticks.filter((t) => t.m.endsWith("-01")) : ticks;
   const tickLabel = (m: string) => yearly ? m.slice(0, 4) : new Date(`${m}-15`).toLocaleDateString("fr-FR", { month: "short", year: "2-digit" });
   return (
-    <div className="relative mt-4 touch-pan-y select-none" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setI(null)}>
+    <div className="relative mt-4 touch-pan-y" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setI(null)}>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40 block" preserveAspectRatio="none" role="img" aria-label="Gain, patrimoine moins versé cumulé">
         {shown.map((t) => <line key={t.m} x1={x(t.j)} x2={x(t.j)} y1="0" y2={H} stroke="var(--line)" strokeWidth="1" vectorEffect="non-scaling-stroke" />)}
         {/* Aire verte au-dessus de zéro, rouge en dessous : deux clips sur la même surface. */}
