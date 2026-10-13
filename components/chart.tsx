@@ -130,8 +130,8 @@ function Bars({ ledger, plan, from, byYear }: { ledger: Move[]; plan: Plan[]; fr
 function Gain({ points }: { points: Point[] }) {
   const [i, setI] = useState<number | null>(null);
   if (points.length < 2) return <p className="text-[14px] text-ink-2 mt-3">Pas assez d&apos;historique sur cette période.</p>;
-  const W = 600, H = 160, all = points.flatMap((p) => [p.value, p.cost]), lo = Math.min(...all), hi = Math.max(...all), pad = (hi - lo) * 0.08 || 1;
-  const y = (n: number) => H - ((n - (lo - pad)) / (hi - lo + 2 * pad)) * H;
+  const W = 600, H = 160, lo = 0, hi = Math.max(...points.map((p) => p.value)), pad = hi * 0.04 || 1;
+  const y = (n: number) => H - ((n - lo) / (hi - lo + pad)) * H;
   const x = (k: number) => (k / (points.length - 1)) * W;
   const line = points.map((p, k) => `${x(k)},${y(p.value)}`).join(" "), paid = points.map((p, k) => `${x(k)},${y(p.cost)}`).join(" ");
   const pick = (e: React.PointerEvent<HTMLDivElement>) => { const r = e.currentTarget.getBoundingClientRect(); setI(Math.round(((e.clientX - r.left) / r.width) * (points.length - 1))); };
@@ -140,10 +140,12 @@ function Gain({ points }: { points: Point[] }) {
   return (
     <div className="relative mt-4 touch-pan-y select-none" onPointerMove={pick} onPointerDown={pick} onPointerLeave={() => setI(null)}>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-40 block" preserveAspectRatio="none" role="img" aria-label="Patrimoine et versé cumulé">
-        <polygon points={`${line} ${paid.split(" ").reverse().join(" ")}`} fill="var(--up)" opacity="0.15" />
+        {/* Deux couches : le versé en teinte accent, le gain en vert par-dessus. */}
+        <polygon points={`0,${H} ${paid} ${W},${H}`} fill="var(--accent)" opacity="0.14" />
+        <polygon points={`${line} ${paid.split(" ").reverse().join(" ")}`} fill="var(--up)" opacity="0.22" />
         <polyline points={paid} fill="none" stroke="var(--ink-3)" strokeWidth="1" strokeDasharray="4 4" vectorEffect="non-scaling-stroke" />
-        <polyline points={line} fill="none" stroke="var(--ink)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-        {k != null && <line x1={x(k)} x2={x(k)} y1="0" y2={H} stroke="var(--accent)" strokeWidth="1" vectorEffect="non-scaling-stroke" />}
+        <polyline points={line} fill="none" stroke="var(--accent)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+        {k != null && <line x1={x(k)} x2={x(k)} y1="0" y2={H} stroke="var(--ink)" strokeWidth="1" vectorEffect="non-scaling-stroke" />}
       </svg>
       {k != null && (
         <div className="absolute top-0 pointer-events-none panel px-2.5 py-1.5 text-[12px] whitespace-nowrap" style={{ left: `${left}%`, transform: `translateX(${left > 70 ? "calc(-100% - 8px)" : "8px"})` }}>
@@ -152,7 +154,7 @@ function Gain({ points }: { points: Point[] }) {
           <div className="text-ink-2 tnum">versé {eur(points[k].cost)}, gain <Delta value={Math.round(points[k].value - points[k].cost)} suffix=" €" /></div>
         </div>
       )}
-      <p className="flex gap-5 text-[12px] text-ink-3 mt-2"><span><span className="inline-block w-4 border-t-[1.5px] border-ink align-middle mr-1.5" />Patrimoine</span><span><span className="inline-block w-4 border-t border-dashed border-ink-3 align-middle mr-1.5" />Versé cumulé</span></p>
+      <p className="flex gap-5 text-[12px] text-ink-3 mt-2"><span><span className="inline-block w-4 border-t-[1.5px] align-middle mr-1.5" style={{ borderTopColor: "var(--accent)" }} />Patrimoine</span><span><span className="inline-block w-4 border-t border-dashed border-ink-3 align-middle mr-1.5" />Versé cumulé</span><span className="flex items-center gap-1.5"><span className="inline-block w-2.5 h-2.5 rounded-sm" style={{ background: "var(--up)", opacity: 0.5 }} />Gain</span></p>
     </div>
   );
 }
