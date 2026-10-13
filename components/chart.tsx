@@ -45,7 +45,7 @@ export function Chart({ points: all, flows, ledger, plan }: { points: Point[]; f
         <div className="flex gap-0.5 p-0.5 rounded-full bg-surface-2 text-[12px]" role="tablist" aria-label="Période">
           {RANGES.map(([l, d]) => (
             <button key={l} role="tab" aria-selected={d === days} onClick={() => setDays(d)}
-              className={`px-2.5 py-1 rounded-full tnum transition-colors ${d === days ? "bg-surface font-semibold shadow-[var(--shadow)]" : "text-ink-2 hover:text-ink"}`}>{l}</button>
+              className={`px-2 sm:px-2.5 py-1 rounded-full tnum whitespace-nowrap transition-colors ${d === days ? "bg-surface font-semibold shadow-[var(--shadow)]" : "text-ink-2 hover:text-ink"}`}>{l}</button>
           ))}
         </div>
       </div>
@@ -107,7 +107,7 @@ function Bars({ ledger, plan, from, byYear }: { ledger: Move[]; plan: Plan[]; fr
             );
           })}
         </svg>
-        <div className="flex text-[11px] text-ink-3 tnum mt-1">{rows.map(([k]) => <span key={k} className="flex-1 text-center truncate">{rows.length > 14 && !byYear ? (k.endsWith("-01") ? k.slice(0, 4) : "") : label(k)}</span>)}</div>
+        <div className="flex text-[11px] text-ink-3 tnum mt-1">{rows.map(([k]) => <span key={k} className="flex-1 text-center truncate">{rows.length > 14 && !byYear ? (k.endsWith("-01") ? k.slice(0, 4) : "") : byYear ? k : <><span className="sm:hidden">{k.slice(5)}</span><span className="hidden sm:inline">{label(k)}</span></>}</span>)}</div>
         {p && (
           <div className="absolute top-0 pointer-events-none panel px-2.5 py-1.5 text-[12px] whitespace-nowrap" style={{ left: `${((i! + 0.5) / rows.length) * 100}%`, transform: `translateX(${i! > rows.length * 0.7 ? "calc(-100% - 8px)" : "8px"})` }}>
             <div className="text-ink-3">{byYear ? p[0] : label(p[0])}</div>
@@ -159,7 +159,7 @@ function Gain({ points }: { points: Point[] }) {
         {k != null && <line x1={x(k)} x2={x(k)} y1="0" y2={H} stroke="var(--ink)" strokeWidth="1" vectorEffect="non-scaling-stroke" />}
       </svg>
       <div className="relative h-4 text-[11px] text-ink-3 tnum">
-        {shown.map((t) => <span key={t.m} className="absolute top-0 capitalize whitespace-nowrap" style={{ left: `${(t.j / (points.length - 1)) * 100}%`, transform: "translateX(-50%)" }}>{tickLabel(t.m)}</span>)}
+        {shown.map((t) => <span key={t.m} className="absolute top-0 capitalize whitespace-nowrap" style={{ left: `${(t.j / (points.length - 1)) * 100}%`, transform: "translateX(-50%)" }}>{yearly ? tickLabel(t.m) : <><span className="sm:hidden">{t.m.slice(5)}</span><span className="hidden sm:inline">{tickLabel(t.m)}</span></>}</span>)}
       </div>
       {k != null && (
         <div className="absolute top-0 pointer-events-none panel px-2.5 py-1.5 text-[12px] whitespace-nowrap" style={{ left: `${left}%`, transform: `translateX(${left > 70 ? "calc(-100% - 8px)" : "8px"})` }}>

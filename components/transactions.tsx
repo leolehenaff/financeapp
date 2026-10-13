@@ -2,7 +2,7 @@
 import { useState, useTransition } from "react";
 import { listTransactions } from "@/lib/actions";
 import { dateFr, eur, TX_PAGE, type TxFilter, type TxRow } from "@/lib/format";
-import { Dot, Empty } from "@/components/ui";
+import { Delta, Dot, Empty } from "@/components/ui";
 import { DatePicker } from "@/components/datepicker";
 
 const TYPES: Record<string, string> = { buy: "Achat", sell: "Vente", dividend: "Dividende" };
@@ -41,17 +41,20 @@ export function Transactions({ instruments, initial }: { instruments: { id: numb
       {data.rows.length === 0 ? <Empty>Aucune transaction pour ces filtres.</Empty> : (
         <div className={`panel overflow-x-auto transition-opacity ${pending ? "opacity-50" : ""}`}>
           <table className="tbl">
-            <thead><tr><th>Date</th><th>Instrument</th><th>Compte</th><th>Type</th><th className="num">Qté</th><th className="num">Montant</th><th>Note</th></tr></thead>
+            <thead><tr><th>Date</th><th className="max-md:w-full max-md:max-w-0">Instrument</th><th className="max-md:hidden">Compte</th><th className="max-md:hidden">Type</th><th className="num max-md:hidden">Qté</th><th className="num">Montant</th><th className="max-md:hidden">Note</th></tr></thead>
             <tbody>
               {data.rows.map((t) => (
                 <tr key={t.id}>
                   <td className="tnum text-ink-2 whitespace-nowrap">{dateFr(t.date)}</td>
-                  <td><div className="flex items-center gap-2"><Dot kind={t.kind} />{t.instrument}</div></td>
-                  <td className="text-ink-2 whitespace-nowrap">{t.owner} · {t.account}</td>
-                  <td>{TYPES[t.type]}</td>
-                  <td className="num text-ink-2">{t.quantity.toLocaleString("fr-FR", { maximumFractionDigits: 4 })}</td>
-                  <td className="num font-medium">{eur(t.amount)}</td>
-                  <td className="text-ink-3 text-[13px]">{t.note}</td>
+                  <td className="max-md:w-full max-md:max-w-0">
+                    <div className="flex items-center gap-2 min-w-0"><Dot kind={t.kind} /><span className="truncate">{t.instrument}</span></div>
+                    <div className="md:hidden text-ink-3 text-[12px] truncate pl-[18px]">{TYPES[t.type]} · {t.account}</div>
+                  </td>
+                  <td className="text-ink-2 whitespace-nowrap max-md:hidden">{t.owner} · {t.account}</td>
+                  <td className="max-md:hidden">{TYPES[t.type]}</td>
+                  <td className="num text-ink-2 max-md:hidden">{t.quantity.toLocaleString("fr-FR", { maximumFractionDigits: 4 })}</td>
+                  <td className="num font-medium"><Delta value={Math.round(t.type === "buy" ? -t.amount : t.amount)} suffix=" €" /></td>
+                  <td className="text-ink-3 text-[13px] max-md:hidden">{t.note}</td>
                 </tr>
               ))}
             </tbody>
