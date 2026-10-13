@@ -98,6 +98,12 @@ export const stale = (positions: Position[]) =>
   positions.filter((p) => p.price_source === "manual" && p.kind !== "Livret"
     && (!p.price_date || p.price_date < addDays(today(), p.kind === "Start-up" ? -365 : -90)));
 
+/** Date du premier apport externe, point de départ de l'annualisation en mode Max. */
+export async function getFirstContribution() {
+  const r = await db.execute("SELECT MIN(date) d FROM contributions");
+  return String(r.rows[0]?.d ?? today());
+}
+
 /** Tout l'historique : valeur, et versé net (coût d'achat) depuis les snapshots v2 seulement.
  *  Les snapshots v1 ont un coût figé (valeur mise à jour à la main, pas d'achats saisis) : inutilisable. */
 export async function getHistory(): Promise<{ date: string; value: number; cost: number }[]> {

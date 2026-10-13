@@ -7,7 +7,8 @@ type Point = { date: string; value: number; cost: number };
 const RANGES: [string, number][] = [["1 m", 30], ["3 m", 91], ["6 m", 182], ["1 an", 365], ["Max", 0]];
 
 /** Trois KPI de la période (variation nette des versements, performance, versé), sélecteur de période, puis la courbe. */
-export function Chart({ points: all }: { points: Point[] }) {
+/** `start` : date du premier apport, base du calcul annualisé en mode Max. */
+export function Chart({ points: all, start }: { points: Point[]; start: string }) {
   const [days, setDays] = useState(365);
   const points = days ? all.filter((p) => p.date >= addDays(today(), -days)) : all;
   const first = points[0], last = points.at(-1);
@@ -17,6 +18,11 @@ export function Chart({ points: all }: { points: Point[] }) {
   const net = last ? last.value - base.value - paid : 0;
   const engaged = base.value + paid;
   const since = days && first ? `depuis le ${dateFr(first.date)}` : "depuis le début";
+  // Annualisé sur la durée réelle couverte : du premier point (ou du premier apport en Max) au dernier.
+  const span = last ? Math.max(1, (Date.parse(last.date) - Date.parse(days && first ? first.date : start)) / 864e5) : 1;
+  const perYear = 365 / span;
+  const pctNet = engaged ? net / engaged : 0;
+  const annual = (n: number) => `${n > 0 ? "+" : n < 0 ? "−" : ""}${eur(Math.round(Math.abs(n)))} par an`;
   return (
     <div>
       <div className="flex justify-end mt-3">
@@ -29,14 +35,14 @@ export function Chart({ points: all }: { points: Point[] }) {
       </div>
       <dl className="grid grid-cols-3 gap-3 mt-3">
         {[
-          ["Variation nette", <Delta key="n" value={Math.round(net)} suffix=" €" />, "hors versements"],
-          ["Performance", <Delta key="p" value={engaged ? (net / engaged) * 100 : 0} suffix=" %" />, "sur le capital engagé"],
-          ["Versé", <span key="v" className="tnum">{eur(Math.round(paid))}</span>, since],
+          ["Variation nette", <Delta key="n" value={Math.round(net)} suffix=" €" />, `hors versements, ${annual(net * perYear)}`],
+          ["Performance", <Delta key="p" value={pctNet * 100} suffix=" %" />, `${(pctNet > -1 ? (Math.pow(1 + pctNet, perYear) - 1) * 100 : -100).toLocaleString("fr-FR", { maximumFractionDigits: 1, signDisplay: "exceptZero" })} % par an`],
+          ["Versé", <span key="v" className="tnum">{eur(Math.round(paid))}</span>, `${since}, ${eur(Math.round(paid * perYear))} par an`],
         ].map(([l, v, sub]) => (
           <div key={String(l)} className="panel px-3 py-2.5 sm:px-4 sm:py-3 min-w-0">
             <dt className="text-[12px] text-ink-3 whitespace-nowrap">{l}</dt>
             <dd className="text-[16px] sm:text-[20px] font-bold tracking-[-0.02em] leading-tight mt-0.5 whitespace-nowrap">{v}</dd>
-            <dd className="text-[11px] sm:text-[12px] text-ink-3 mt-0.5">{sub}</dd>
+            <dd className="text-[11px] sm:text-[12px] text-ink-3 mt-0.5 tnum">{sub}</dd>
           </div>
         ))}
       </dl>

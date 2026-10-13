@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Recalcule snapshots.total_value du 17/01/2026 à hier : quantités = transactions datées, cours = Yahoo historique (clôture, report en avant) ou dernier prix manuel connu, cash et livrets à 1 €.
 import { config } from "dotenv"; config({ path: ".env.local", quiet: true });
 import YahooFinance from "yahoo-finance2";
