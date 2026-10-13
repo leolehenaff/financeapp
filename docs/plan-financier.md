@@ -46,7 +46,7 @@ Décision du 12/10/2026 : 3 700 € investis par mois dès octobre, soit exactem
 | Léo | Stock | 1 350 | PEA : S&P 500 (ESE) 800, STOXX 600 (ETZ) 300, EM Asia (PAEJ) 250 |
 | Léo | Start-up | 250 | un ticket de 1 000 € tous les 4 mois |
 | Léo | BTC | 250 | Bitstack |
-| Julie | Stock | 1 850 | MSCI World sur son PEA Trade Republic (ouvert 2025, horloge 5 ans lancée). Swissquote : à décider lors de l'état des lieux |
+| Julie | Stock | 1 850 | MSCI World sur son PEA Trade Republic (ouvert 2025, horloge 5 ans lancée). Swissquote écarté le 13/10/2026 |
 
 Virements automatiques au 1er du mois, avant toute dépense. Le plan n'est pas en base (constante `PLAN` dans `lib/queries.ts`, 1 850 € par personne) : l'écran « Ce mois » compare les apports externes du mois à cette cible. La répartition par instrument ci-dessus est indicative : chaque 1er du mois, l'agent la recalcule sur l'écart aux cibles et la pose en actions datées.
 

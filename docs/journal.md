@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 13 octobre 2026 : pas de Swissquote pour Julie, 100 % du flux sur le PEA Trade Republic
+
+Décision de Léo, jusqu'à nouvel ordre. Raisons : aucun gain fiscal pour une résidente française (PFU 30 % contre 17,2 % sur le PEA après 5 ans, droit de timbre 0,15 %, déclaration 3916), plafond PEA à plus de 6 ans de distance au rythme de 1 850 €/mois, détention hors France déjà assurée par Trade Republic (banque allemande), et un compte de plus à exporter chaque mois pour un flux coupé en deux. À rouvrir si Julie devient résidente fiscale suisse ou si le PEA approche de 150 k€. Même jour : virement automatique PEA Léo (1 350 €) et DCA Bitstack (250 €) en place ; les ordres PEA Banque Populaire ne sont pas automatisables, ils se passent à la main chaque 1er selon la répartition de `/mois`.
+
 ## 13 octobre 2026 : plan d'épargne hors base, répartition mensuelle par l'agent
 
 Décision de Léo : la table `plan_flows` est supprimée. Le plan (3 700 €/mois, 1 850 par personne) vit dans ce doc et dans une constante de l'app ; le réel vient des apports datés (`contributions`). Chaque 1er du mois, l'agent calcule la répartition par instrument à partir de l'écart aux cibles et la crée en actions datées. Le bouton « Versé » de l'écran Ce mois disparaît, toute saisie passe par l'agent depuis les exports.

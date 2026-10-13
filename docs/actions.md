@@ -13,15 +13,15 @@ Une action faite ou abandonnée se supprime d'ici ; son contexte reste dans [jou
 
 ## Mise en place des flux (une fois)
 
-- [ ] Léo : virement automatique 1 350 € vers PEA au 1er du mois, ordres S&P 500 800 / STOXX 600 300 / EM Asia 250.
-- [ ] Léo : DCA Bitstack 250 €/mois activé.
+- [x] Léo : virement automatique 1 350 € vers PEA au 1er du mois (fait le 13/10/2026). Les ordres ne sont pas automatisables chez Banque Populaire : passés à la main chaque 1er selon la répartition posée par `/mois`.
+- [x] Léo : DCA Bitstack 250 €/mois activé (13/10/2026).
 - [ ] Julie : virement automatique 1 850 € au 1er du mois, ordre MSCI World.
 - [ ] Première vérification : au 1er novembre, le coût d'achat cumulé dans l'app a augmenté d'environ 3 700 €.
 
 ## Points ouverts (à trancher)
 
 - [ ] Virement Julie 1 850 €/mois vers son PEA Trade Republic (conversion CHF→EUR via son compte Wise existant, pas BCGE).
-- [ ] Compte-titres suisse (Swissquote) : prend-il une part du flux de Julie ?
+- [ ] Transférer le PEA Léo de Banque Populaire (0,5 % par ordre plus droits de garde, ≈900 €/an au rythme prévu) vers un courtier en ligne (≈50 €/an). Antériorité conservée, compte gelé 4 à 8 semaines : à faire après les ventes Capgemini (avril 2027 au plus tard). Noté le 13/10/2026.
 
 ## Démarches administratives
 

@@ -3,15 +3,15 @@ export const eur = (n: number) =>
 export const pct = (n: number) => `${n.toLocaleString("fr-FR", { maximumFractionDigits: 1 })} %`;
 export const dateFr = (iso: string | null) => (iso ? iso.slice(0, 10).split("-").reverse().join("/") : "");
 /** Date du jour à Paris, en ISO (Vercel tourne en UTC). */
-/** Date relative, en jours : « aujourd'hui », « hier », « il y a 12 j », « il y a 3 mois », « il y a 1 an ». */
+/** Date relative, passée ou future : « aujourd'hui », « hier », « demain », « il y a 12 j », « dans 3 mois », « dans 1 an ». */
 export const ago = (iso: string | null) => {
   if (!iso) return "jamais";
-  const d = Math.round((Date.parse(today()) - Date.parse(iso.slice(0, 10))) / 86_400_000);
-  if (d <= 0) return "aujourd'hui";
+  const d = Math.round((Date.parse(today()) - Date.parse(iso.slice(0, 10))) / 86_400_000), n = Math.abs(d);
+  if (d === 0) return "aujourd'hui";
   if (d === 1) return "hier";
-  if (d < 60) return `il y a ${d} j`;
-  if (d < 365) return `il y a ${Math.round(d / 30)} mois`;
-  return `il y a ${Math.round(d / 365)} an${d >= 730 ? "s" : ""}`;
+  if (d === -1) return "demain";
+  const span = n < 60 ? `${n} j` : n < 365 ? `${Math.round(n / 30)} mois` : `${Math.round(n / 365)} an${n >= 730 ? "s" : ""}`;
+  return d > 0 ? `il y a ${span}` : `dans ${span}`;
 };
 export const today = () => new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Paris" }).format(new Date());
 export const addDays = (iso: string, d: number) => {

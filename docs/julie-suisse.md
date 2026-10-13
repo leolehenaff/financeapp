@@ -21,7 +21,7 @@ Lectures :
 ## Leviers, par ordre de priorité
 
 1. **LPP (2e pilier).** Cotisation automatique, part salariée 123 CHF/mois. Rachats non déductibles (pas quasi-résidente), donc pas de rachat volontaire.
-2. **Support d'investissement.** PEA Trade Republic (ouvert 2025) pour le flux mensuel : avantage fiscal après 5 ans (17,2 % au lieu de 30 % sur les gains), plafond 150 k€. Un compte-titres suisse (Swissquote) n'apporte aucun avantage fiscal pour une résidente française (PFU 30 % quand même, droit de timbre 0,15 %, 3916) : son seul intérêt est la détention hors de France. À trancher lors de l'état des lieux, en poche séparée, pas à la place du PEA. Conversion CHF→EUR via son compte Wise existant (≈ 0,3 %), pas via BCGE.
+2. **Support d'investissement.** PEA Trade Republic (ouvert 2025) pour le flux mensuel : avantage fiscal après 5 ans (17,2 % au lieu de 30 % sur les gains), plafond 150 k€. Un compte-titres suisse (Swissquote) n'apporte aucun avantage fiscal pour une résidente française (PFU 30 % quand même, droit de timbre 0,15 %, 3916) : son seul intérêt est la détention hors de France. Tranché le 13/10/2026 : pas de Swissquote jusqu'à nouvel ordre, 100 % du flux sur le PEA Trade Republic (voir journal). Conversion CHF→EUR via son compte Wise existant (≈ 0,3 %), pas via BCGE.
 3. **3e pilier A.** Non déductible dans votre situation : pas d'intérêt, argent bloqué pour rien.
 
 ## Obligations côté France

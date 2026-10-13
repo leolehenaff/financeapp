@@ -1,5 +1,5 @@
 import { completeAction, setPrice } from "@/lib/actions";
-import { dateFr, eur, monthLabel, today } from "@/lib/format";
+import { ago, dateFr, eur, monthLabel, today } from "@/lib/format";
 import { dueSoon, getActions, getMonthProgress, getPositions, stale, type Action, type Position } from "@/lib/queries";
 import { Bar, Check, Dot, Empty, Section } from "@/components/ui";
 
@@ -12,7 +12,7 @@ function StaleRow({ p }: { p: Position }) {
         <Dot kind={p.kind} />
         <div className="min-w-0">
           <div className="text-[14px] truncate">{p.instrument} <span className="text-ink-3 text-[12px]">{p.owner}</span></div>
-          <div className="text-[12px] text-ink-3 tnum">{p.quantity.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} × {p.price?.toLocaleString("fr-FR") ?? "?"}, {p.price_date ? `au ${dateFr(p.price_date)}` : "jamais valorisé"}</div>
+          <div className="text-[12px] text-ink-3 tnum">{p.quantity.toLocaleString("fr-FR", { maximumFractionDigits: 2 })} × {p.price?.toLocaleString("fr-FR") ?? "?"}, {p.price_date ? `valorisé ${ago(p.price_date)}` : "jamais valorisé"}</div>
         </div>
       </div>
       <form action={setPrice} className="flex gap-2">
@@ -28,9 +28,9 @@ function ActionRow({ a, day }: { a: Action; day: string }) {
   return (
     <li className="flex gap-3 items-start py-3">
       <form action={completeAction.bind(null, a.id)} className="pt-0.5"><Check /></form>
-      <div className="text-[14px] leading-snug">
-        <span className={`chip tnum mr-2 ${a.due_date! < day ? "bg-down-soft text-down" : "bg-surface-2 text-ink-2"}`}>{dateFr(a.due_date)}</span>
-        {a.title}
+      <div className="flex gap-2 items-baseline text-[14px] leading-snug">
+        <span className={`chip tnum shrink-0 w-[6.5rem] justify-center ${a.due_date! < day ? "bg-down-soft text-down" : "bg-surface-2 text-ink-2"}`} title={dateFr(a.due_date)}>{ago(a.due_date)}</span>
+        <span>{a.title}</span>
       </div>
     </li>
   );
