@@ -1,6 +1,6 @@
 # Automations Superset
 
-Deux automations tournent sur le Mac de Léo via Superset, agent « Claude SEO » (`claude --dangerously-skip-permissions --model claude-opus-5-5`), workspace relié à ce repo.
+Deux automations tournent sur le Mac de Léo via Superset, agent « Claude opus 5.5 » (`claude --dangerously-skip-permissions --model claude-opus-5-5`), workspace relié à ce repo.
 
 | Automation | Planning (RRULE) | Prompt |
 |---|---|---|
