@@ -106,6 +106,6 @@ export async function listTransactions(f: TxFilter, page: number): Promise<{ row
   const rows = (await db.execute({ sql: `
     SELECT t.id, t.date, a.owner, a.name account, i.name instrument, i.kind, t.type, t.quantity, t.amount, t.note
     FROM transactions t JOIN accounts a ON a.id = t.account_id JOIN instruments i ON i.id = t.instrument_id
-    WHERE ${where} ORDER BY t.date DESC, t.id DESC LIMIT ${TX_PAGE} OFFSET ${(Math.max(1, page) - 1) * TX_PAGE}`, args })).rows as unknown as TxRow[];
+    WHERE ${where} ORDER BY t.date DESC, t.id DESC LIMIT ${TX_PAGE} OFFSET ${(Math.max(1, page) - 1) * TX_PAGE}`, args })).rows.map((r) => ({ ...r })) as unknown as TxRow[];
   return { rows, count };
 }
