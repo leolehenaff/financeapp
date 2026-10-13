@@ -36,4 +36,4 @@ Une action faite ou abandonnée se supprime d'ici ; son contexte reste dans [jou
 
 ## Corrections de données dans l'app
 
-- [ ] Lignes Julie (PEE ×2, Livret A) : dernière mise à jour en mai, en attente des relevés.
+- [x] Lignes Julie (PEE ×2, Livret A) : reconstruites depuis les opérations CIC et les relevés Banque Populaire le 13/10/2026.
