@@ -100,12 +100,14 @@ export const stale = (positions: Position[]) =>
 
 /** Tout l'historique : valeur, et versé net (coût d'achat) depuis les snapshots v2 seulement.
  *  Les snapshots v1 ont un coût figé (valeur mise à jour à la main, pas d'achats saisis) : inutilisable. */
-export async function getHistory(): Promise<{ date: string; value: number; cost: number | null }[]> {
+export async function getHistory(): Promise<{ date: string; value: number; cost: number }[]> {
+  // Versé net à chaque date = cumul des achats moins les ventes (le coût stocké dans les snapshots v1 est inexploitable).
   const r = await db.execute(`
-    SELECT snapshot_date date, total_value value, json_extract(data_json, '$.cost') cost
-    FROM snapshots ORDER BY 1`);
+    SELECT s.snapshot_date date, s.total_value value,
+      (SELECT COALESCE(SUM(CASE type WHEN 'buy' THEN amount WHEN 'sell' THEN -amount ELSE 0 END), 0) FROM transactions t WHERE t.date <= s.snapshot_date) cost
+    FROM snapshots s ORDER BY 1`);
   // Objets plats : les Row libsql ne passent pas au composant client.
-  return r.rows.map((x) => ({ date: String(x.date), value: Number(x.value), cost: x.cost == null ? null : Number(x.cost) }));
+  return r.rows.map((x) => ({ date: String(x.date), value: Number(x.value), cost: Number(x.cost) }));
 }
 
 /** Seuils FIRE en euros constants de 2026 : 28 fois les dépenses annuelles (3,5 % de retrait brut),

@@ -1,6 +1,6 @@
 import { dateFr, eur, pct, today } from "@/lib/format";
 import { FIRE, getFire, getHistory, getMonthProgress, getPositions, type Position } from "@/lib/queries";
-import { Delta, Dot, POCKET, Section, pocket } from "@/components/ui";
+import { Dot, POCKET, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
 import { Positions } from "@/components/positions";
 
@@ -27,21 +27,16 @@ export default async function Patrimoine() {
   const monthly = flows.reduce((s, f) => s + f.planned, 0);
   const fire = await getFire(positions, monthly);
   const total = positions.reduce((s, p) => s + p.value, 0);
-  const sum = (ps: Position[], k: "value" | "cost") => ps.reduce((s, p) => s + p[k], 0);
-  const perf = (ps: Position[]) => { const c = sum(ps, "cost"), v = sum(ps, "value"); return c ? ((v - c) / c) * 100 : 0; };
-  const tracked = history.find((h) => h.cost != null);
-  const cost = sum(positions, "cost");
   const year = Number(today().slice(0, 4));
+  // Le snapshot du jour date de minuit : on le remplace par les positions en direct pour que KPI et total coïncident.
+  const live = [...history.filter((h) => h.date < today()), { date: today(), value: total, cost: positions.reduce((s, p) => s + p.cost, 0) }];
 
   return (
     <>
       <p className="text-[13px] text-ink-2">Patrimoine au {dateFr(today())}</p>
       <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum mt-0.5">{eur(total)}</h1>
-      <p className="text-[15px] text-ink-2 mt-2">
-        <Delta value={Math.round(total - cost)} suffix=" €" /> net des versements ({eur(cost)} versés), soit <Delta value={perf(positions)} suffix=" %" />.
-      </p>
-      <Chart points={history} />
-      <p className="flex gap-5 text-[12px] text-ink-3 mt-1.5"><span><span className="inline-block w-4 border-t-[1.5px] border-ink align-middle mr-1.5" />Valeur</span><span><span className="inline-block w-4 border-t border-dashed border-ink-3 align-middle mr-1.5" />Versé net{tracked && <> (suivi depuis le {dateFr(tracked.date)})</>}</span></p>
+      <Chart points={live} />
+      <p className="flex gap-5 text-[12px] text-ink-3 mt-1.5"><span><span className="inline-block w-4 border-t-[1.5px] border-ink align-middle mr-1.5" />Valeur</span><span><span className="inline-block w-4 border-t border-dashed border-ink-3 align-middle mr-1.5" />Versé net</span></p>
       <div className="mt-6"><Composition positions={positions} total={total} /></div>
 
       <Section title="Trajectoire" aside={`${pct(fire.real * 100)} réels attendus (${pct(fire.rate * 100)} moins 2 % d'inflation), ${eur(monthly)} par mois`}>
