@@ -11,14 +11,24 @@ const Field = ({ label, children, className = "" }: { label: string; children: R
   <label className={`flex flex-col gap-1 text-[12px] text-ink-2 ${className}`}>{label}{children}</label>
 );
 
-export default async function Journal() {
+const PAGE = 20;
+
+export default async function Journal({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
+  const sp = await searchParams;
+  const f = { from: sp.from ?? "", to: sp.to ?? "", instrument: sp.instrument ?? "", type: sp.type ?? "" };
+  const page = Math.max(1, Number(sp.page) || 1);
   const { accounts, instruments } = await lists();
   const actions = await getActions();
-  const tx = (await db.execute(`
+  const where = ["1=1", f.from && "t.date >= ?", f.to && "t.date <= ?", f.instrument && "t.instrument_id = ?", f.type && "t.type = ?"].filter(Boolean).join(" AND ");
+  const args = [f.from, f.to, f.instrument, f.type].filter(Boolean);
+  const count = Number((await db.execute({ sql: `SELECT COUNT(*) n FROM transactions t WHERE ${where}`, args })).rows[0].n);
+  const tx = (await db.execute({ sql: `
     SELECT t.id, t.date, a.owner, a.name account, i.name instrument, i.kind, t.type, t.quantity, t.amount, t.note
     FROM transactions t JOIN accounts a ON a.id = t.account_id JOIN instruments i ON i.id = t.instrument_id
-    ORDER BY t.date DESC, t.id DESC LIMIT 100`)).rows as unknown as
+    WHERE ${where} ORDER BY t.date DESC, t.id DESC LIMIT ${PAGE} OFFSET ${(page - 1) * PAGE}`, args })).rows as unknown as
     { id: number; date: string; owner: string; account: string; instrument: string; kind: string; type: string; quantity: number; amount: number; note: string | null }[];
+  const pages = Math.max(1, Math.ceil(count / PAGE));
+  const href = (n: number) => "?" + new URLSearchParams({ ...Object.fromEntries(Object.entries(f).filter(([, v]) => v)), page: String(n) });
   const sections = [...new Set(actions.map((a) => a.section))];
   const open = actions.filter((a) => a.status === "todo").length;
 
@@ -58,7 +68,17 @@ export default async function Journal() {
         </details>
       </Section>
 
-      <Section title="Transactions" aside={`${tx.length} dernières`}>
+      <Section title="Transactions" aside={`${count} ligne${count > 1 ? "s" : ""}, page ${page} sur ${pages}`}>
+        <form className="flex flex-wrap gap-2 mb-3 items-end">
+          <Field label="Du"><input type="date" name="from" defaultValue={f.from} className="field !w-36 !h-8" /></Field>
+          <Field label="Au"><input type="date" name="to" defaultValue={f.to} className="field !w-36 !h-8" /></Field>
+          <Field label="Instrument">
+            <select name="instrument" defaultValue={f.instrument} className="field !h-8"><option value="">Tous</option>{instruments.map((i) => <option key={i.id} value={i.id}>{i.name}</option>)}</select>
+          </Field>
+          <Field label="Type"><select name="type" defaultValue={f.type} className="field !h-8"><option value="">Tous</option>{Object.entries(TYPES).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></Field>
+          <button className="btn btn-ghost btn-sm">Filtrer</button>
+          {Object.values(f).some(Boolean) && <a href="?" className="text-[13px] text-ink-2 underline underline-offset-2 self-center">Effacer</a>}
+        </form>
         <div className="panel overflow-x-auto">
           <table className="tbl">
             <thead><tr><th>Date</th><th>Instrument</th><th>Compte</th><th>Type</th><th className="num">Qté</th><th className="num">Montant</th><th>Note</th></tr></thead>
@@ -77,6 +97,12 @@ export default async function Journal() {
             </tbody>
           </table>
         </div>
+        {pages > 1 && (
+          <p className="flex justify-between text-[13px] mt-3">
+            <span>{page > 1 ? <a href={href(page - 1)} className="underline underline-offset-2">Précédent</a> : <span className="text-ink-3">Précédent</span>}</span>
+            <span>{page < pages ? <a href={href(page + 1)} className="underline underline-offset-2">Suivant</a> : <span className="text-ink-3">Suivant</span>}</span>
+          </p>
+        )}
       </Section>
 
       <Section title="Actions" aside={`${open} ouverte${open > 1 ? "s" : ""}`}>
