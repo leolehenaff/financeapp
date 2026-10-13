@@ -16,9 +16,9 @@ docs/
 PRODUCT.md         contexte produit pour le design (registre, usages, personnalité, anti-références)
 DESIGN.md          design system « Carnet de bord » : tokens, typographie, composants, règles. À lire avant tout écran
 components/ui.tsx  primitives (Section, Bar, Delta, Dot, Check, Empty) et couleurs par poche (POCKET)
-app/(app)/page.tsx            écran « Ce mois » : versements vs plan, actions à 30 j, écart aux cibles, valorisations périmées
+app/(app)/page.tsx            écran « Ce mois » : versements vs plan, calendrier des actions datées (liste, ajout), écart aux cibles, valorisations périmées
 app/(app)/patrimoine/page.tsx positions par personne et compte, historique, trajectoire FIRE
-app/(app)/journal/page.tsx    liste filtrée et paginée des transactions, actions
+app/(app)/journal/page.tsx    liste filtrée et paginée des transactions
 app/api/cron/*                refresh-prices (Yahoo, jours ouvrés 18h UTC), create-snapshot (minuit)
 lib/db.ts          client Turso, schéma v2 (SCHEMA), constantes KINDS / GEOS
 lib/queries.ts     positions dérivées, allocation, avancement du mois, actions, FIRE

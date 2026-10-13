@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { completeAction, recordFlow, setPrice } from "@/lib/actions";
+import { addAction, completeAction, recordFlow, setPrice } from "@/lib/actions";
+import { DatePicker } from "@/components/datepicker";
 import { dateFr, eur, monthLabel, pct, today } from "@/lib/format";
 import { dueSoon, getActions, getAllocation, getMonthProgress, getPositions, stale, type AllocRow, type Position } from "@/lib/queries";
 import { Bar, Check, Delta, Dot, Empty, Section, pocket } from "@/components/ui";
@@ -60,6 +61,7 @@ export default async function ThisMonth() {
   const cost = positions.reduce((s, p) => s + p.cost, 0);
   const planned = flows.reduce((s, f) => s + f.planned, 0);
   const done = flows.reduce((s, f) => s + Math.min(f.done, f.planned), 0);
+  const todo = actions.filter((a) => a.status === "todo");
   const due = dueSoon(actions);
   const late = due.filter((a) => a.due_date! < day).length;
   const old = stale(positions);
@@ -131,20 +133,26 @@ export default async function ThisMonth() {
         )}
       </Section>
 
-      <Section title="À faire sous 30 jours" aside={due.length ? `${due.length} action${due.length > 1 ? "s" : ""}` : undefined}>
-        {due.length === 0 ? <Empty>Rien à échéance. Les prochaines actions sont dans le Journal.</Empty> : (
+      <Section title="Calendrier" aside={due.length ? `${due.length} sous 30 jours${late ? `, ${late} en retard` : ""}` : undefined}>
+        {todo.length === 0 ? <Empty>Rien de programmé.</Empty> : (
           <ul className="divide-y divide-line">
-            {due.map((a) => (
+            {todo.map((a) => (
               <li key={a.id} className="flex gap-3 items-start py-3">
                 <form action={completeAction.bind(null, a.id)} className="pt-0.5"><Check /></form>
                 <div className="text-[14px] leading-snug">
-                  <span className={`chip tnum mr-2 ${a.due_date! < day ? "bg-down-soft text-down" : "bg-surface-2 text-ink-2"}`}>{dateFr(a.due_date)}</span>
+                  <span className={`chip tnum mr-2 ${a.due_date! < day ? "bg-down-soft text-down" : due.includes(a) ? "bg-accent-soft text-accent" : "bg-surface-2 text-ink-2"}`}>{dateFr(a.due_date)}</span>
                   {a.title}
                 </div>
               </li>
             ))}
           </ul>
         )}
+        <form action={addAction} className="mt-4 flex flex-wrap gap-2 items-end">
+          <label className="flex flex-col gap-1 text-[12px] text-ink-2 flex-1 basis-64">Nouvelle action<input name="title" placeholder="Vendre les 88 derniers Capgemini" className="field" required /></label>
+          <label className="flex flex-col gap-1 text-[12px] text-ink-2">Échéance<DatePicker name="due_date" defaultValue={day} className="w-40" /></label>
+          <button type="submit" className="btn btn-ghost">Ajouter</button>
+        </form>
+        <p className="text-[12px] text-ink-3 mt-2">Seules les actions datées vivent ici. Les points à trancher et les démarches sont dans docs/actions.md.</p>
       </Section>
 
       <div className="grid md:grid-cols-2 gap-x-10">
