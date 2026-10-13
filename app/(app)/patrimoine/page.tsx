@@ -48,14 +48,6 @@ export default async function Patrimoine() {
       <p className="text-[13px] text-ink-2">Patrimoine au {dateFr(today())}</p>
       <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum mt-0.5">{eur(total)}</h1>
       <Chart points={live} flows={contributions} ledger={ledger} plan={plan} />
-
-      <div className="grid md:grid-cols-2 gap-x-10">
-        <Section title="Par poche"><Targets rows={alloc.type} byPocket /></Section>
-        <Section title="Actions par zone" aside="poche actions seule"><Targets rows={alloc.geo} byPocket={false} /></Section>
-      </div>
-      <p className="text-[12px] text-ink-3 mt-3">Le trait noir est la cible. Un écart positif veut dire « sous la cible » : c&apos;est là que vont les prochains versements.</p>
-
-
       <Section title="Trajectoire" aside={`${pct(fire.real * 100)} réels attendus (${pct(fire.rate * 100)} moins 2 % d'inflation), ${eur(monthly)} par mois`}>
         {/* Une seule piste, remplie au prorata du chemin vers le seuil complet ; les seuils sont des repères, pas des étapes franchies. */}
         <div className="relative h-3 rounded-full bg-surface-2">
@@ -77,6 +69,14 @@ export default async function Patrimoine() {
           ))}
         </ol>
       </Section>
+
+      <div className="grid md:grid-cols-2 gap-x-10">
+        <Section title="Par poche"><Targets rows={alloc.type} byPocket /></Section>
+        <Section title="Actions par zone" aside="poche actions seule"><Targets rows={alloc.geo} byPocket={false} /></Section>
+      </div>
+      <p className="text-[12px] text-ink-3 mt-3">Le trait noir est la cible. Un écart positif veut dire « sous la cible » : c&apos;est là que vont les prochains versements.</p>
+
+
 
       <Positions positions={positions.map((p) => ({ ...p }))} closed={closed.map((p) => ({ ...p }))} />
     </>
