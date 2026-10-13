@@ -25,6 +25,8 @@ Puis `docs/strategie.md`, `docs/actions.md`, les trois dernières entrées de `d
 
 ## 3. Titres vifs : recherche approfondie
 
+Si `docs/journal.md` contient une entrée « Revue trimestrielle <mois>, proposition de l'agent, en attente de validation » datée de moins de 15 jours (run Superset, voir `.claude/automations/`), repartir de ce tableau sans refaire la recherche, et passer au point 4.
+
 Pour chaque ligne de la section « Titres vifs » de `npm run etat` qui n'a pas déjà une action de vente datée en base, lancer un sous-agent par titre, en parallèle, avec ce brief :
 
 > Titre : <nom, ticker>. Position : <valeur, gain, % du patrimoine>. Date du jour : <date>. Recherche web sourcée et datée, exclure tout résultat d'une autre année que l'année en cours et la précédente. Rendre, en 15 lignes maximum : (a) derniers résultats publiés et réaction du marché ; (b) prochain catalyseur daté (publication, AG, détachement de dividende, cession, procès) ; (c) consensus analystes et valorisation actuelle contre historique 5 ans ; (d) la thèse d'achat initiale tient-elle encore ; (e) réponse à la règle d'or avec une phrase de justification. Chaque fait avec sa source et sa date.
