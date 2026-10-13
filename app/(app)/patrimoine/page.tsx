@@ -1,6 +1,6 @@
 import { dateFr, eur, pct, today } from "@/lib/format";
 import { FIRE, getAllocation, getFire, getContributions, getHistory, getLedger, getPlan, getMonthProgress, getPositions, type AllocRow, type Position } from "@/lib/queries";
-import { Delta, Dot, POCKET, Section, pocket } from "@/components/ui";
+import { Delta, Dot, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
 import { Positions } from "@/components/positions";
 
@@ -33,21 +33,6 @@ function Targets({ rows, byPocket }: { rows: AllocRow[]; byPocket: boolean }) {
   );
 }
 
-/** Bande de composition : la signature visuelle, une poche = un segment. */
-function Composition({ positions, total }: { positions: Position[]; total: number }) {
-  const parts = Object.keys(POCKET).map((k) => ({ k, v: positions.filter((p) => p.kind === k).reduce((s, p) => s + p.value, 0) })).filter((x) => x.v > 0);
-  return (
-    <div>
-      <div className="flex h-3 rounded-full overflow-hidden gap-px">
-        {parts.map((x) => <span key={x.k} style={{ width: `${(x.v / total) * 100}%`, background: pocket(x.k).color }} title={`${pocket(x.k).label} ${pct((x.v / total) * 100)}`} />)}
-      </div>
-      <ul className="flex flex-wrap gap-x-5 gap-y-1 mt-3 text-[13px]">
-        {parts.map((x) => <li key={x.k} className="flex items-center gap-1.5"><Dot kind={x.k} />{pocket(x.k).label} <span className="text-ink-3 tnum">{pct((x.v / total) * 100)}</span></li>)}
-      </ul>
-    </div>
-  );
-}
-
 export default async function Patrimoine() {
   const positions = await getPositions();
   const [history, flows, contributions, closed, ledger, plan, alloc] = await Promise.all([getHistory(), getMonthProgress(today().slice(0, 7)), getContributions(), getPositions(true), getLedger(), getPlan(), getAllocation(positions)]);
@@ -63,7 +48,6 @@ export default async function Patrimoine() {
       <p className="text-[13px] text-ink-2">Patrimoine au {dateFr(today())}</p>
       <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum mt-0.5">{eur(total)}</h1>
       <Chart points={live} flows={contributions} ledger={ledger} plan={plan} />
-      <div className="mt-6"><Composition positions={positions} total={total} /></div>
 
       <div className="grid md:grid-cols-2 gap-x-10">
         <Section title="Par poche" aside="start-up au coût d'achat"><Targets rows={alloc.type} byPocket /></Section>
