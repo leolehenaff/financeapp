@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 13 octobre 2026 : AV Generali Léo et Julie recalées
+
+D'après l'espace Banque Populaire : contrat Generali souscrit le 12/11/2020, solde 1 814,12 € au 13/10/2026. Léo indique que le contrat de Julie est identique. Pour chaque AV : versement initial de 1 500 € daté du 12/11/2020 (apport à cette date), revalorisation de 314,12 € en achat à 0 € au 13/10/2026 (même convention que les intérêts des livrets), 1 unité = 1 €. La reprise v1 valorisait chaque contrat 1 800 €.
+
 ## 13 octobre 2026 : historique réel du Livret A Léo (juin 2018 à janvier 2026)
 
 Huit relevés annuels Banque Populaire fournis par Léo. La ligne « Reprise v1 » (16 445 € pour 15 945 € de coût) est remplacée par 17 lignes : versements et retraits regroupés en une ligne nette par an, datée du dernier mouvement de l'année (apports nets 15 479 €, détail des montants versés et retirés dans la note), intérêts annuels au 31/12 en achat à 0 € (1 817 € cumulés de 2018 à 2025). Chaque solde annuel du relevé a été vérifié au centime contre le cumul, ouverture le 21/06/2018. Solde au 02/01/2026 : 17 295,96 €. Opérations 2026 d'après le relevé en ligne : 750 € versés (trois fois 250 €), 2 250 € retirés (cinq virements), solde 15 795,96 € au 13/10/2026 ; la reprise v1 disait 16 445 €, elle était fausse de 649 €.
