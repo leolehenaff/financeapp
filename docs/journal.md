@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 13 octobre 2026 : historique réel du PEA Léo
+
+Le graphique montrait une marche de 19 k€ de « versé » le 24/02/2026 sans hausse de valeur : la reprise v1 avait daté cinq achats de ce jour-là sans les ventes qui les finançaient (Kering, un S&P 500 Amundi, Engie, Veolia). Léo a fourni les 46 avis d'opéré Banque Populaire (décembre 2018 à février 2026). Les 19 lignes « Reprise v1 » du PEA sont remplacées par 44 transactions réelles plus une ligne reconstituée pour l'introduction en bourse FDJ (128 titres, 2 281 €, pas d'avis). Quantités par ligne inchangées, coût moyen 95 560 € pour 107 855 € de valeur. Versé net du PEA depuis l'ouverture : 81 210 € (achats moins ventes). Six instruments soldés ajoutés pour l'historique : Arkema, Renault, Kering, SMCP, Valeo, S&P 500 (PE500). Conséquence sur le cockpit : le « versé net » du graphique et des KPI vient du cumul des transactions, donc de l'argent réellement injecté, et non plus du coût moyen des positions.
+
 ## 12 octobre 2026 (nuit) : seuils FIRE révisés
 
 Léo trouvait 1,4 M€ trop faible pour vivre. Vérification : ce chiffre valait 28 fois le coût de vie actuel sans enfant, en nominal, sans fiscalité. Décision : recalculer sur le coût de vie à l'horizon des seuils (enfant d'âge scolaire, 3 956 + 600 = 4 550 €/mois ; la crèche s'arrête vers 2030, première version à 5 436 € corrigée par Léo) et en euros constants, avec un rendement réel (nominal moins 2 %). Nouveaux seuils : 870 k€ hors crédit, 1,53 M€ complet, soit vers 2035 et 2042 au rythme actuel de 3 700 €/mois. Fiscalité des retraits toujours non déduite, à traiter à la prochaine revue annuelle. Constante `FIRE` dans `lib/queries.ts`.

@@ -28,8 +28,8 @@ export default async function Patrimoine() {
   const fire = await getFire(positions, monthly);
   const total = positions.reduce((s, p) => s + p.value, 0);
   const year = Number(today().slice(0, 4));
-  // Le snapshot du jour date de minuit : on le remplace par les positions en direct pour que KPI et total coïncident.
-  const live = [...history.filter((h) => h.date < today()), { date: today(), value: total, cost: positions.reduce((s, p) => s + p.cost, 0) }];
+  // Le snapshot du jour date de minuit : on le remplace par le total en direct, le versé net restant celui du cumul des transactions.
+  const live = [...history.filter((h) => h.date < today()), { date: today(), value: total, cost: history.at(-1)?.cost ?? 0 }];
 
   return (
     <>
