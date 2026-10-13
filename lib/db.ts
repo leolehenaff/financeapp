@@ -3,6 +3,11 @@ import { createClient } from "@libsql/client";
 export const db = createClient({
   url: process.env.TURSO_DATABASE_URL!,
   authToken: process.env.TURSO_AUTH_TOKEN,
+  // fetch natif (undici) au lieu de node-fetch : node-fetch réutilise une socket keep-alive
+  // fermée pendant le gel de la fonction Vercel, d'où des ECONNRESET « socket hang up ».
+  // hrana passe une Request node-fetch, qu'undici ne sait pas lire telle quelle.
+  fetch: async (req: Request) =>
+    fetch(req.url, { method: req.method, headers: req.headers, body: await req.text() }),
 });
 
 export const KINDS = ["Stock", "Crypto", "Start-up", "Livret", "Active Cash"] as const;
