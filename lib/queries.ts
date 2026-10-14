@@ -155,7 +155,7 @@ export async function getFire(positions: Position[], monthly: number) {
 
 /** Maison au prix d'achat net vendeur, hors frais. Part possédée = prix moins capital restant dû à la dernière échéance passée.
  *  Affichée en une ligne sous le total, hors poches et hors FIRE. */
-export const HOME = { price: null as number | null };
+export const HOME = { price: 380_000 as number | null };
 
 export async function getHomeEquity() {
   if (!HOME.price) return null;

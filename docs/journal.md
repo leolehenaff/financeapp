@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 14 octobre 2026 : ligne « maison comprise » sur Patrimoine
+
+Décision de Léo : la maison s'affiche en une seule ligne sous le total, hors poches, zones et FIRE (la mensualité de 1 974 € est déjà dans les seuils FIRE). Part possédée = prix d'achat net vendeur (380 000 €, hors frais de notaire) moins le capital restant dû à la dernière échéance passée. Le tableau d'amortissement Banque Populaire (prêt de 380 000 € à 3,85 % sur 300 mois, du 05/09/2024 au 05/08/2049) est chargé dans la table `loan_schedule`, 300 échéances vérifiées (capital total 380 000 €, chaque capital restant dû retombe au centime). Au 05/10/2026 : 359 554,76 € restant dû, donc 20 445 € de part possédée. Les frais de dossier et de garantie (4 940 €) et l'assurance, prélevée à part, ne comptent pas. En cas de remboursement anticipé ou de renégociation, recharger le nouveau tableau.
+
 ## 14 octobre 2026 : ticket start-up d'octobre (batch YC sur Blast)
 
 Décision de Léo : 1 000 € dans un batch YC via Blast, au plus tard le 31/10. C'est le ticket prévu fin novembre (dernier le 24/07, cadence 4 mois), avancé d'un mois et non ajouté ; le suivant tombe fin février 2027. Poche start-up à 14,2 % en valorisation et 13,4 % au coût pour une cible de 15 %, soit environ 2,2 k€ de marge. Le retard d'apports de septembre (environ 1 950 €) va en ETF sur le PEA, là où se trouvent les écarts (actions +14,7 k€, US +24 k€, EU +17 k€), pas en start-up.
