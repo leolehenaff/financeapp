@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 14 octobre 2026 : Livrets A regroupés par mois et non plus par an
+
+Léo a relevé 12 k€ versés en décembre 2025 : les mouvements de toute l'année 2025 des deux Livrets A (9 221 € nets) étaient datés du 01/12. À partir des relevés annuels Banque Populaire (Léo 2018 à 2025, Julie 2020 à 2025), les 14 lignes annuelles sont remplacées par 90 lignes mensuelles, même règle que Bitstack et Nexo : une ligne nette par mois, datée du dernier mouvement du mois, détail versé et retiré dans la note. Trois mois à net nul sont sans ligne (Léo 05/2020 et 04/2024, Julie 07/2023). La prime de bienvenue de 10 € (Julie, 11/01/2021) reste dans les intérêts 2021, pas dans les apports. Totaux inchangés au centime : 15 479,01 € d'apports nets pour Léo, 17 000 € pour Julie, soldes au 13/10/2026 identiques. Les snapshots partent du 17/01/2026 et le cumul à cette date ne bouge pas : pas de recalcul. Reste en une ligne annuelle : Livret A Léo 2026 (−1 500 € au 23/07), faute du détail daté des opérations.
+
 ## 14 octobre 2026 : ligne « maison comprise » sur Patrimoine
 
 Décision de Léo : la maison s'affiche en une seule ligne sous le total, hors poches, zones et FIRE (la mensualité de 1 974 € est déjà dans les seuils FIRE). Part possédée = prix d'achat net vendeur (380 000 €, hors frais de notaire) moins le capital restant dû à la dernière échéance passée. Le tableau d'amortissement Banque Populaire (prêt de 380 000 € à 3,85 % sur 300 mois, du 05/09/2024 au 05/08/2049) est chargé dans la table `loan_schedule`, 300 échéances vérifiées (capital total 380 000 €, chaque capital restant dû retombe au centime). Au 05/10/2026 : 359 554,76 € restant dû, donc 20 445 € de part possédée. Les frais de dossier et de garantie (4 940 €) et l'assurance, prélevée à part, ne comptent pas. En cas de remboursement anticipé ou de renégociation, recharger le nouveau tableau.
