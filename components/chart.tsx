@@ -73,11 +73,12 @@ export function Chart({ points: all, flows, ledger, plan }: { points: Point[]; f
 function Bars({ ledger, plan, from, byYear }: { ledger: Move[]; plan: Plan[]; from: string; byYear: boolean }) {
   const [i, setI] = useState<number | null>(null);
   const key = (d: string) => (byYear ? d.slice(0, 4) : d.slice(0, 7));
-  const buckets = new Map<string, { paid: number; div: number }>();
+  const buckets = new Map<string, { paid: number; in: number; out: number; div: number }>();
   for (const m of ledger) {
     if (m.date < from || (m.type !== "contribution" && m.type !== "dividend")) continue;
-    const k = key(m.date), b = buckets.get(k) ?? { paid: 0, div: 0 };
-    if (m.type === "contribution") b.paid += m.amount; else b.div += m.amount;
+    const k = key(m.date), b = buckets.get(k) ?? { paid: 0, in: 0, out: 0, div: 0 };
+    if (m.type === "dividend") b.div += m.amount;
+    else { b.paid += m.amount; if (m.amount > 0) b.in += m.amount; else b.out -= m.amount; }
     buckets.set(k, b);
   }
   const rows = [...buckets].sort();
@@ -87,9 +88,12 @@ function Bars({ ledger, plan, from, byYear }: { ledger: Move[]; plan: Plan[]; fr
     const months = byYear ? Array.from({ length: 12 }, (_, m) => `${k}-${String(m + 1).padStart(2, "0")}`).filter((ym) => ym <= today().slice(0, 7)) : [k];
     return months.reduce((s, ym) => s + plan.filter((p) => p.from <= ym && (!p.to || ym <= p.to)).reduce((t, p) => t + p.amount, 0), 0);
   };
-  const max = Math.max(1, ...rows.map(([k, b]) => Math.max(b.paid + b.div, target(k))));
+  // Un versé net négatif (plus de retraits que d'apports) descend sous la ligne de zéro.
+  const top = Math.max(1, ...rows.map(([k, b]) => Math.max(Math.max(0, b.paid) + b.div, target(k))));
+  const bottom = Math.max(0, ...rows.map(([, b]) => -b.paid));
   const W = 600, H = 160, slot = W / rows.length, bw = slot * 0.62;
-  const y = (v: number) => H - (v / max) * H;
+  const zero = (top / (top + bottom)) * H, unit = H / (top + bottom);
+  const y = (v: number) => zero - v * unit;
   const label = (k: string) => (byYear ? k : `${k.slice(5)}/${k.slice(2, 4)}`);
   const p = i == null ? null : rows[i];
   const pick = (e: React.PointerEvent<HTMLDivElement>) => { const b = e.currentTarget.getBoundingClientRect(); setI(Math.max(0, Math.min(rows.length - 1, Math.floor(((e.clientX - b.left) / b.width) * rows.length)))); };
@@ -102,19 +106,22 @@ function Bars({ ledger, plan, from, byYear }: { ledger: Move[]; plan: Plan[]; fr
             return (
               <g key={k}>
                 <rect x={r * slot} y={0} width={slot} height={H} fill={i === r ? "var(--surface-2)" : "transparent"} />
-                {b.paid > 0 && <rect x={x} y={y(b.paid)} width={bw} height={H - y(b.paid)} fill="var(--accent)" />}
-                {b.paid < 0 && <rect x={x} y={H - 2} width={bw} height={2} fill="var(--down)" />}
-                {b.div > 0 && <rect x={x} y={y(Math.max(0, b.paid) + b.div)} width={bw} height={(b.div / max) * H} fill="var(--up)" />}
+                {b.paid > 0 && <rect x={x} y={y(b.paid)} width={bw} height={b.paid * unit} fill="var(--accent)" />}
+                {b.paid < 0 && <rect x={x} y={zero} width={bw} height={-b.paid * unit} fill="var(--down)" />}
+                {b.div > 0 && <rect x={x} y={y(Math.max(0, b.paid) + b.div)} width={bw} height={b.div * unit} fill="var(--up)" />}
                 {t > 0 && <line x1={x - 3} x2={x + bw + 3} y1={y(t)} y2={y(t)} stroke="var(--ink)" strokeWidth="2" vectorEffect="non-scaling-stroke" />}
               </g>
             );
           })}
+          {bottom > 0 && <line x1={0} x2={W} y1={zero} y2={zero} stroke="var(--line-strong)" strokeWidth="1" vectorEffect="non-scaling-stroke" />}
         </svg>
         <div className="flex text-[11px] text-ink-3 tnum mt-1">{rows.map(([k]) => <span key={k} className="flex-1 text-center truncate">{rows.length > 14 && !byYear ? (k.endsWith("-01") ? k.slice(0, 4) : "") : byYear ? k : <><span className="sm:hidden">{k.slice(5)}</span><span className="hidden sm:inline">{label(k)}</span></>}</span>)}</div>
         {p && (
           <div className="absolute top-0 pointer-events-none panel px-2.5 py-1.5 text-[12px] whitespace-nowrap" style={{ left: `${((i! + 0.5) / rows.length) * 100}%`, transform: `translateX(${i! > rows.length * 0.7 ? "calc(-100% - 8px)" : "8px"})` }}>
             <div className="text-ink-3">{byYear ? p[0] : label(p[0])}</div>
-            <div className="flex justify-between gap-4 tnum"><span className="text-ink-2">Versé</span><span>{eur(Math.round(p[1].paid))}</span></div>
+            <div className="flex justify-between gap-4 tnum"><span className="text-ink-2">Versé</span><span>{eur(Math.round(p[1].in))}</span></div>
+            <div className="flex justify-between gap-4 tnum"><span className="text-ink-2">Retiré</span><span>{eur(-Math.round(p[1].out))}</span></div>
+            <div className="flex justify-between gap-4 tnum"><span className="text-ink-2">Net versé</span><span>{eur(Math.round(p[1].paid))}</span></div>
             <div className="flex justify-between gap-4 tnum"><span className="text-ink-2">Dividendes</span><span>{eur(Math.round(p[1].div))}</span></div>
             {target(p[0]) > 0 && <div className="flex justify-between gap-4 tnum"><span className="text-ink-2">Objectif</span><span>{eur(Math.round(target(p[0])))}</span></div>}
           </div>
