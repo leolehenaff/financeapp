@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 14 octobre 2026 : ticket start-up d'octobre (batch YC sur Blast)
+
+Décision de Léo : 1 000 € dans un batch YC via Blast, au plus tard le 31/10. C'est le ticket prévu fin novembre (dernier le 24/07, cadence 4 mois), avancé d'un mois et non ajouté ; le suivant tombe fin février 2027. Poche start-up à 14,2 % en valorisation et 13,4 % au coût pour une cible de 15 %, soit environ 2,2 k€ de marge. Le retard d'apports de septembre (environ 1 950 €) va en ETF sur le PEA, là où se trouvent les écarts (actions +14,7 k€, US +24 k€, EU +17 k€), pas en start-up.
+
 ## 14 octobre 2026 : première vente Capgemini avancée du 30/10 à maintenant
 
 Décision de Léo. Capgemini a rebondi à 119,30 € (clôture du 13/10, +7,6 % sur 5 jours, plus bas 52 semaines 85,62 €), portée par les résultats d'Accenture (CA trimestriel 18,7 Md$, +7 %, le 01/10), le relèvement de l'objectif de Citi à 140 € (02/10) et le rachat de 3 millions de titres annoncé le 06/10 pour neutraliser le plan salarié. La sortie étant décidée, attendre le CA T3 du 30/10 revenait à parier sur l'annonce sans en avoir besoin. Le rebond attendu après le catalyseur est arrivé avant. Le PEA ne crée pas d'impôt et les frais sont identiques. Première tranche (89 titres, ordre limité à 118 €) à passer maintenant ; les tranches de janvier et d'avril 2027 sont inchangées pour lisser le prix. Réinvestissement inchangé : moitié STOXX 600 (ETZ), moitié S&P 500. Sources : Yahoo CAP.PA, Moneyvox 01/10/2026, communiqué Capgemini 06/10/2026.
