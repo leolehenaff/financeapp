@@ -39,4 +39,7 @@ export const SCHEMA = [
     id INTEGER PRIMARY KEY, section TEXT NOT NULL, title TEXT NOT NULL, due_date TEXT,
     status TEXT NOT NULL DEFAULT 'todo' CHECK (status IN ('todo','done','dropped')),
     done_on TEXT, created_at TEXT NOT NULL DEFAULT (datetime('now')))`,
+  // Tableau d'amortissement du prêt immobilier : sert seulement à la ligne « maison comprise », hors poches et FIRE.
+  `CREATE TABLE IF NOT EXISTS loan_schedule (
+    due_date TEXT PRIMARY KEY, interest REAL NOT NULL, principal REAL NOT NULL, remaining REAL NOT NULL)`,
 ];

@@ -153,6 +153,16 @@ export async function getFire(positions: Position[], monthly: number) {
   return { rate, real, partial: yearsTo(FIRE.partial), full: yearsTo(FIRE.full) };
 }
 
+/** Maison au prix d'achat net vendeur, hors frais. Part possédée = prix moins capital restant dû à la dernière échéance passée.
+ *  Affichée en une ligne sous le total, hors poches et hors FIRE. */
+export const HOME = { price: null as number | null };
+
+export async function getHomeEquity() {
+  if (!HOME.price) return null;
+  const r = await db.execute({ sql: "SELECT remaining FROM loan_schedule WHERE due_date <= ? ORDER BY due_date DESC LIMIT 1", args: [today()] });
+  return r.rows.length ? HOME.price - Number(r.rows[0].remaining) : null;
+}
+
 export const lists = async () => ({
   accounts: (await db.execute("SELECT id, owner, name FROM accounts ORDER BY owner, name")).rows as unknown as { id: number; owner: string; name: string }[],
   instruments: (await db.execute("SELECT id, name, kind FROM instruments ORDER BY kind, name")).rows as unknown as { id: number; name: string; kind: string }[],

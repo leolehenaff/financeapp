@@ -1,5 +1,5 @@
 import { dateFr, eur, pct, today } from "@/lib/format";
-import { FIRE, getAllocation, getFire, getContributions, getHistory, getLedger, getPlan, getPositions, planTotal, type AllocRow } from "@/lib/queries";
+import { FIRE, getAllocation, getFire, getContributions, getHistory, getHomeEquity, getLedger, getPlan, getPositions, planTotal, type AllocRow } from "@/lib/queries";
 import { Delta, Dot, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
 import { Positions } from "@/components/positions";
@@ -38,7 +38,7 @@ function Targets({ rows, byPocket }: { rows: AllocRow[]; byPocket: boolean }) {
 
 export default async function Patrimoine() {
   const positions = await getPositions();
-  const [history, contributions, closed, ledger, alloc] = await Promise.all([getHistory(), getContributions(), getPositions(true), getLedger(), getAllocation(positions)]);
+  const [history, contributions, closed, ledger, alloc, home] = await Promise.all([getHistory(), getContributions(), getPositions(true), getLedger(), getAllocation(positions), getHomeEquity()]);
   const plan = getPlan(), monthly = planTotal();
   const fire = await getFire(positions, monthly);
   const total = positions.reduce((s, p) => s + p.value, 0);
@@ -53,6 +53,7 @@ export default async function Patrimoine() {
         <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum">{eur(total)}</h1>
         <Refresh />
       </div>
+      {home !== null && <p className="text-[13px] text-ink-2 tnum">{eur(total + home)} maison comprise, dont {eur(home)} de part possédée</p>}
       <Chart points={live} flows={contributions} ledger={ledger} plan={plan} />
       {/* Carte héros : la seule mise en avant de la page, fond dégradé indigo pâle. Une piste remplie au prorata du seuil complet ; les seuils sont des repères. */}
       <section className="panel mt-10 p-5 sm:p-6 bg-[linear-gradient(135deg,var(--accent-soft),var(--surface)_75%)]">
