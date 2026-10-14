@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 14 octobre 2026 : première vente Capgemini avancée du 30/10 à maintenant
+
+Décision de Léo. Capgemini a rebondi à 119,30 € (clôture du 13/10, +7,6 % sur 5 jours, plus bas 52 semaines 85,62 €), portée par les résultats d'Accenture (CA trimestriel 18,7 Md$, +7 %, le 01/10), le relèvement de l'objectif de Citi à 140 € (02/10) et le rachat de 3 millions de titres annoncé le 06/10 pour neutraliser le plan salarié. La sortie étant décidée, attendre le CA T3 du 30/10 revenait à parier sur l'annonce sans en avoir besoin. Le rebond attendu après le catalyseur est arrivé avant. Le PEA ne crée pas d'impôt et les frais sont identiques. Première tranche (89 titres, ordre limité à 118 €) à passer maintenant ; les tranches de janvier et d'avril 2027 sont inchangées pour lisser le prix. Réinvestissement inchangé : moitié STOXX 600 (ETZ), moitié S&P 500. Sources : Yahoo CAP.PA, Moneyvox 01/10/2026, communiqué Capgemini 06/10/2026.
+
 ## 13 octobre 2026 : pas de Swissquote pour Julie, 100 % du flux sur le PEA Trade Republic
 
 Décision de Léo, jusqu'à nouvel ordre. Raisons : aucun gain fiscal pour une résidente française (PFU 30 % contre 17,2 % sur le PEA après 5 ans, droit de timbre 0,15 %, déclaration 3916), plafond PEA à plus de 6 ans de distance au rythme de 1 850 €/mois, détention hors France déjà assurée par Trade Republic (banque allemande), et un compte de plus à exporter chaque mois pour un flux coupé en deux. À rouvrir si Julie devient résidente fiscale suisse ou si le PEA approche de 150 k€. Même jour : virement automatique PEA Léo (1 350 €) et DCA Bitstack (250 €) en place ; les ordres PEA Banque Populaire ne sont pas automatisables, ils se passent à la main chaque 1er selon la répartition de `/mois`.
