@@ -34,3 +34,4 @@ export function irr(flows: Flow[]) {
 export type TxFilter = { from: string; to: string; instrument: string; type: string };
 export type TxRow = { id: number; date: string; owner: string; account: string; instrument: string; kind: string; type: string; quantity: number; amount: number; note: string | null };
 export const TX_PAGE = 20;
+export type ContribRow = { id: number; date: string; owner: string; account: string; amount: number; note: string | null };

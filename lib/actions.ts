@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "./db";
 import { createToken } from "./token";
-import { today, TX_PAGE, type TxFilter, type TxRow } from "./format";
+import { today, TX_PAGE, type ContribRow, type TxFilter, type TxRow } from "./format";
 import { refreshPrices } from "./prices";
 
 const str = (fd: FormData, k: string) => String(fd.get(k) ?? "").trim();
@@ -52,6 +52,17 @@ export async function listTransactions(f: TxFilter, page: number): Promise<{ row
     SELECT t.id, t.date, a.owner, a.name account, i.name instrument, i.kind, t.type, t.quantity, t.amount, t.note
     FROM transactions t JOIN accounts a ON a.id = t.account_id JOIN instruments i ON i.id = t.instrument_id
     WHERE ${where} ORDER BY t.date DESC, t.id DESC LIMIT ${TX_PAGE} OFFSET ${(Math.max(1, page) - 1) * TX_PAGE}`, args })).rows.map((r) => ({ ...r })) as unknown as TxRow[];
+  return { rows, count };
+}
+
+/** Apports externes paginés, lus par le second tableau du Journal. */
+export async function listContributions(sign: "" | "in" | "out", page: number): Promise<{ rows: ContribRow[]; count: number }> {
+  const where = sign === "in" ? "c.amount > 0" : sign === "out" ? "c.amount < 0" : "1=1";
+  const count = Number((await db.execute(`SELECT COUNT(*) n FROM contributions c WHERE ${where}`)).rows[0].n);
+  const rows = (await db.execute(`
+    SELECT c.id, c.date, a.owner, a.name account, c.amount, c.note
+    FROM contributions c JOIN accounts a ON a.id = c.account_id
+    WHERE ${where} ORDER BY c.date DESC, c.id DESC LIMIT ${TX_PAGE} OFFSET ${(Math.max(1, page) - 1) * TX_PAGE}`)).rows.map((r) => ({ ...r })) as unknown as ContribRow[];
   return { rows, count };
 }
 

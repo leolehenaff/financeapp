@@ -1,5 +1,5 @@
-import { listTransactions } from "@/lib/actions";
-import { Transactions } from "@/components/transactions";
+import { listContributions, listTransactions } from "@/lib/actions";
+import { Contributions, Transactions } from "@/components/transactions";
 import { lists } from "@/lib/queries";
 import { Section } from "@/components/ui";
 
@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Journal() {
   const { instruments } = await lists();
-  const first = await listTransactions({ from: "", to: "", instrument: "", type: "" }, 1);
+  const [first, contribs] = await Promise.all([listTransactions({ from: "", to: "", instrument: "", type: "" }, 1), listContributions("", 1)]);
 
   return (
     <>
@@ -16,6 +16,10 @@ export default async function Journal() {
 
       <Section title="Transactions">
         <Transactions instruments={instruments.map((i) => ({ id: i.id, name: i.name }))} initial={first} />
+      </Section>
+
+      <Section title="Apports">
+        <Contributions initial={contribs} />
       </Section>
 
     </>
