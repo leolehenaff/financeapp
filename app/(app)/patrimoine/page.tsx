@@ -1,5 +1,5 @@
 import { dateFr, eur, pct, today } from "@/lib/format";
-import { FIRE, getAllocation, getFire, getContributions, getHistory, getHomeEquity, getLedger, getPlan, getPositions, planTotal, type AllocRow } from "@/lib/queries";
+import { FIRE, HOME, getAllocation, getFire, getContributions, getHistory, getHomeEquity, getLedger, getPlan, getPositions, planTotal, type AllocRow } from "@/lib/queries";
 import { Delta, Dot, Section, pocket } from "@/components/ui";
 import { Chart } from "@/components/chart";
 import { Positions } from "@/components/positions";
@@ -53,7 +53,24 @@ export default async function Patrimoine() {
         <h1 className="text-[38px] font-bold tracking-[-0.03em] leading-tight tnum">{eur(total)}</h1>
         <Refresh />
       </div>
-      {home !== null && <p className="text-[13px] text-ink-2 tnum">{eur(total + home)} maison comprise, dont {eur(home)} de part possédée</p>}
+      {home !== null && (
+        // Maison : une pilule enfoncée (total maison comprise) et une barre fine de la part possédée sur le prix d'achat.
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-2">
+          <div className="inline-flex items-center gap-2 h-9 pl-1.5 pr-3.5 rounded-full bg-surface-2">
+            <span className="grid place-items-center w-6 h-6 rounded-full bg-surface text-accent">
+              <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1h-4.5v-5.5h-5V20H5a1 1 0 0 1-1-1z" /></svg>
+            </span>
+            <span className="text-[13px] text-ink-2">Maison comprise</span>
+            <span className="text-[15px] font-semibold tnum">{eur(total + home)}</span>
+          </div>
+          <div className="flex items-center gap-2.5 text-[13px] text-ink-2 tnum">
+            <span className="relative w-20 h-1.5 rounded-full bg-surface-2 overflow-hidden">
+              <span className="absolute inset-y-0 left-0 rounded-full bg-accent" style={{ width: `${(home / HOME.price!) * 100}%` }} />
+            </span>
+            <span><span className="font-semibold text-ink">{eur(home)}</span> à vous, {pct((home / HOME.price!) * 100)} de la maison</span>
+          </div>
+        </div>
+      )}
       <Chart points={live} flows={contributions} ledger={ledger} plan={plan} />
       {/* Carte héros : la seule mise en avant de la page, fond dégradé indigo pâle. Une piste remplie au prorata du seuil complet ; les seuils sont des repères. */}
       <section className="panel mt-10 p-5 sm:p-6 bg-[linear-gradient(135deg,var(--accent-soft),var(--surface)_75%)]">
