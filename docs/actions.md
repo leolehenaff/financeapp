@@ -14,7 +14,7 @@ Une action faite ou abandonnée se supprime d'ici ; son contexte reste dans [jou
 ## Mise en place des flux (une fois)
 
 - [x] Léo : virement automatique 1 350 € vers PEA au 1er du mois (fait le 13/10/2026). Les ordres ne sont pas automatisables chez Banque Populaire : passés à la main chaque 1er selon la répartition posée par `/mois`.
-- [x] Léo : DCA Bitstack 250 €/mois activé (13/10/2026).
+- [x] Léo : DCA Bitstack 250 €/mois activé le 13/10/2026, premier prélèvement le 01/11/2026 (pas de DCA en octobre).
 - [ ] Julie : virement automatique 1 850 € au 1er du mois, ordre MSCI World.
 - [ ] Première vérification : au 1er novembre, le coût d'achat cumulé dans l'app a augmenté d'environ 3 700 €.
 
