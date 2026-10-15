@@ -136,4 +136,4 @@ Le Livret A Julie 2026, saisi jusque-là en une ligne nette de −550 € au 01/
 
 ## 15 octobre 2026 : produit Capgemini réinvesti sur le PEA
 
-Action #16 exécutée : 247 STOXX 600 (ETZ) à 21,015 € (5 216,66 €) et 130 S&P 500 (ESE) à 34,8272 € (4 550,17 €), commission estimée 0,5 % comme les ordres du 13 et du 14, à caler sur les avis d'opéré. 147 ESE étaient prévues, plafond de la banque atteint : il reste 658 € d'espèces sur le PEA, à investir en ESE début novembre (action #18).
+Action #16 exécutée : 247 STOXX 600 (ETZ) à 21,015 € (5 216,66 €) et 130 S&P 500 (ESE) à 34,8272 € (4 550,17 €), commission estimée 0,5 % comme les ordres du 13 et du 14, à caler sur les avis d'opéré. 147 ESE étaient prévues, plafond de la banque atteint : il reste 658 € d'espèces sur le PEA, à investir en ESE début novembre (action #18). Avis d'opéré du 13/10 reçus : vente LVMH nette 2 658,20 € (commission 13,35 €) et achat de 97 ESE à 3 444,86 € (commission 17,13 €), calés au centime ; restent à caler Capgemini, ETZ et PAEJ du 14/10 et les achats du 15/10.
