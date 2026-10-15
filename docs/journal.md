@@ -133,3 +133,7 @@ Décision de Léo : les 1 350 € mensuels du PEA se répartissent chaque 1er au
 ## 13 octobre 2026 (soir) : second recalcul des snapshots
 
 Le Livret A Julie 2026, saisi jusque-là en une ligne nette de −550 € au 01/10, est éclaté en ses 16 opérations réelles (relevé en ligne). Avec la reprise PEE Julie corrigée dans la journée, les snapshots calculés le matin étaient périmés : le 17/01 passe de 261 711 à 258 129 €. Sans ce recalcul, la variation nette 1 an tombait à environ +4,9 k€ (base de départ surévaluée) ; elle revient à +8,5 k€ (+3,1 %). Règle : relancer `scripts/rebuild-snapshots.mts write` après toute reprise d'historique.
+
+## 15 octobre 2026 : produit Capgemini réinvesti sur le PEA
+
+Action #16 exécutée : 247 STOXX 600 (ETZ) à 21,015 € (5 190,71 €) et 130 S&P 500 (ESE) à 34,8272 € (4 527,54 €), montants bruts des avis d'exécution, frais non indiqués. 147 ESE étaient prévues : il reste 707 € d'espèces sur le PEA, à reverser avec la répartition de novembre.
