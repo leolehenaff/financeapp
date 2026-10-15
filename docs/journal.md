@@ -136,4 +136,4 @@ Le Livret A Julie 2026, saisi jusque-là en une ligne nette de −550 € au 01/
 
 ## 15 octobre 2026 : produit Capgemini réinvesti sur le PEA
 
-Action #16 exécutée : 247 STOXX 600 (ETZ) à 21,015 € (5 190,71 €) et 130 S&P 500 (ESE) à 34,8272 € (4 527,54 €), montants bruts des avis d'exécution, frais non indiqués. 147 ESE étaient prévues : il reste 707 € d'espèces sur le PEA, à reverser avec la répartition de novembre.
+Action #16 exécutée : 247 STOXX 600 (ETZ) à 21,015 € (5 216,66 €) et 130 S&P 500 (ESE) à 34,8272 € (4 550,17 €), commission estimée 0,5 % comme les ordres du 13 et du 14, à caler sur les avis d'opéré. 147 ESE étaient prévues, plafond de la banque atteint : il reste 658 € d'espèces sur le PEA, à investir en ESE début novembre (action #18).
