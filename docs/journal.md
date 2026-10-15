@@ -1,5 +1,27 @@
 # Journal des décisions
 
+## 15 octobre 2026 : ticket start-up d'octobre non pris, Finisterestes passée à zéro
+
+Décision de Léo : aucun des deux deals Blast d'octobre. Cortex (YC F25, robotique) écarté pour ses termes : SAFE uncapped à 10 % de décote, sans Madelin, information quasi nulle. Reev (orthèse de genou motorisée post-AVC, pré-série A sur 18,6 M€ de pré-money, Madelin 30 %) écarté faute de potentiel de grosse sortie : le comparable coté Myomo (orthèse de coude motorisée remboursée Medicare) fait 45 à 47 M$ de CA 2026 pour 45 à 70 M$ de capitalisation, Ottobock tient déjà le code L2006 avec le C-Brace. L'action du 31/10 est abandonnée, le ticket revient à sa date prévue, fin novembre, conditionné aux thèses et critères de `strategie.md`. Remplace la décision du 14/10 ci-dessous.
+
+Finisterestes29, en redressement judiciaire depuis le 13/01/2026, passe en perdue : vente de 1 000 titres à 0 € le 15/10/2026, même traitement que Project X. Perte de 1 050 € au coût, atténuée par 233,62 € de Madelin déjà encaissés ; une reprise de cette réduction n'est pas attendue en cas de liquidation judiciaire, non modélisée.
+
+## 15 octobre 2026 : thèses d'investissement start-up
+
+Léo fixe ses secteurs d'intérêt pour les prochains tickets : IA au niveau des fondations (hardware, énergie, infrastructure, logique des vendeurs de pelles), santé, technologies de rupture. Ajoutés au principe 4 de `strategie.md`, avec les critères de deal tirés de l'analyse Reev contre Cortex (tour à valorisation fixée, Madelin, pas de renfort Blast Army). Les thèses orientent sans exclure : Léo maintient la diversification maximale, les lignes passées hors thèse (Conso et impact, 24,6 %) ne sont pas un problème.
+
+## 15 octobre 2026 : secteur et activité des start-up
+
+Recherche web sur chaque ligne de la poche start-up (sources : blast.club/nos-levees, presse spécialisée), complétée par Léo pour Wheere, Nūmi et Flech' Studio. Deux colonnes ajoutées à `instruments` : `sector` (Blast, Santé, Conso et impact, Paniers YC, Spatial, Deeptech, Fintech, Logiciel et IA B2B) et `activity` (une phrase). Constats : Blast Army 1 et 2 ne portent pas de start-up mais des actions de Blast SAS, soit 47 % de la valeur de la poche sur une seule société ; Conso et impact est le premier secteur (7 lignes, 9 534 € au coût, 24,6 %), devant Blast (23,2 %) et la santé (7 lignes, 8 456 €, 21,8 %) ; Finisterestes29 est en redressement judiciaire depuis le 13/01/2026, ligne encore valorisée 1 000 €. Identifications fragiles : Astral (Astral Systems, Bristol, probable), Defacto et Faktus (aucune source publique ne cite Blast).
+
+## 15 octobre 2026 : Moriah et Flech' Studio dans la poche start-up
+
+Léo ajoute ses deux propres sociétés au compte Start-up Léo, au coût, valorisées au pair faute de levée : Moriah, 10 % du capital acheté 300 € (option sur 10 % supplémentaires à 300 €, non exercée), et Flech' Studio, 50 % du capital social, 500 € versés. Payées hors wallet Blast : une transaction et un apport chacune, datés au 1er du mois de versement faute de jour exact (Moriah décembre 2025, Flech' Studio octobre 2026). Impact négligeable sur la poche (800 €). À revaloriser dès qu'une levée ou une cession donne un prix.
+
+## 14 octobre 2026 : PEA Léo maintenu chez Banque Populaire
+
+Décision de Léo, pour l'instant. Le transfert visait à remplacer 0,5 % par ordre plus droits de garde (≈ 900 €/an) par un courtier en ligne. Écartés : BoursoBank (0,60 % au-delà de 500 €, plafonné à 0,50 % en PEA, soit le tarif actuel pour des ordres souvent supérieurs à 500 €), Bourse Direct, Saxo et Fortuneo (moins chers, mais Léo ne veut pas d'une interface de banque traditionnelle). Seul néo-courtier avec un PEA : Trade Republic, mais il refuse les titres non cotés, et Blast Army 1 et 2 (≈ 25,5 k€) sont dans le PEA ; un PEA se transfère en entier. Retours Finary 2025 et 2026 sur les transferts vers Trade Republic : 2 à 6 mois, parfois plus d'un an, une seule ligne peut bloquer. À rouvrir à la sortie de Blast Army. Sources : Détective Banque (tarifs BoursoBank 2026), pea.fr, Finary Community, support Trade Republic.
+
 ## 14 octobre 2026 : Livrets A regroupés par mois et non plus par an
 
 Léo a relevé 12 k€ versés en décembre 2025 : les mouvements de toute l'année 2025 des deux Livrets A (9 221 € nets) étaient datés du 01/12. À partir des relevés annuels Banque Populaire (Léo 2018 à 2025, Julie 2020 à 2025), les 14 lignes annuelles sont remplacées par 90 lignes mensuelles, même règle que Bitstack et Nexo : une ligne nette par mois, datée du dernier mouvement du mois, détail versé et retiré dans la note. Trois mois à net nul sont sans ligne (Léo 05/2020 et 04/2024, Julie 07/2023). La prime de bienvenue de 10 € (Julie, 11/01/2021) reste dans les intérêts 2021, pas dans les apports. Totaux inchangés au centime : 15 479,01 € d'apports nets pour Léo, 17 000 € pour Julie, soldes au 13/10/2026 identiques. Les snapshots partent du 17/01/2026 et le cumul à cette date ne bouge pas : pas de recalcul. Reste en une ligne annuelle : Livret A Léo 2026 (−1 500 € au 23/07), faute du détail daté des opérations.

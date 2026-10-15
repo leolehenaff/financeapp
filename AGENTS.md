@@ -39,7 +39,7 @@ Commence toute session par `docs/README.md`, puis `docs/actions.md` (sans date) 
 ## Modèle de données (Turso)
 
 - `accounts` : qui, nom, kind (PEA, CTO, PEE, AV, Livret, Crypto, Startup, Cash), date d'ouverture (horloge PEA).
-- `instruments` : nom unique, ticker Yahoo unique ou null, kind (Stock, Crypto, Start-up, Livret, Active Cash), geo (US, EU, FR, OTHER), price_source (yahoo ou manual).
+- `instruments` : nom unique, ticker Yahoo unique ou null, kind (Stock, Crypto, Start-up, Livret, Active Cash), geo (US, EU, FR, OTHER), price_source (yahoo ou manual), sector et activity (start-up : secteur de regroupement et activité en une phrase).
 - `transactions` : date, compte, instrument, type (buy, sell, dividend), quantité, montant total en €. Les positions sont dérivées : quantité nette, coût moyen pondéré. Livrets, cash et AV : 1 unité = 1 €, les intérêts se saisissent en buy à montant 0.
 - Le plan d'épargne (1 850 €/mois par personne) n'est pas en base : il vit dans `docs/plan-financier.md` et dans la constante `PLAN` de `lib/queries.ts`. Chaque 1er du mois, l'agent propose la répartition par instrument sous forme d'actions datées.
 - `contributions` : apports externes par compte (date, montant, négatif pour un retrait). C'est le « versé » du cockpit : un dividende ou une vente réinvestis ne sont pas des apports. Saisis par l'agent depuis les exports mensuels (checklist dans `docs/revues.md`, relevés dans `docs/releves/AAAA-MM/`), jamais à la main dans l'app.
@@ -47,6 +47,7 @@ Commence toute session par `docs/README.md`, puis `docs/actions.md` (sans date) 
 - `actions` : section, titre, échéance (obligatoire), statut (todo, done, dropped). Seules les actions datées y vivent ; les autres sont dans `docs/actions.md`.
 - `allocation_objectives` et `hypotheses` : cibles d'allocation et taux de rendement, inchangées depuis la v1.
 - `snapshots` : total quotidien, alimenté par le cron.
+- `loan_schedule` : tableau d'amortissement du prêt immobilier (échéance, intérêts, capital, restant dû). Avec la constante `HOME` de `lib/queries.ts` (prix d'achat), donne la seule ligne « maison comprise » de Patrimoine, hors poches et FIRE.
 
 ## Sources de vérité
 

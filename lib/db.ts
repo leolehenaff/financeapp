@@ -20,7 +20,7 @@ export const SCHEMA = [
     kind TEXT NOT NULL, opened_on TEXT, notes TEXT)`,
   `CREATE TABLE IF NOT EXISTS instruments (
     id INTEGER PRIMARY KEY, name TEXT NOT NULL UNIQUE, ticker TEXT UNIQUE, kind TEXT NOT NULL,
-    geo TEXT, price_source TEXT NOT NULL DEFAULT 'manual', notes TEXT)`,
+    geo TEXT, price_source TEXT NOT NULL DEFAULT 'manual', notes TEXT, sector TEXT, activity TEXT)`,
   `CREATE TABLE IF NOT EXISTS transactions (
     id INTEGER PRIMARY KEY, date TEXT NOT NULL,
     account_id INTEGER NOT NULL REFERENCES accounts(id),

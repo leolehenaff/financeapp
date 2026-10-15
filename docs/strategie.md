@@ -27,6 +27,8 @@ Dernière mise à jour : 12 octobre 2026. Cibles écrites dans la table `allocat
 2. Plus un euro vers Nexo. Exposition plafonnée à EUROX 30 k€, token NEXO à solder.
 3. Les versements mensuels vont en ETF monde ou régionaux hors France. Pas de nouvelle ligne de titre vif.
 4. Start-up : diversification maximale assumée, tickets de 1 000 €, un ticket tous les 4 mois. La poche se pilote au coût d'achat, pas à la valorisation.
+   - Thèses de Léo (15/10/2026), sans ordre de priorité : l'IA au niveau des fondations (hardware, puces, énergie, infrastructure : les vendeurs de pelles plutôt que les applications), la santé, les technologies de rupture. Les thèses orientent le choix entre deux deals, elles n'excluent aucun secteur : la diversification maximale reste la règle.
+   - Critères de deal : tour à valorisation fixée (pas de SAFE uncapped), Madelin quand il existe, pas de renfort de Blast Army (déjà 23 % de la poche au coût).
 5. Crypto : 100 % BTC, DCA 250 €/mois, transfert cold wallet tous les 6 mois.
 6. Livrets : montant fixe (6 mois de dépenses), le pourcentage dérive vers le bas avec le patrimoine.
 7. Vente d'une ligne : décision sur une date ou un catalyseur, jamais sur « quand le cours remontera ».

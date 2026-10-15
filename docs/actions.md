@@ -21,7 +21,8 @@ Une action faite ou abandonnée se supprime d'ici ; son contexte reste dans [jou
 ## Points ouverts (à trancher)
 
 - [ ] Virement Julie 1 850 €/mois vers son PEA Trade Republic (conversion CHF→EUR via son compte Wise existant, pas BCGE).
-- [ ] Transférer le PEA Léo de Banque Populaire (0,5 % par ordre plus droits de garde, ≈900 €/an au rythme prévu) vers un courtier en ligne (≈50 €/an). Antériorité conservée, compte gelé 4 à 8 semaines : à faire après les ventes Capgemini (avril 2027 au plus tard). Noté le 13/10/2026.
+- [ ] Moriah : exercer ou non l'option sur 10 % supplémentaires à 300 €. Si exercée : achat de 300 € plus apport sur Start-up Léo.
+- [ ] PEA Léo : rester chez Banque Populaire (décision du 14/10/2026). Transfert bloqué tant que Blast Army 1 et 2 (non cotés) sont dans le PEA : Trade Republic refuse le non coté et un PEA se transfère en entier. À rouvrir à la sortie de Blast Army ou si Blast indique un courtier en ligne qui accepte leurs parts. En attendant : négocier les droits de garde, vérifier s'il existe un minimum par ordre.
 
 ## Démarches administratives
 

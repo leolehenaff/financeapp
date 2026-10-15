@@ -3,7 +3,7 @@ import { addDays, irr, today, type Flow } from "./format";
 
 export type Position = {
   account_id: number; account: string; owner: string; account_kind: string;
-  instrument_id: number; instrument: string; ticker: string | null; kind: string; geo: string | null;
+  instrument_id: number; instrument: string; ticker: string | null; kind: string; geo: string | null; sector: string | null;
   price_source: string; quantity: number; cost: number; price: number | null; price_date: string | null;
   value: number; dividends: number; sold: number; bought: number; gain: number; tri: number | null; last_date: string;
 };
@@ -24,7 +24,7 @@ export async function getPositions(closed = false): Promise<Position[]> {
       SELECT instrument_id, price, date FROM prices p
       WHERE date = (SELECT MAX(date) FROM prices WHERE instrument_id = p.instrument_id))
     SELECT a.id account_id, a.name account, a.owner, a.kind account_kind,
-      i.id instrument_id, i.name instrument, i.ticker, i.kind, i.geo, i.price_source,
+      i.id instrument_id, i.name instrument, i.ticker, i.kind, i.geo, i.sector, i.price_source,
       agg.quantity,
       CASE WHEN agg.bought_qty > 0 THEN agg.bought / agg.bought_qty * agg.quantity ELSE 0 END AS cost,
       lp.price, lp.date price_date, agg.quantity * COALESCE(lp.price, 0) AS value, agg.dividends, agg.sold, agg.bought,
@@ -66,9 +66,20 @@ export async function getAllocation(positions: Position[]) {
       return { key: o.key, target: o.target_percent, actual, value, gap: (o.target_percent / 100) * total - value };
     });
   };
+  // Secteurs de la poche Start-up, au coût, sans cible : répartition seule, du plus lourd au plus léger.
+  const startups = positions.filter((p) => p.kind === "Start-up");
+  const startupTotal = startups.reduce((s, p) => s + p.cost, 0);
+  const bySector = new Map<string, { value: number; count: number }>();
+  for (const p of startups) {
+    const k = p.sector ?? "Non classé", e = bySector.get(k) ?? { value: 0, count: 0 };
+    bySector.set(k, { value: e.value + p.cost, count: e.count + 1 });
+  }
+  const sectors = [...bySector].map(([key, e]) => ({ key, ...e, actual: startupTotal ? (e.value / startupTotal) * 100 : 0 }))
+    .sort((a, b) => b.value - a.value);
   return {
     type: build("type", positions, (p) => p.kind),
     geo: build("geo", positions.filter((p) => p.kind === "Stock"), (p) => p.geo),
+    sectors,
   };
 }
 

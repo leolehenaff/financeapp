@@ -7,6 +7,13 @@ import { Refresh } from "@/components/refresh";
 
 export const dynamic = "force-dynamic";
 
+/** Couleur fixe par secteur start-up (palette catégorielle validée daltonisme), attachée au nom et jamais au rang. */
+const SECTOR_COLORS: Record<string, string> = {
+  "Conso et impact": "#2a78d6", Blast: "#eb6834", Santé: "#1baf7a", "Paniers YC": "#eda100",
+  Spatial: "#e87ba4", Deeptech: "#008300", Fintech: "#4a3aa7", "Logiciel et IA B2B": "#e34948",
+};
+const sectorColor = (k: string) => SECTOR_COLORS[k] ?? "var(--ink-3)";
+
 /** Barre horizontale par poche : réel en couleur, repère de cible, écart signé en €. */
 function Targets({ rows, byPocket }: { rows: AllocRow[]; byPocket: boolean }) {
   const max = Math.max(...rows.map((r) => Math.max(r.actual, r.target))) * 1.1;
@@ -111,6 +118,23 @@ export default async function Patrimoine() {
         <Section title="Actions par zone" aside="poche actions seule"><Targets rows={alloc.geo} byPocket={false} /></Section>
       </div>
       <p className="text-[12px] text-ink-3 mt-3">Le trait noir est la cible. Hachuré au-delà : surplus. Vide avant le trait : manque à combler, c&apos;est là que vont les prochains versements.</p>
+      <Section title="Start-up par secteur" aside="au coût d'achat, sans cible">
+        <div className="flex h-[20px] gap-[2px] rounded-full overflow-hidden" role="img" aria-label={alloc.sectors.map((s) => `${s.key} ${pct(s.actual)}`).join(", ")}>
+          {alloc.sectors.map((s) => (
+            <span key={s.key} className="h-full transition-opacity hover:opacity-80" style={{ width: `${s.actual}%`, background: sectorColor(s.key) }} title={`${s.key} : ${pct(s.actual)}, ${eur(s.value)}, ${s.count} ${s.count > 1 ? "lignes" : "ligne"}`} />
+          ))}
+        </div>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-2 mt-4">
+          {alloc.sectors.map((s) => (
+            <li key={s.key} className="flex items-baseline gap-2 text-[14px] min-w-0">
+              <span className="dot shrink-0 self-center" style={{ background: sectorColor(s.key) }} aria-hidden />
+              <span className="truncate">{s.key}</span>
+              <span className="ml-auto text-ink-3 text-[13px] tnum whitespace-nowrap">{pct(s.actual)}, {eur(s.value)}</span>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
 
 
 
