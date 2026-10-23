@@ -22,7 +22,7 @@ Une action faite ou abandonnée se supprime d'ici ; son contexte reste dans [jou
 
 - [ ] Virement Julie 1 850 €/mois vers son PEA Trade Republic (conversion CHF→EUR via son compte Wise existant, pas BCGE).
 - [ ] Moriah : exercer ou non l'option sur 10 % supplémentaires à 300 €. Si exercée : achat de 300 € plus apport sur Start-up Léo.
-- [ ] PEA Léo : rester chez Banque Populaire (décision du 14/10/2026). Transfert bloqué tant que Blast Army 1 et 2 (non cotés) sont dans le PEA : Trade Republic refuse le non coté et un PEA se transfère en entier. À rouvrir à la sortie de Blast Army ou si Blast indique un courtier en ligne qui accepte leurs parts. En attendant : négocier les droits de garde, vérifier s'il existe un minimum par ordre.
+- [ ] PEA Léo : transfert de Banque Populaire vers BoursoBank, demande faite par Léo le 23/10/2026, PEA transféré en entier sans vente préalable (Blast Army 1 et 2 comprises). Pendant le transfert, aucun ordre ni versement. À l'arrivée : demander sous 3 mois le remboursement des frais de transfert BP, investir les espèces en ETF Amundi (courtage 0 € à l'achat), recaler l'action #18 (reliquat Capgemini) et la tranche Capgemini du 31/01 si le transfert la bloque.
 
 ## Démarches administratives
 
