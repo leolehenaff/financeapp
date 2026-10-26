@@ -52,7 +52,7 @@ Puis une entrée datée dans `docs/journal.md` : apports constatés, répartitio
 
 ## 5. Rendre compte
 
-Première ligne : ce que Léo doit faire ce mois (virements et ordres, montants). Puis les écarts du mois passé. Terminer par une seule prochaine action.
+Première ligne : ce que Léo doit faire ce mois (virements et ordres, montants). Puis les écarts du mois passé. Puis, si le mois précédent n'est pas saisi, une section « Exports à déposer dans `docs/releves/<mois précédent>/` » : les exports mensuels de la checklist « Clôture mensuelle » de `docs/revues.md`, plus les exports conditionnels pour les comptes touchés par une action du mois précédent (ticket start-up : Blast Club, recharge Livrets : Livret A, transfert cold wallet : capture Ledger). Mois déjà saisi : pas de section. Terminer par une seule prochaine action, qui est « déposer les exports puis dire saisis <mois> » si la section existe.
 
 ## 6. Envoyer le récap
 
