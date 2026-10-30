@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 30 octobre 2026 : Livret A Léo transféré chez BoursoBank
+
+Le Livret A Léo est fermé chez Banque Populaire et rouvert chez BoursoBank, avec le même compte dans l'app (un Livret A ne se transfère pas : on ferme d'abord, puis on rouvre). Intérêts 2026 versés par BP à la clôture : 198,67 €, saisis en achat à 0 €. Léo a ajouté à l'ouverture 165,37 € venus d'un autre compte courant, saisis en apport. Solde de 20 660 € au 30/10/2026, égal au cumul en base. Les deux lignes sont datées du 30/10, faute de date exacte de clôture.
+
 ## 23 octobre 2026 : transfert du PEA Léo vers BoursoBank
 
 Décision de Léo : le PEA quitte Banque Populaire pour BoursoBank, transféré en entier, sans vente préalable. Remplace la décision du 14/10 (rester chez BP). Raisons : droits de garde BP d'environ 98 €/trimestre et 0,5 % de courtage, soit environ 470 €/an, contre 0 € de droits de garde chez Bourso et 0 € à l'achat sur environ 75 ETF Amundi éligibles PEA depuis le 05/10/2026 (CW8 compris ; ESE et ETZ, ETF BNP, restent payants à l'achat) ; le blocage Blast Army est levé, des contacts de Léo détiennent Blast Army 1 et 2 dans un PEA Bourso. Ventes envisagées avant le transfert puis écartées : TotalEnergies (au plus haut sur 52 semaines, 82,84 €, potentiel de 6 % vers le consensus Yahoo de 88 €), gardée par conviction (énergie, dividende) ; la tranche Capgemini de janvier (89 titres), non avancée après un repli à 122,55 € le 23/10 contre 126,80 € la veille. Les autres titres vifs sont au milieu ou en bas de leur fourchette 52 semaines. Risque accepté : aucun ordre pendant le transfert, qui peut durer plusieurs semaines ou mois à cause des lignes non cotées. Sources : Yahoo Finance 23/10/2026, ABC Bourse (Capgemini en zone de surachat), Selectra 15/10/2026 (ETF Amundi chez Bourso).
