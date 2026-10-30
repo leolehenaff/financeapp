@@ -24,7 +24,7 @@ Dernière mise à jour : 12 octobre 2026. Cibles écrites dans la table `allocat
 ## Principes
 
 1. Plus un euro de nouvelle épargne vers des valeurs françaises. Les titres vifs FR conservés sont Air Liquide, TotalEnergies, Sanofi, Legrand (plus ASML côté EU).
-2. Plus un euro vers Nexo. Exposition plafonnée à EUROX 30 k€, token NEXO à solder.
+2. Plus un euro vers Nexo. EUROX ramené à la cible Active Cash (≈26,5 k€) dès que le PEA Bourso est ouvert, en flexible, sans dépôt à terme (garder la possibilité de retirer vite). Token NEXO gardé entre 12,5 et 15 % du compte Nexo : le statut Platinum (6 % en flexible) exige au moins 10 %, la marge absorbe une baisse du token d'environ 15 %. L'excédent est vendu en BTC à chaque revue trimestrielle ; seule exception au 100 % BTC de la poche crypto.
 3. Les versements mensuels vont en ETF monde ou régionaux hors France. Pas de nouvelle ligne de titre vif.
 4. Start-up : diversification maximale assumée, tickets de 1 000 €, un ticket tous les 4 mois. La poche se pilote au coût d'achat, pas à la valorisation.
    - Thèses de Léo (15/10/2026), sans ordre de priorité : l'IA au niveau des fondations (hardware, puces, énergie, infrastructure : les vendeurs de pelles plutôt que les applications), la santé, les technologies de rupture. Les thèses orientent le choix entre deux deals, elles n'excluent aucun secteur : la diversification maximale reste la règle.

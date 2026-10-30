@@ -27,8 +27,9 @@ Pas besoin d'export pour les cours : Yahoo les met à jour chaque jour ouvré. L
 2. Vérifier que les virements automatiques sont passés (coût d'achat cumulé en hausse de ≈3 700 € par mois dans les snapshots).
 3. Passer en revue `actions.md` : exécuter ce qui est dû, cocher, reporter ce qui ne l'est pas avec une raison.
 4. Rafraîchir les lignes manuelles : Livrets, EUROX, PEE, AV, start-up (nouvelles valorisations connues).
-5. Lire les notes de chaque ligne, supprimer celles qui sont obsolètes.
-6. Ajouter un paragraphe dans `journal.md`.
+5. Nexo : part du token NEXO dans le compte Nexo (valeur NEXO / (EUROX + NEXO)). Au-dessus de 15 %, vendre l'excédent en BTC vers le cold wallet ; sous 12,5 %, ne rien vendre (Platinum exige 10 %).
+6. Lire les notes de chaque ligne, supprimer celles qui sont obsolètes.
+7. Ajouter un paragraphe dans `journal.md`.
 
 ## Revue annuelle (juillet)
 
