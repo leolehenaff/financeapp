@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 30 octobre 2026 : Nexo saisi du 14 au 30 octobre
+
+Export Nexo fourni par Léo (`docs/releves/2026-10/nexo.csv`), à la suite de l'import du 13/10, sans recouvrement. Intérêts : 133,59 NEXO en 34 versements journaliers, en une ligne d'achat à 0 € datée du 30/10, soit environ 94 € au cours du jour (0,70 €), dont 86 € sur l'EURX. Ramené à l'année, l'EURX rapporte environ 5,8 % en euros, contre 8 % affichés, parce que les intérêts sont payés en NEXO. Carte : 1,06 € (iTunes 1,04 €, frais de change 0,02 €) financés par la vente de 1,51 NEXO le 15/10, apport de −1,06 €. Pas de dépôt sur la période, celui d'octobre (500 €, le 01/10) était déjà saisi. Les intérêts du 31/10 passeront avec novembre. Position après saisie : 31 846,89 EURX et 7 786,48 NEXO.
+
 ## 30 octobre 2026 : Livret A Léo transféré chez BoursoBank
 
 Le Livret A Léo est fermé chez Banque Populaire et rouvert chez BoursoBank, avec le même compte dans l'app (un Livret A ne se transfère pas : on ferme d'abord, puis on rouvre). Intérêts 2026 versés par BP à la clôture : 198,67 €, saisis en achat à 0 €. Léo a ajouté à l'ouverture 165,37 € venus d'un autre compte courant, saisis en apport. Les deux lignes sont datées du 26/10/2026, jour de la clôture. Solde de 20 660 € au 30/10/2026, égal au cumul en base.
