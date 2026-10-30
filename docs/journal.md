@@ -2,7 +2,7 @@
 
 ## 30 octobre 2026 : Livret A Léo transféré chez BoursoBank
 
-Le Livret A Léo est fermé chez Banque Populaire et rouvert chez BoursoBank, avec le même compte dans l'app (un Livret A ne se transfère pas : on ferme d'abord, puis on rouvre). Intérêts 2026 versés par BP à la clôture : 198,67 €, saisis en achat à 0 €. Léo a ajouté à l'ouverture 165,37 € venus d'un autre compte courant, saisis en apport. Solde de 20 660 € au 30/10/2026, égal au cumul en base. Les deux lignes sont datées du 30/10, faute de date exacte de clôture.
+Le Livret A Léo est fermé chez Banque Populaire et rouvert chez BoursoBank, avec le même compte dans l'app (un Livret A ne se transfère pas : on ferme d'abord, puis on rouvre). Intérêts 2026 versés par BP à la clôture : 198,67 €, saisis en achat à 0 €. Léo a ajouté à l'ouverture 165,37 € venus d'un autre compte courant, saisis en apport. Les deux lignes sont datées du 26/10/2026, jour de la clôture. Solde de 20 660 € au 30/10/2026, égal au cumul en base.
 
 ## 23 octobre 2026 : transfert du PEA Léo vers BoursoBank
 
