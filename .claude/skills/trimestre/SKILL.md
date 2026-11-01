@@ -64,7 +64,7 @@ Première ligne : nombre de lignes revues, nombre de ventes proposées, montant 
 Après l'écriture du point 4, récap en Markdown dans le scratchpad (écarts aux cibles, tableau des décisions validées avec dates, valorisations rafraîchies, prochaine action), puis :
 
 ```bash
-npm run mail -- "Patrimoine : revue trimestrielle <mois année>" < /chemin/recap.md
+./node_modules/.bin/tsx scripts/mail.mts "Patrimoine : revue trimestrielle <mois année>" < /chemin/recap.md
 ```
 
-Destinataires dans `MAIL_TO` (Léo et Julie). Si la commande échoue, le dire en fin de réponse, ne pas réessayer.
+Destinataires dans `MAIL_TO` (Léo et Julie). Pas `npm run mail` depuis Claude Code : le hook rtk réécrit `npm run` et le corps du mail n’arrive plus sur stdin. Si la commande échoue, le dire en fin de réponse, ne pas réessayer.

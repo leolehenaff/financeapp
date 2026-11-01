@@ -13,5 +13,5 @@ Règles pour un run sans humain :
 
 Fin de run :
 1. Écrire le tableau de proposition et les écarts dans `docs/journal.md` sous un titre « Revue trimestrielle <mois année>, proposition de l'agent, en attente de validation ». Commit sur `main` « Revue trimestrielle <mois année> : proposition », puis `git push`. Si l'arbre git n'était pas propre au départ, ne rien committer et le dire dans le récap.
-2. Envoyer le récap par mail (`npm run mail -- "Patrimoine : revue trimestrielle <mois année>" < recap.md`). Première ligne : nombre de lignes revues, ventes proposées, montant. Dernière ligne : « Pour valider ligne par ligne : ouvrir Claude Code dans assetfinance et lancer /trimestre, qui reprend la proposition du journal. »
+2. Envoyer le récap par mail (`./node_modules/.bin/tsx scripts/mail.mts "Patrimoine : revue trimestrielle <mois année>" < recap.md`, pas `npm run mail` : un hook Claude Code coupe stdin). Première ligne : nombre de lignes revues, ventes proposées, montant. Dernière ligne : « Pour valider ligne par ligne : ouvrir Claude Code dans assetfinance et lancer /trimestre, qui reprend la proposition du journal. »
 3. Si une étape échoue, envoyer quand même ce qui a pu être produit et mettre l'erreur en tête du récap.

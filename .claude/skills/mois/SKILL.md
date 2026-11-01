@@ -59,7 +59,7 @@ Première ligne : ce que Léo doit faire ce mois (virements et ordres, montants)
 Écrire le récap du point 5 (Markdown : tableau des actions, écarts, prochaine action) dans le scratchpad, puis :
 
 ```bash
-npm run mail -- "Patrimoine : clôture <mois année>" < /chemin/recap.md
+./node_modules/.bin/tsx scripts/mail.mts "Patrimoine : clôture <mois année>" < /chemin/recap.md
 ```
 
-Destinataires dans `MAIL_TO` (Léo et Julie). Si la commande échoue (clé absente, domaine non vérifié), le dire en fin de réponse, ne pas réessayer.
+Destinataires dans `MAIL_TO` (Léo et Julie). Pas `npm run mail` depuis Claude Code : le hook rtk réécrit `npm run` et le corps du mail n’arrive plus sur stdin. Si la commande échoue (clé absente, domaine non vérifié), le dire en fin de réponse, ne pas réessayer.
