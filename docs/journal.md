@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 1er novembre 2026 : versement PEA suspendu pendant le transfert, DCA Bitstack constaté
+
+Décision de Léo : le virement permanent de 1 350 € vers le PEA BP est suspendu le 01/11, avant sa première exécution, car le PEA est en transfert vers BoursoBank depuis le 23/10 (aucun ordre ni versement). Les 1 350 € mensuels restent sur le compte courant, sans placement d'attente (gain de quelques euros sur quelques semaines, Livrets et Active Cash déjà au-dessus de leur cible). À l'arrivée chez Bourso : virement permanent recréé, mensualités en attente et reliquat Capgemini investis d'un coup en ETF Amundi. Premier DCA Bitstack automatique passé le 01/11 : 0,00389095 BTC pour 279,17 € (273,75 € plus 5,42 € de frais, soit 2 %, BTC à 70 355,57 €), saisi en achat et en apport. Le mode « récurrent intelligent » fait varier le montant autour des 250 € prévus. Solde Bitstack 0,06892002 BTC, égal à la base.
+
 ## 1er novembre 2026 : clôture d'octobre par `/mois`
 
 Apports d'octobre contre plan (1 850 € chacun) : Léo 7 014 € (PEA 1 350, Nexo 500, Start-up 500, Livret A 4 665 venus de l'extérieur à la réouverture chez Bourso, carte Nexo −1), Julie 2 100 € (PEA Trade Republic 1 850, Livret A 250). Aucun manque. Les flux d'octobre ont été passés à la main le 13/10 : le premier virement automatique de Léo (1 350 € vers le PEA) et le premier DCA Bitstack tombent le 01/11, à vérifier à la clôture de novembre. Le virement automatique de Julie n'est toujours pas en place.
