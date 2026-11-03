@@ -2,7 +2,7 @@
 
 ## 3 novembre 2026 : solde Bitstack transféré vers le cold wallet
 
-Léo a transféré tout le solde Bitstack, soit 0,06892002 BTC, vers le Ledger. La quantité reçue est identique à la quantité envoyée : aucun frais de réseau n'est visible. Le transfert est saisi comme celui du 28/10/2025 : vente Bitstack au coût moyen (4 740,59 €) avec un apport négatif du même montant, puis achat du même montant sur le cold wallet avec un apport positif, ce qui laisse le transfert neutre. Le cold wallet détient désormais 0,26460187 BTC et Bitstack 0. Le DCA de 250 € continue d'alimenter Bitstack, avec un prochain transfert dans 6 mois. L'action #12 est close.
+Léo a transféré tout le solde Bitstack, soit 0,06892002 BTC, vers le Ledger. La quantité reçue est identique à la quantité envoyée : aucun frais de réseau n'est visible. Le transfert est saisi en vente Bitstack au coût moyen (4 740,59 €) puis en achat du même montant sur le cold wallet, sans ligne dans `contributions` : un transfert entre deux comptes n'est pas un apport. Saisi d'abord avec deux apports opposés, comme le 28/10/2025, il gonflait les versements du mois de Léo dans « Ce mois », qui ne compte que les apports positifs ; les apports des deux transferts (2025 et 2026) ont été supprimés, le versé total ne bouge pas. Le cold wallet détient désormais 0,26460187 BTC et Bitstack 0. Le DCA de 250 € continue d'alimenter Bitstack, avec un prochain transfert dans 6 mois. L'action #12 est close.
 
 ## 1er novembre 2026 : versement PEA suspendu pendant le transfert, DCA Bitstack constaté
 
