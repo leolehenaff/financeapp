@@ -1,5 +1,9 @@
 # Journal des décisions
 
+## 3 novembre 2026 : solde Bitstack transféré vers le cold wallet
+
+Léo a transféré tout le solde Bitstack, soit 0,06892002 BTC, vers le Ledger. La quantité reçue est identique à la quantité envoyée : aucun frais de réseau n'est visible. Le transfert est saisi comme celui du 28/10/2025 : vente Bitstack au coût moyen (4 740,59 €) avec un apport négatif du même montant, puis achat du même montant sur le cold wallet avec un apport positif, ce qui laisse le transfert neutre. Le cold wallet détient désormais 0,26460187 BTC et Bitstack 0. Le DCA de 250 € continue d'alimenter Bitstack, avec un prochain transfert dans 6 mois. L'action #12 est close.
+
 ## 1er novembre 2026 : versement PEA suspendu pendant le transfert, DCA Bitstack constaté
 
 Décision de Léo : le virement permanent de 1 350 € vers le PEA BP est suspendu le 01/11, avant sa première exécution, car le PEA est en transfert vers BoursoBank depuis le 23/10 (aucun ordre ni versement). Les 1 350 € mensuels restent sur le compte courant, sans placement d'attente (gain de quelques euros sur quelques semaines, Livrets et Active Cash déjà au-dessus de leur cible). À l'arrivée chez Bourso : virement permanent recréé, mensualités en attente et reliquat Capgemini investis d'un coup en ETF Amundi. Premier DCA Bitstack automatique passé le 01/11 : 0,00389095 BTC pour 279,17 € (273,75 € plus 5,42 € de frais, soit 2 %, BTC à 70 355,57 €), saisi en achat et en apport. Le mode « récurrent intelligent » fait varier le montant autour des 250 € prévus. Solde Bitstack 0,06892002 BTC, égal à la base.
